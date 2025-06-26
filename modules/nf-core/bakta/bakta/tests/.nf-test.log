@@ -1,0 +1,8 @@
+Jun-18 20:31:37.212 [main] INFO  com.askimed.nf.test.App - nf-test 0.9.2
+Jun-18 20:31:37.226 [main] INFO  com.askimed.nf.test.App - Arguments: [test, .]
+Jun-18 20:31:38.055 [main] INFO  com.askimed.nf.test.App - Nextflow Version: 25.04.4
+Jun-18 20:31:38.059 [main] WARN  com.askimed.nf.test.commands.RunTestsCommand - No nf-test config file found.
+Jun-18 20:31:38.068 [main] INFO  com.askimed.nf.test.lang.dependencies.DependencyResolver - Loaded 1 files from directory /mnt/c/Users/syl218/Desktop/Thesis/nf-core-bactiseq/modules/nf-core/bakta/bakta/tests in 0.007 sec
+Jun-18 20:31:38.070 [main] INFO  com.askimed.nf.test.lang.dependencies.DependencyResolver - Found 0 files containing tests.
+Jun-18 20:31:38.071 [main] DEBUG com.askimed.nf.test.lang.dependencies.DependencyResolver - Found files: []
+Jun-18 20:31:38.074 [main] INFO  com.askimed.nf.test.commands.RunTestsCommand - Found 0 tests to execute.

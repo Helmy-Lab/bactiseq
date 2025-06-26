@@ -241,5 +241,32 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "db_path": {
+            "type": "string",
+            "default": "./Databases",
+            "description": "Where the databases will be downloaded to if not given a path"
+        },
+        "bakta_db": {
+            "type": "string",
+            "description": "path to bakta database"
+        },
+        "amr_db": {
+            "type": "string",
+            "description": "path to amr+ database"
+        },
+        "prokka_db": {
+            "type": "string",
+            "description": "patch to prokka database"
+        },
+        "card_db": {
+            "type": "string",
+            "description": "path to card database"
+        },
+        "checkm2_db": {
+            "type": "string",
+            "description": "path to checkm2 database"
+        }
+    }
 }

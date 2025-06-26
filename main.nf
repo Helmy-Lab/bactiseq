@@ -55,6 +55,7 @@ workflow NFCORE_BACTISEQ {
     )
     emit:
     multiqc_report = BACTISEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
+    // gff = BACTISEQ.out.gff
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
