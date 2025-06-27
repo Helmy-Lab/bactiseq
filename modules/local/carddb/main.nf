@@ -8,19 +8,19 @@ process CARDDB {
         'https://depot.galaxyproject.org/singularity/rgi:6.0.3--pyha8f3691_1':
         'biocontainers/rgi:6.0.3--pyha8f3691_1' }"
     
-    // publishDir "${params.db_path}/carddb", 
-    //     saveAs: { filename -> 
-    //         // Remove 'localDB/' prefix from the path (keep only filename)
-    //         if (filename.startsWith("localDB/")) {
-    //             return filename.substring("localDB/".length())
-    //         }
-    //     },
-    // mode: 'copy',
-    // overwrite: true
     publishDir "${params.db_path}/carddb", 
-        pattern: '*localDB/*',  // Copy contents only (no directory)
-        mode: 'copy',
-        overwrite: true
+        saveAs: { filename -> 
+            // Remove 'localDB/' prefix from the path (keep only filename)
+            if (filename.startsWith("localDB/")) {
+                return filename.substring("localDB/".length())
+            }
+        },
+    mode: 'copy',
+    overwrite: true
+    // publishDir "${params.db_path}/carddb", 
+    //     pattern: '*localDB/*',  // Copy contents only (no directory)
+    //     mode: 'copy',
+    //     overwrite: true
 
     output:
         path "localDB/*",     emit: db

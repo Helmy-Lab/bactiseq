@@ -51,7 +51,7 @@ workflow DATABASEDOWNLOAD {
     }else if (params.card_db == null && !downloadData.contains('carddb')){
         card_ch = Channel.fromPath(params.db_path + '/carddb')
     }
-
+    //DOWNLOAD AMR FINDER PLUS DATABASE
     def amr_ch = Channel.empty()
     if (params.amr_db == null && downloadData.contains('amrdb')){   
         AMRDB()
@@ -61,7 +61,9 @@ workflow DATABASEDOWNLOAD {
     }else if (params.amr_db == null && !downloadData.contains('amrdb')){
         amr_ch = Channel.fromPath(params.db_path + '/amrdb')
     }
+    
 
+    //DOWNLOAD BAKTA DATABASE IT IS PERMA DB-LIGHT RIGHT NOW
     def bakta_ch = Channel.empty()
     if (params.bakta_db == null && downloadData.contains('baktadb')){
         BAKTADB()
@@ -69,7 +71,7 @@ workflow DATABASEDOWNLOAD {
     }else if (params.bakta_db != null){
         bakta_ch = Channel.fromPath(params.bakta_db)
     }else if (params.bakta_db == null && !downloadData.contains("baktadb")){
-        bakta_ch = Channel.fromPath(params.db_path + '/baktadb')
+        bakta_ch = Channel.fromPath(params.db_path + '/baktadb/db-light')
     }
 
     card_ch.last().view() 
