@@ -10,17 +10,22 @@
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 // include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_bactiseq_pipeline'
 
+
+include { CHECKM2_PREDICT } from '../modules/nf-core/checkm2/predict/main'
+
 //Test bakta
 include {BAKTA_BAKTA             } from '../modules/nf-core/bakta/bakta/main'
 include { PROKKA                 } from '../modules/nf-core/prokka/main'
 include { DATABASEDOWNLOAD       } from '../subworkflows/local/databasedownload/main.nf'
 include { RGI_MAIN               } from '../modules/nf-core/rgi/main'
-include { BAKTADB             } from '../modules/local/baktadb/main'
+include { BAKTADB                } from '../modules/local/baktadb/main'
 include { ABRICATE_RUN } from '../modules/nf-core/abricate/run/main'
 include { MOBSUITE_RECON } from '../modules/nf-core/mobsuite/recon/main'
 include { AMRFINDERPLUS_RUN } from '../modules/nf-core/amrfinderplus/run/main'
 include { MLST } from '../modules/nf-core/mlst/main'
 /*
+
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
