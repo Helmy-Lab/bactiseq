@@ -59,7 +59,7 @@ workflow DATABASEDOWNLOAD {
     }else if (params.amr_db != null){
         amr_ch = Channel.fromPath(params.card_db)
     }else if (params.amr_db == null && !downloadData.contains('amrdb')){
-        amr_ch = Channel.fromPath(params.db_path + '/amrdb')
+        amr_ch = Channel.fromPath(params.db_path + '/amrdb/amrfinderdb.tar.gz')
     }
     
 
