@@ -17,6 +17,7 @@ include { DATABASEDOWNLOAD       } from '../subworkflows/local/databasedownload/
 include { RGI_MAIN               } from '../modules/nf-core/rgi/main'
 include { BAKTADB             } from '../modules/local/baktadb/main'
 include { ABRICATE_RUN } from '../modules/nf-core/abricate/run/main'
+include { MOBSUITE_RECON } from '../modules/nf-core/mobsuite/recon/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -72,6 +73,7 @@ workflow BACTISEQ {
     RGI_MAIN(ch_input, DATABASEDOWNLOAD.out.carddb, [])
     PROKKA(ch_input, [], [])
     ABRICATE_RUN(ch_input, [])
+    MOBSUITE_RECON(ch_input)
     emit:
     // Emit specific outputs individually
     // embl = BAKTA_BAKTA.out.embl
