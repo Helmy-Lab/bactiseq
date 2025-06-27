@@ -35,6 +35,11 @@
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
+                    "mlst": {
+                        "branch": "master",
+                        "git_sha": "f23f3245612d0e37b02ba46176fbb8f7fc674fb4",
+                        "installed_by": ["modules"]
+                    },
                     "mobsuite/recon": {
                         "branch": "master",
                         "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
