@@ -18,6 +18,7 @@ include { RGI_MAIN               } from '../modules/nf-core/rgi/main'
 include { BAKTADB             } from '../modules/local/baktadb/main'
 include { ABRICATE_RUN } from '../modules/nf-core/abricate/run/main'
 include { MOBSUITE_RECON } from '../modules/nf-core/mobsuite/recon/main'
+include { AMRFINDERPLUS_RUN } from '../modules/nf-core/amrfinderplus/run/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW

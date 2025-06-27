@@ -11,7 +11,7 @@ process AMRDB {
     publishDir "${params.db_path + '/amrdb'}", mode: 'copy', overwrite: true
 
     output:
-    path "amrdb/**", emit: uncompressed
+    path "amrfinderdb.tar.gz", emit: uncompressed
     path "versions.yml"      , emit: versions
 
     when:
@@ -21,9 +21,6 @@ process AMRDB {
         """
         amrfinder_update -d amrfinderdb
         tar czvf amrfinderdb.tar.gz -C amrfinderdb/\$(readlink amrfinderdb/latest) ./
-
-        mkdir -p ./amrdb
-        tar xzvf amrfinderdb.tar.gz -C ./amrdb
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
