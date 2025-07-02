@@ -1,10 +1,12 @@
 include { BAKTADB             } from '../../../modules/local/baktadb/main'
 include { AMRDB               } from '../../../modules/local/amrdb/main'
 include { CARDDB              } from '../../../modules/local/carddb/main'
+include { CHECKM2_DATABASEDOWNLOAD } from '../../../modules/local/checkm2db/main'
+include {BUSCO_DOWNLOAD} from '../../../modules/local/buscodb/main'
 workflow DATABASEDOWNLOAD {
 
     main:
-    database_list =['baktadb', 'amrdb', 'checkm2db', 'carddb'] as Set //All the databases we need
+    database_list =['baktadb', 'amrdb', 'checkm2db', 'carddb', 'buscodb'] as Set //All the databases we need
     // 1. First validate params.db_path exists or create it
     db_dir = new File(params.db_path)
     if (!db_dir.exists()) { // If database directory does not exist
@@ -24,7 +26,7 @@ workflow DATABASEDOWNLOAD {
 
     downloadData = database_list - allSubdirs
     log.info "DBs to download: ${downloadData.join(', ')}"
-    // 2. Conditionally run processes
+    // 2. Conditionally run process
 
     //Initiate the AMR database if they exist already in the database folder (downloaded from previous run)
 
@@ -62,7 +64,6 @@ workflow DATABASEDOWNLOAD {
         amr_ch = Channel.fromPath(params.db_path + '/amrdb/amrfinderdb.tar.gz')
     }
     
-
     //DOWNLOAD BAKTA DATABASE IT IS PERMA DB-LIGHT RIGHT NOW
     def bakta_ch = Channel.empty()
     if (params.bakta_db == null && downloadData.contains('baktadb')){
@@ -74,7 +75,27 @@ workflow DATABASEDOWNLOAD {
         bakta_ch = Channel.fromPath(params.db_path + '/baktadb/db-light')
     }
 
-    card_ch.last().view() 
+    //DOWNLOAD CHECKM2 database
+    def checmk2_ch = Channel.empty()
+    if (params.checkm2_db == null && downloadData.contains('checkm2db')){
+        CHECKM2_DATABASEDOWNLOAD(params.checkm2_ver)
+        checmk2_ch = checmk2_ch.mix(CHECKM2_DATABASEDOWNLOAD.out)
+    }else if (params.checkm2_db != null){
+        checmk2_ch = Channel.fromPath(params.checkm2_db)
+    }else if (params.checkm2_db == null && !downloadData.contains('checkm2db')){
+        checmk2_ch = Channel.fromPath("${params.db_path}/checkm2db/*.dmnd")
+    }
+
+    def busco_ch = Channel.empty()
+    if (params.buscodb == null && downloadData.contains('buscodb')){
+        BUSCO_DOWNLOAD()
+        busco_ch = busco_ch.mix(BUSCO_DOWNLOAD.out.download_dir)
+    }else if (params.buscodb != null) {
+        busco_ch = Channel.fromPath(params.buscodb)
+    } else if (params.buscodb == null && !downloadData.contains('buscodb')){
+        busco_ch.Channel.fromPath("${params.db_path}/buscodb/lineages")
+    }
+
     // bakta_ch.view()
     // println(card_ch.out.stdout)
 // println "All subdirectories: ${allSubdirs}"
@@ -102,4 +123,6 @@ workflow DATABASEDOWNLOAD {
         baktadb = bakta_ch.first()
         amrdb = amr_ch.first()
         carddb = card_ch.last() //Get the last item, because if you downloaded the database, it will be last in channel, works too if already downloaded the channel will only have 1 item in the channel anyways
+        checkm2db= checmk2_ch.first()
+        buscodb = busco_ch.last()
 }

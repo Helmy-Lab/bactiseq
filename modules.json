@@ -25,6 +25,11 @@
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
+                    "busco/busco": {
+                        "branch": "master",
+                        "git_sha": "deeb89c7a9150091e69c9d7644836c40982c683b",
+                        "installed_by": ["modules"]
+                    },
                     "checkm2/predict": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
@@ -61,6 +66,11 @@
                         "installed_by": ["modules"]
                     },
                     "rgi/main": {
+                        "branch": "master",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"]
+                    },
+                    "untar": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]

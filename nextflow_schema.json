@@ -267,6 +267,17 @@
         "checkm2_db": {
             "type": "string",
             "description": "path to checkm2 database"
+        },
+        "checkm2_ver": {
+            "type": "integer",
+            "default": 14897628
+        },
+        "busco_db_type": {
+            "type": "string",
+            "default": "eukaryota_odb10"
+        },
+        "buscodb": {
+            "type": "string"
         }
     }
 }

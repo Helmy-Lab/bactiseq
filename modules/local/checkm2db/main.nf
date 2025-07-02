@@ -1,85 +1,68 @@
-// TODO nf-core: If in doubt look at other nf-core/modules to see how we are doing things! :)
-//               https://github.com/nf-core/modules/tree/master/modules/nf-core/
-//               You can also ask for help via your pull request or on the #modules channel on the nf-core Slack workspace:
-//               https://nf-co.re/join
-// TODO nf-core: A module file SHOULD only define input and output files as command-line parameters.
-//               All other parameters MUST be provided using the "task.ext" directive, see here:
-//               https://www.nextflow.io/docs/latest/process.html#ext
-//               where "task.ext" is a string.
-//               Any parameters that need to be evaluated in the context of a particular sample
-//               e.g. single-end/paired-end data MUST also be defined and evaluated appropriately.
-// TODO nf-core: Software that can be piped together SHOULD be added to separate module files
-//               unless there is a run-time, storage advantage in implementing in this way
-//               e.g. it's ok to have a single module for bwa to output BAM instead of SAM:
-//                 bwa mem | samtools view -B -T ref.fasta
-// TODO nf-core: Optional inputs are not currently supported by Nextflow. However, using an empty
-//               list (`[]`) instead of a file can be used to work around this issue.
-
-process CHECKM2DB {
-    tag '$bam'
+process CHECKM2_DATABASEDOWNLOAD {
     label 'process_single'
 
-    // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/YOUR-TOOL-HERE':
-        'biocontainers/YOUR-TOOL-HERE' }"
+    container { 
+        workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/0a/0af812c983aeffc99c0fca9ed2c910816b2ddb9a9d0dcad7b87dab0c9c08a16f/data' :
+        'community.wave.seqera.io/library/checkm2:1.1.0--60f287bc25d7a10d' 
+    }
+  
 
-    input:// TODO nf-core: Where applicable all sample-specific information e.g. "id", "single_end", "read_group"
-    //               MUST be provided as an input via a Groovy Map called "meta".
-    //               This information may not be required in some instances e.g. indexing reference genome files:
-    //               https://github.com/nf-core/modules/blob/master/modules/nf-core/bwa/index/main.nf
-    // TODO nf-core: Where applicable please provide/convert compressed files as input/output
-    //               e.g. "*.fastq.gz" and NOT "*.fastq", "*.bam" and NOT "*.sam" etc.
-    path bam
+    publishDir "${params.db_path + '/checkm2db'}", mode: 'copy', overwrite: true //Save the checkm2DB into a local folder
+
+    input:
+    val(db_zenodo_id)
 
     output:
-    // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
-    path "*.bam", emit: bam
-    // TODO nf-core: List additional required output channels/values here
-    path "versions.yml"           , emit: versions
+    path("checkm2_db_v${db_version}.dmnd"), emit: database
+    path("versions.yml")                                   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    
-    // TODO nf-core: Where possible, a command MUST be provided to obtain the version number of the software e.g. 1.10
-    //               If the software is unable to output a version number on the command-line then it can be manually specified
-    //               e.g. https://github.com/nf-core/modules/blob/master/modules/nf-core/homer/annotatepeaks/main.nf
-    //               Each software used MUST provide the software name and version number in the YAML version file (versions.yml)
-    // TODO nf-core: It MUST be possible to pass additional parameters to the tool as a command-line string via the "task.ext.args" directive
-    // TODO nf-core: If the tool supports multi-threading then you MUST provide the appropriate parameter
-    //               using the Nextflow "task" variable e.g. "--threads $task.cpus"
-    // TODO nf-core: Please replace the example samtools command below with your module's command
-    // TODO nf-core: Please indent the command appropriately (4 spaces!!) to help with readability ;)
+    def args        = task.ext.args ?: ''
+    zenodo_id       = db_zenodo_id ?: 14897628  // Default to version 3 if no ID provided
+    // api_data        = (new groovy.json.JsonSlurper()).parseText(file("https://zenodo.org/api/records/${zenodo_id}").text)
+    // Create URL connection with proper headers
+    def url = new URL("https://zenodo.org/api/records/${zenodo_id}")
+    def connection = url.openConnection()
+    connection.setRequestProperty("Accept", "application/json")
+
+    // Get and parse the response
+    def api_data = (new groovy.json.JsonSlurper()).parseText(connection.content.text)
+    // def api_data = new groovy.json.JsonSlurper().parse("https://zenodo.org/api/records/${zenodo_id}" as URL)
+    db_version      = api_data.metadata.version
+    checksum        = api_data.files[0].checksum.replaceFirst(/^md5:/, "md5=")
+    meta            = [id: 'checkm2_db', version: db_version]
     """
-    checkm2db \\
-        $args \\
-        -@ $task.cpus \\
-        $bam
+    # Automatic download is broken when using singularity/apptainer (https://github.com/chklovski/CheckM2/issues/73)
+    # So it's necessary to download the database manually
+    aria2c \
+        ${args} \
+        --checksum ${checksum} \
+        https://zenodo.org/records/${zenodo_id}/files/checkm2_database.tar.gz
+
+    tar -xzf checkm2_database.tar.gz
+    db_path=\$(find -name *.dmnd)
+    mv \$db_path checkm2_db_v${db_version}.dmnd
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        checkm2db: \$(checkm2db --version)
+        aria2: \$(echo \$(aria2c --version 2>&1) | grep 'aria2 version' | cut -f3 -d ' ')
     END_VERSIONS
     """
 
     stub:
-    def args = task.ext.args ?: ''
-    
-    // TODO nf-core: A stub section should mimic the execution of the original module as best as possible
-    //               Have a look at the following examples:
-    //               Simple example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bcftools/annotate/main.nf#L47-L63
-    //               Complex example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bedtools/split/main.nf#L38-L54
+    db_version = 0
+    meta       = [id: 'checkm2_db', version: db_version]
     """
-    
-    touch ${prefix}.bam
+    touch checkm2_db_v${db_version}.dmnd
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        checkm2db: \$(checkm2db --version)
+        aria2: \$(echo \$(aria2c --version 2>&1) | grep 'aria2 version' | cut -f3 -d ' ')
     END_VERSIONS
     """
 }
