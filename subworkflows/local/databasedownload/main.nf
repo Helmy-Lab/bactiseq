@@ -93,7 +93,7 @@ workflow DATABASEDOWNLOAD {
     }else if (params.buscodb != null) {
         busco_ch = Channel.fromPath(params.buscodb)
     } else if (params.buscodb == null && !downloadData.contains('buscodb')){
-        busco_ch.Channel.fromPath("${params.db_path}/buscodb/lineages")
+        busco_ch = Channel.fromPath("${params.db_path}/buscodb/lineages")
     }
 
     // bakta_ch.view()
