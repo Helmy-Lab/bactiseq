@@ -1,5 +1,5 @@
-process BUSCO_BUSCO {
-    tag "${meta.id}"
+process BUSCO {
+ tag "${meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -13,7 +13,7 @@ process BUSCO_BUSCO {
     val mode
     // Required:    lineage for checking against, or "auto/auto_prok/auto_euk" for enabling auto-lineage
     val lineage
-    // Recommended: BUSCO lineages file - downloads if not set
+    // Recommended: BUSCO lineages file
     path busco_lineages_path
     // Optional:    BUSCO configuration file
     path config_file
@@ -30,7 +30,6 @@ process BUSCO_BUSCO {
     tuple val(meta), path("*-busco/*/run_*/busco_sequences"), emit: seq_dir, optional: true
     tuple val(meta), path("*-busco/*/translated_proteins"), emit: translated_dir, optional: true
     tuple val(meta), path("*-busco"), emit: busco_dir
-    tuple val(meta), path("busco_downloads/lineages/*"), emit: downloaded_lineages, optional: true
     tuple val(meta), path("*-busco/*/run_*/busco_sequences/single_copy_busco_sequences/*.faa"), emit: single_copy_faa, optional: true
     tuple val(meta), path("*-busco/*/run_*/busco_sequences/single_copy_busco_sequences/*.fna"), emit: single_copy_fna, optional: true
 
@@ -49,7 +48,8 @@ process BUSCO_BUSCO {
     def busco_lineage = lineage in ['auto', 'auto_prok', 'auto_euk']
         ? lineage.replaceFirst('auto', '--auto-lineage').replaceAll('_', '-')
         : "--lineage_dataset ${lineage}"
-    def busco_lineage_dir = busco_lineages_path ? "--download_path ${busco_lineages_path}" : ''
+
+
     def intermediate_files = [
         './*-busco/*/auto_lineage',
         './*-busco/*/**/{miniprot,hmmer,.bbtools}_output',
@@ -57,6 +57,8 @@ process BUSCO_BUSCO {
     ]
     def clean_cmd = clean_intermediates ? "rm -fr ${intermediate_files.join(' ')}" : ''
     """
+    echo CURRENT WORKING PATH
+    echo "\${PWD}"
     # Fix Augustus for Apptainer
     ENV_AUGUSTUS=/opt/conda/etc/conda/activate.d/augustus.sh
     set +u
@@ -86,14 +88,16 @@ process BUSCO_BUSCO {
         fi
     done
     cd ..
-
+    
+    echo HELLO
+    echo ${busco_lineages_path}
+    echo "\${PWD}"
     busco \\
         --cpu ${task.cpus} \\
         --in "\$INPUT_SEQS" \\
         --out ${prefix}-busco \\
         --mode ${mode} \\
-        ${busco_lineage} \\
-        ${busco_lineage_dir} \\
+        -l "${busco_lineages_path}/${params.busco_db_type}" \\
         ${busco_config} \\
         ${args}
 

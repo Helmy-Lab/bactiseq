@@ -1,0 +1,63 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "busco"
+## TODO nf-core: Add a description of the module and list keywords
+description: write your description here
+keywords:
+  - sort
+  - example
+  - genomics
+tools:
+  - "busco":
+      ## TODO nf-core: Add a description and other details for the software below
+      description: "Assessment of assembly completeness using Universal Single Copy Orthologs."
+      homepage: "https://busco.ezlab.org/busco_userguide.html"
+      documentation: "https://busco.ezlab.org/busco_userguide.html"
+      tool_dev_url: "https://gitlab.com/ezlab/busco"
+      doi: ""
+      licence: ["MIT"]
+      identifier: biotools:busco
+
+## TODO nf-core: Add a description of all of the variables used as input
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+
+    - sequence_set_(nucleic_acid):
+        # TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
+        type: file
+        description: sequence_set_(nucleic_acid) file
+        pattern: "*.{fasta}"
+        ontologies:
+          - edam: "http://edamontology.org/data_1234" # Sequence set (nucleic acid)
+          - edam: "http://edamontology.org/format_1929" # FASTA
+
+## TODO nf-core: Add a description of all of the variables used as output
+output:
+  - sequence_report:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.{}":
+          # TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
+          type: file
+          description: sequence_report file
+          pattern: "*.{}"
+          ontologies:
+            - edam: "http://edamontology.org/data_2955" # Sequence report
+
+  - versions:
+      - "versions.yml":
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+
+authors:
+  - "@Sylvia"
+maintainers:
+  - "@Sylvia"

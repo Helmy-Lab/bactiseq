@@ -23,10 +23,11 @@ process BUSCO_DOWNLOAD {
     // publishDir "${params.db_path + '/buscodb'}", mode: 'copy', overwrite: true //Save the checkm2DB into a local folder
 
     output:
-    path "busco_downloads/lineages/*", emit: download_dir
+    path "busco_downloads/*", emit: download_dir
     path "versions.yml"   , emit: versions
+    stdout emit: dbpath
 
-    println(params.busco_db_type)
+
     when:
     task.ext.when == null || task.ext.when
 
@@ -36,8 +37,9 @@ process BUSCO_DOWNLOAD {
     """
     busco \\
         --download ${params.busco_db_type} \\
-        $args
-    ls busco_downloads/lineages
+        $args > busco_download.log 2>&1
+    echo "\${PWD}/busco_downloads"
+    rm -rf busco_downloads/file_versions.tsv
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         busco: \$( busco --version 2> /dev/null | sed 's/BUSCO //g' )

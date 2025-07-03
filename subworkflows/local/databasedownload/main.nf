@@ -89,7 +89,7 @@ workflow DATABASEDOWNLOAD {
     def busco_ch = Channel.empty()
     if (params.buscodb == null && downloadData.contains('buscodb')){
         BUSCO_DOWNLOAD()
-        busco_ch = busco_ch.mix(BUSCO_DOWNLOAD.out.download_dir)
+        busco_ch = busco_ch.concat(BUSCO_DOWNLOAD.out.download_dir)
     }else if (params.buscodb != null) {
         busco_ch = Channel.fromPath(params.buscodb)
     } else if (params.buscodb == null && !downloadData.contains('buscodb')){

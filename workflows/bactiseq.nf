@@ -23,8 +23,8 @@ include { ABRICATE_RUN } from '../modules/nf-core/abricate/run/main'
 include { MOBSUITE_RECON } from '../modules/nf-core/mobsuite/recon/main'
 include { AMRFINDERPLUS_RUN } from '../modules/nf-core/amrfinderplus/run/main'
 include { MLST } from '../modules/nf-core/mlst/main'
-include { BUSCO_BUSCO } from '../modules/nf-core/busco/busco/main'
 
+include { BUSCO       } from '../modules/local/busco/main'
 
 /*
 
@@ -99,7 +99,10 @@ workflow BACTISEQ {
     //     )
     // }
     // CHECKM2_PREDICT(ch_input, ch_db)
-    BUSCO_BUSCO(ch_input, 'genome', params.busco_db_type, DATABASEDOWNLOAD.out.buscodb, [], true)
+    DATABASEDOWNLOAD.out.buscodb.view()
+    BUSCO(ch_input, 'genome', params.busco_db_type, DATABASEDOWNLOAD.out.buscodb, [], true)
+
+    // DATABASEDOWNLOAD.out.buscodb.view { "Value: $it (Type: ${it.getClass().simpleName})" }
     emit:
     // Emit specific outputs individually
     // embl = BAKTA_BAKTA.out.embl
