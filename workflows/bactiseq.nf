@@ -17,6 +17,7 @@ include { CHECKM2_PREDICT } from '../modules/nf-core/checkm2/predict/main'
 include {BAKTA_BAKTA             } from '../modules/nf-core/bakta/bakta/main'
 include { PROKKA                 } from '../modules/nf-core/prokka/main'
 include { DATABASEDOWNLOAD       } from '../subworkflows/local/databasedownload/main.nf'
+include { SAMPLESHEETFILTERING   } from '../subworkflows/local/samplesheetfiltering/main'
 include { RGI_MAIN               } from '../modules/nf-core/rgi/main'
 include { BAKTADB                } from '../modules/local/baktadb/main'
 include { ABRICATE_RUN } from '../modules/nf-core/abricate/run/main'
@@ -26,6 +27,8 @@ include { MLST } from '../modules/nf-core/mlst/main'
 
 include { BUSCO       } from '../modules/local/busco/main'
 
+
+include { samplesheetToList } from 'plugin/nf-schema'
 /*
 
 
@@ -40,7 +43,9 @@ workflow BACTISEQ {
     ch_samplesheet // channel: samplesheet read in from --input
     // ch_samplesheet // channel: samplesheet read in from --input
     main:
-
+    // SAMPLESHEETFILTERING(params.input)
+    // SAMPLESHEETFILTERING.out.view()
+    input_samples_ch = Channel.fromList(samplesheetToList(params.input, "schemas/samplesheet_check.json"))
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
@@ -50,7 +55,7 @@ workflow BACTISEQ {
     // Channel.fromPath(params.db_path + '/amrdb').view()
 
     // 2. Now proceed with your workflow
-    DATABASEDOWNLOAD()
+    // DATABASEDOWNLOAD()
     // DATABASEDOWNLOAD.out.buscodb.view()
     // 2. Debug the database outputs
     // DATABASEDOWNLOAD.out.baktadb.view { "BAKTA DB PATH: $it" }
@@ -99,8 +104,8 @@ workflow BACTISEQ {
     //     )
     // }
     // CHECKM2_PREDICT(ch_input, ch_db)
-    DATABASEDOWNLOAD.out.buscodb.view()
-    BUSCO(ch_input, 'genome', params.busco_db_type, DATABASEDOWNLOAD.out.buscodb, [], true)
+    // DATABASEDOWNLOAD.out.buscodb.view()
+    // BUSCO(ch_input, 'genome', params.busco_db_type, DATABASEDOWNLOAD.out.buscodb, [], true)
 
     // DATABASEDOWNLOAD.out.buscodb.view { "Value: $it (Type: ${it.getClass().simpleName})" }
     emit:
