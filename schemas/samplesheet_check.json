@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Sylvia's pipeline - params.input // --input samplesheet.csv schema",
+  "description": "Schema for the file provided with params.input",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "sample": {
+        "type": "string",
+        "pattern": "^\\S+$",
+        "errorMessage": "Sample name must be provided and cannot contain spaces",
+        "meta": ["sample_name"]
+      },
+      "short_fastq1": {
+        "type": "string",
+        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+        "default": "NA",
+        "format": "file-path",
+        "errorMessage": "FastQ file for short reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+              "meta": ["sample_name"]
+      },
+      "short_fastq2": {
+        "errorMessage": "FastQ file for short reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+        "type": "string",
+        "default": "NA",
+        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+        "format": "file-path"
+      },
+      "long_fastq": {
+        "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+        "type": "string",
+        "default": "NA",
+        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+        "format": "file-path"
+      },
+      "assembly": {
+        "errorMessage": "File for assembly cannot contain spaces and must have extension 'fasta' or 'gb/gbk/gbff/genbank/gff/gff3'",
+        "type": "string",
+        "default": "NA",
+        "pattern": "^\\S+\\.(fasta|gbk?|gbff|genbank|gff3?)$",
+        "format": "file-path"
+      },
+      "polish": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether to perform assembly polishing (true/false)",
+        "errorMessage": "Must be 'true' or 'false'"
+        },
+      "ONT_basecaller": {
+        "type": "string",
+        "default": "AUTO",
+        "description": "Baecaller used, so medaka can polish correctly on nanopore reads, try to autpmatically detect model else, use r1041_e82_400bps_sup_v4.2.0",
+        "errorMessage": ""
+        }
+    },
+
+    "$comment": "BELOW: Asks if every row of the csv fits the requirements. illumina paired ends? long reads? pre-assembled?",
+    "oneOf": [
+        {
+        "required": ["sample","short_fastq1", "short_fastq2"],
+        "properties":{
+            "assembly": false,
+            "polish": false,
+            "ONT_basecaller": false
+            }
+        },
+        {
+        "required": ["sample", "long_fastq"],
+        "properties": {
+            "assembly": false
+        }
+        },
+        {
+        "required": ["sample", "short_fastq1","long_fastq", "polish"],
+        "properties": {
+            "assembly": false
+        }
+        },
+        {
+        "required": ["sample", "assembly"],
+        "properties": {
+            "polish": false,
+            "short_fastq1": false,
+            "short_fastq2": false,
+            "ONT_basecaller": false,
+            "long_fastq": false
+        }
+        }
+    ],
+    "messages": {"oneOf": "A or multiple sample data input in samplesheet does not fit criteria (missing sample name? some data inputs do not require or PROHIBIT other input data)"}
+
+  }
+}
