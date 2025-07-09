@@ -42,7 +42,7 @@ workflow BACTISEQ {
     // SAMPLESHEETFILTERING.out.view()
 
     // ch_input.view()
-    ch_input = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input_original.json")))
+    ch_input = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input.json")))
     ch_input.view()
     // Validate input parameters
     // validateParameters()
