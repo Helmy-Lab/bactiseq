@@ -27,8 +27,7 @@ include { MLST } from '../modules/nf-core/mlst/main'
 
 include { BUSCO       } from '../modules/local/busco/main'
 
-
-include { samplesheetToList } from 'plugin/nf-schema'
+include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 /*
 
 
@@ -38,14 +37,16 @@ include { samplesheetToList } from 'plugin/nf-schema'
 */
 
 workflow BACTISEQ {
-
-    take:
-    ch_samplesheet // channel: samplesheet read in from --input
-    // ch_samplesheet // channel: samplesheet read in from --input
     main:
     // SAMPLESHEETFILTERING(params.input)
     // SAMPLESHEETFILTERING.out.view()
-    input_samples_ch = Channel.fromList(samplesheetToList(params.input, "schemas/samplesheet_check.json"))
+
+    // ch_input.view()
+    ch_input = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input_original.json")))
+    ch_input.view()
+    // Validate input parameters
+    // validateParameters()
+    // println(ch_input)
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
@@ -76,9 +77,7 @@ workflow BACTISEQ {
     // // ch_versions = ch_versions.mix(BAKTA_BAKTADBDOWNLOAD.out.versions.first())
     // // db_results = DATABASEDOWNLOAD()
     // // 2. Create hardcoded input channel
-    ch_input = Channel.fromPath("./TestDatasetNfcore/GCA_040556925.1_ASM4055692v1_genomic.fna") | map { fna ->
-        [ [id: fna.baseName], fna ]  // meta + file
-    }
+
 
     
     // // // ch_versions = ch_versions.mix(db_results.versions.virst())

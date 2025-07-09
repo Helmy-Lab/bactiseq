@@ -41,18 +41,12 @@ params.fasta = getGenomeAttribute('fasta')
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow NFCORE_BACTISEQ {
-
-    take:
-    samplesheet // channel: samplesheet read in from --input
-
     main:
 
     //
     // WORKFLOW: Run pipeline
     //
-    BACTISEQ (
-        samplesheet
-    )
+    BACTISEQ()
     emit:
     multiqc_report = BACTISEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
     // gff = BACTISEQ.out.gff
@@ -81,9 +75,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_BACTISEQ (
-        PIPELINE_INITIALISATION.out.samplesheet
-    )
+    NFCORE_BACTISEQ ()
     //
     // SUBWORKFLOW: Run completion tasks
     //
