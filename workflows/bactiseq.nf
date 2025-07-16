@@ -40,7 +40,9 @@ workflow BACTISEQ {
     main:
     // SAMPLESHEETFILTERING(params.input)
     // SAMPLESHEETFILTERING.out.view()
-
+    ch_input = Channel.fromPath("./TestDatasetNfcore/GCA_040556925.1_ASM4055692v1_genomic.fna") | map { fna ->
+        [ [id: fna.baseName], fna ]  // meta + file
+    }
     // ch_input.view()
     ch_input = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input.json")))
     ch_input.view()

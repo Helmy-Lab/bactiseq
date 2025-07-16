@@ -15,43 +15,48 @@
       "short_fastq1": {
         "type": "string",
         "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-        "default": "NA",
+
         "format": "file-path",
         "errorMessage": "FastQ file for short reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-              "meta": ["sample_name"]
+        "meta": ["short_fastq1"]
       },
       "short_fastq2": {
         "errorMessage": "FastQ file for short reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
         "type": "string",
-        "default": "NA",
+
         "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-        "format": "file-path"
+        "format": "file-path",
+        "meta": ["short_fastq2"]
       },
       "long_fastq": {
         "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
         "type": "string",
-        "default": "NA",
+
         "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-        "format": "file-path"
+        "format": "file-path",
+        "meta": ["long_fastq"]
       },
       "assembly": {
         "errorMessage": "File for assembly cannot contain spaces and must have extension 'fasta' or 'gb/gbk/gbff/genbank/gff/gff3'",
         "type": "string",
-        "default": "NA",
+
         "pattern": "^\\S+\\.(fasta|gbk?|gbff|genbank|gff3?)$",
-        "format": "file-path"
+        "format": "file-path",
+        "meta": ["assembled"]
       },
       "polish": {
-        "type": "boolean",
-        "default": false,
+        "type": "string",
+        "default": "NA",
         "description": "Whether to perform assembly polishing (true/false)",
-        "errorMessage": "Must be 'true' or 'false'"
+        "errorMessage": "Must be 'true' or 'false'",
+        "meta": ["polish"]
         },
       "ONT_basecaller": {
         "type": "string",
         "default": "AUTO",
         "description": "Baecaller used, so medaka can polish correctly on nanopore reads, try to autpmatically detect model else, use r1041_e82_400bps_sup_v4.2.0",
-        "errorMessage": ""
+        "errorMessage": "",
+        "meta": ["ONT_basecaller"]
         }
     },
 
