@@ -6,6 +6,7 @@ results/
 testing/
 testing*
 test/*
+TestDatasetNfcore/*
 *.pyc
 Databases/*
 null/
