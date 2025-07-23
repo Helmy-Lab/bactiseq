@@ -1,32 +1,35 @@
 
 process DATACHECK {
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    'https://depot.galaxyproject.org/singularity/python:3.10' :
+    'docker.io/python:3.10.18-bookworm'}"
 
     input:
-    val sampleList
+    val list
 
-    // output:
-    // // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
-    // tuple val(meta), path("*.bam"), emit: bam
-    // // TODO nf-core: List additional required output channels/values here
-    // path "versions.yml"           , emit: versions
+    output:
+    stdout
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-
-
-
-    stub:
-
-    // TODO nf-core: A stub section should mimic the execution of the original module as best as possible
-    //               Have a look at the following examples:
-    //               Simple example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bcftools/annotate/main.nf#L47-L63
-    //               Complex example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bedtools/split/main.nf#L38-L54
-    """
+        """
+        #!/usr/bin/env python
+        import sys
+        import json
+        import ast
     
-    touch ${prefix}.bam
-
+        # Convert Nextflow input to Python list
+        input_list = ast.literal_eval('${list}')
+    
+        # Process the list (example: create new list)
+        processed_list = [x * 2 for x in input_list]  # Just an example
+        my_list = [1, 2, 3, 4]
+        print(json.dumps(my_list))
+        """
+    stub:
+    """
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         datacheck: \$(datacheck --version)
