@@ -15,29 +15,28 @@
       "short_fastq1": {
         "type": "string",
         "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-        "default": "NA",
+        "default": "short1NA",
         "format": "file-path",
-        "errorMessage": "FastQ file for short reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-              "meta": ["sample_name"]
+        "errorMessage": "FastQ file for short reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
       },
       "short_fastq2": {
         "errorMessage": "FastQ file for short reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
         "type": "string",
-        "default": "NA",
+        "default": "short2NA",
         "pattern": "^\\S+\\.f(ast)?q\\.gz$",
         "format": "file-path"
       },
       "long_fastq": {
         "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
         "type": "string",
-        "default": "NA",
+        "default": "longNA",
         "pattern": "^\\S+\\.f(ast)?q\\.gz$",
         "format": "file-path"
       },
       "assembly": {
         "errorMessage": "File for assembly cannot contain spaces and must have extension 'fasta' or 'gb/gbk/gbff/genbank/gff/gff3'",
         "type": "string",
-        "default": "NA",
+        "default": "assemblyNA",
         "pattern": "^\\S+\\.(fasta|gbk?|gbff|genbank|gff3?)$",
         "format": "file-path"
       },
@@ -45,7 +44,8 @@
         "type": "boolean",
         "default": false,
         "description": "Whether to perform assembly polishing (true/false)",
-        "errorMessage": "Must be 'true' or 'false'"
+        "errorMessage": "Must be 'true' or 'false'",
+        "meta": ["polish"]
         },
       "ONT_basecaller": {
         "type": "string",

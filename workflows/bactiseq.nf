@@ -16,8 +16,10 @@ include { CHECKM2_PREDICT } from '../modules/nf-core/checkm2/predict/main'
 //Test bakta
 include {BAKTA_BAKTA             } from '../modules/nf-core/bakta/bakta/main'
 include { PROKKA                 } from '../modules/nf-core/prokka/main'
+
 include { DATABASEDOWNLOAD       } from '../subworkflows/local/databasedownload/main.nf'
 include { SAMPLESHEETFILTERING   } from '../subworkflows/local/samplesheetfiltering/main'
+
 include { RGI_MAIN               } from '../modules/nf-core/rgi/main'
 include { BAKTADB                } from '../modules/local/baktadb/main'
 include { ABRICATE_RUN } from '../modules/nf-core/abricate/run/main'
@@ -27,6 +29,8 @@ include { MLST } from '../modules/nf-core/mlst/main'
 
 include { BUSCO       } from '../modules/local/busco/main'
 
+
+include { DATACHECK } from '../modules/local/datacheck/main.nf'
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 /*
 
@@ -42,8 +46,16 @@ workflow BACTISEQ {
     // SAMPLESHEETFILTERING.out.view()
 
     // ch_input.view()
-    ch_input = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input.json")))
-    ch_input.view()
+    // ch_input = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input.json")))
+    // ch_input.view()
+
+    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    SAMPLESHEETFILTERING(list)
+    // def string_list = DATACHECK(list)
+    // string_list.view()
+    // def l = Eval.me(string_list)
+    // println("hello")
+    // println(l)
     // Validate input parameters
     // validateParameters()
     // println(ch_input)

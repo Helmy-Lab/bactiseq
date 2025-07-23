@@ -1,4 +1,4 @@
 sample,short_fastq1,short_fastq2,long_fastq,assembly,polish,ONT_basecaller
-Sample1,,,test.fq.gz,,,
+Sample1,,,./testDatasetNfcore/2045B-m1-082_2020.fastq.gz,,,
 Sample2,,,,test.fasta,,
 Sample3,test.fq.gz,test.fq.gz,,,,
