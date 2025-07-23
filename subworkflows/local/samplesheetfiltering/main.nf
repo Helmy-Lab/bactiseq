@@ -5,13 +5,10 @@ def file_name(String string){
 }
 def check_header(String path) {
     try {
-        // Use ProcessBuilder for better control
+        // Use ProcessBuilder to run zca
         def pb = new ProcessBuilder("sh", "-c", "zcat ${path} | grep -m 1 '^@'")
-        pb.redirectErrorStream(true)  // Combine stdout and stderr
+        // pb.redirectErrorStream(true)  // Combine stdout and stderr
         def process = pb.start()
-        
-        // Add timeout to prevent hanging
-        process.waitForOrKill(2000)  // 2 second timeout
         
         // Read only the first line of output
         def output = process.inputStream.withReader { r -> 
