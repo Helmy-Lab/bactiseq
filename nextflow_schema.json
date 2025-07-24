@@ -278,6 +278,9 @@
         },
         "buscodb": {
             "type": "string"
+        },
+        "hybrid_assembler": {
+            "type": "string"
         }
     }
 }
