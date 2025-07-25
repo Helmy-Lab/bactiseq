@@ -72,7 +72,7 @@
         }
         },
         {
-        "required": ["sample", "short_fastq1","long_fastq", "polish"],
+        "required": ["sample", "short_fastq1","long_fastq"],
         "properties": {
             "assembly": false
         }
