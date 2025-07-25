@@ -165,26 +165,26 @@ workflow SAMPLESHEETFILTERING {
     
 
     emit:
-    ch_longnano_noPolish = channel.fromList(longnano_noPolish)
-    ch_longnano_longPolish = channel.fromList(longnano_longPolish)
-    ch_longnano_shortPolish = channel.fromList(longnano_shortPolish)
+    ch_longnano_noPolish = Channel.fromList(longnano_noPolish)
+    ch_longnano_longPolish = Channel.fromList(longnano_longPolish)
+    ch_longnano_shortPolish = Channel.fromList(longnano_shortPolish)
 
-    ch_longpac_noPolish = channel.fromList(longpac_noPolish)
-    ch_longpac_longPolish = channel.fromList(longpac_longPolish)
-    ch_longpac_shortPolish = channel.fromList(longpac_shortPolish)
+    ch_longpac_noPolish = Channel.fromList(longpac_noPolish)
+    ch_longpac_longPolish = Channel.fromList(longpac_longPolish)
+    ch_longpac_shortPolish = Channel.fromList(longpac_shortPolish)
 
-    ch_longbam_noPolish = channel.fromList(longbam_noPolish)
-    ch_longbam_longPolish = channel.fromList(longbam_longPolish)
-    ch_longbam_shortPolish = channel.fromList(longbam_shortPolish)
+    ch_longbam_noPolish = Channel.fromList(longbam_noPolish)
+    ch_longbam_longPolish = Channel.fromList(longbam_longPolish)
+    ch_longbam_shortPolish = Channel.fromList(longbam_shortPolish)
 
-    ch_hybrid_longPolish = channel.fromList(hybrid_longPolish)
-    ch_hybrid_shortPolish = channel.fromList(hybrid_shortPolish)
-    ch_hybrid_noPolish = channel.fromList(hybrid_noPolish)
+    ch_hybrid_longPolish = Channel.fromList(hybrid_longPolish)
+    ch_hybrid_shortPolish = Channel.fromList(hybrid_shortPolish)
+    ch_hybrid_noPolish = Channel.fromList(hybrid_noPolish)
 
-    ch_short_longPolish = channel.fromList(short_longPolish)
-    ch_short_noPolish = channel.fromList(short_noPolish)
-    ch_short_shortPolish = channel.fromList(short_shortPolish)
+    ch_short_longPolish = Channel.fromList(short_longPolish)
+    ch_short_noPolish = Channel.fromList(short_noPolish)
+    ch_short_shortPolish = Channel.fromList(short_shortPolish)
 
-    ch_assembled_convert = channel.fromList(assembled_convert)
-    ch_assembled = channel.fromList(assembled)
+    ch_assembled_convert = Channel.fromList(assembled_convert)
+    ch_assembled = Channel.fromList(assembled)
 }
