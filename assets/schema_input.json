@@ -10,7 +10,7 @@
         "type": "string",
         "pattern": "^\\S+$",
         "errorMessage": "Sample name must be provided and cannot contain spaces",
-        "meta": ["sample_name"]
+        "meta": ["id"]
       },
       "short_fastq1": {
         "type": "string",
