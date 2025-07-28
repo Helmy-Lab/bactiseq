@@ -32,6 +32,9 @@ include { BUSCO       } from '../modules/local/busco/main'
 
 include { DATACHECK } from '../modules/local/datacheck/main.nf'
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
+
+
+include { ANY2FASTA } from '../modules/local/any2fasta/main'
 /*
 
 
@@ -48,9 +51,17 @@ workflow BACTISEQ {
     // ch_input.view()
     // ch_input = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input.json")))
     // ch_input.view()
+    ch_input = Channel.fromPath("./TestDatasetNfcore/test_genomic.gbff") | map { fna ->
+        [ [id: fna.baseName], fna ]  // meta + file
+    }
 
-    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
-    SAMPLESHEETFILTERING(list)
+
+    ANY2FASTA(ch_input)
+    // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    // SAMPLESHEETFILTERING(list)
+
+
+
     // def string_list = DATACHECK(list)
     // string_list.view()
     // def l = Eval.me(string_list)
