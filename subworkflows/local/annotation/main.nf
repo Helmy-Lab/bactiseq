@@ -1,35 +1,62 @@
-// TODO nf-core: If in doubt look at other nf-core/subworkflows to see how we are doing things! :)
-//               https://github.com/nf-core/modules/tree/master/subworkflows
-//               You can also ask for help via your pull request or on the #subworkflows channel on the nf-core Slack workspace:
-//               https://nf-co.re/join
-// TODO nf-core: A subworkflow SHOULD import at least two modules
-
-include { SAMTOOLS_SORT      } from '../../../modules/nf-core/samtools/sort/main'
-include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
+include { BAKTA_BAKTA            } from '../../../modules/nf-core/bakta/bakta/main'
+include { PROKKA                 } from '../../../modules/nf-core/prokka/main'
+include { RGI_MAIN               } from '../../../modules/nf-core/rgi/main'
+include { ABRICATE_RUN           } from '../../../modules/nf-core/abricate/run/main'
+include { MOBSUITE_RECON         } from '../../../modules/nf-core/mobsuite/recon/main'
+include { AMRFINDERPLUS_RUN      } from '../../../modules/nf-core/amrfinderplus/run/main'
+include { MLST                   } from '../../../modules/nf-core/mlst/main'
 
 workflow ANNOTATION {
 
     take:
-    // TODO nf-core: edit input (take) channels
-    ch_bam // channel: [ val(meta), [ bam ] ]
-
+    ch_input // channel: [ val(meta), path(assembly) ]
+    bakta_db
+    amrdb
+    carddb
+    checkm2db
+    
     main:
-
+    //Running genome annotation
     ch_versions = Channel.empty()
+    
+    BAKTA_BAKTA(
+    ch_input,
+    bakta_db,
+    [], // No proteins 
+    []  // No prodigal-tf
+    )
+    ch_versions = ch_versions.mix(BAKTA_BAKTA.out.versions)
+    PROKKA(ch_input, 
+    [],  //proteins file NONE
+    [] //Training file use for prodigal NONE
+    )
+    ch_versions = ch_versions.mix(PROKKA.out.versions)
+    
+    //Running AMR detection
+    RGI_MAIN(ch_input, 
+    carddb, 
+    [] //wildcard database NONE
+    )
+    AMRFINDERPLUS_RUN(ch_input, amrdb)
+    ch_versions = ch_versions.mix(AMRFINDERPLUS_RUN.out.versions)
+    ch_versions = ch_versions.mix(RGI_MAIN.out.versions)
 
-    // TODO nf-core: substitute modules here for the modules of your subworkflow
+    //Running VFDB detection (virulence factors)
+    ABRICATE_RUN(ch_input, 
+    []
+    )
+    ch_versions = ch_versions.mix(ABRICATE_RUN.out.versions)
+    //Detecting plasmids
+    MOBSUITE_RECON(ch_input)
+    ch_versions = ch_versions.mix(MOBSUITE_RECON.out.versions)
 
-    SAMTOOLS_SORT ( ch_bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
+    //MLST detection
+    MLST(ch_input)
+    ch_versions = ch_versions.mix(MLST.out.versions)
 
-    SAMTOOLS_INDEX ( SAMTOOLS_SORT.out.bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     emit:
-    // TODO nf-core: edit emitted channels
-    bam      = SAMTOOLS_SORT.out.bam           // channel: [ val(meta), [ bam ] ]
-    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
 
-    versions = ch_versions                     // channel: [ versions.yml ]
+    versions = ch_versions
+
 }
