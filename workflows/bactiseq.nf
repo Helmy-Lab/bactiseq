@@ -14,18 +14,10 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { CHECKM2_PREDICT } from '../modules/nf-core/checkm2/predict/main'
 
 //Test bakta
-include {BAKTA_BAKTA             } from '../modules/nf-core/bakta/bakta/main'
-include { PROKKA                 } from '../modules/nf-core/prokka/main'
-
 include { DATABASEDOWNLOAD       } from '../subworkflows/local/databasedownload/main.nf'
 include { SAMPLESHEETFILTERING   } from '../subworkflows/local/samplesheetfiltering/main'
 
-include { RGI_MAIN               } from '../modules/nf-core/rgi/main'
-include { BAKTADB                } from '../modules/local/baktadb/main'
-include { ABRICATE_RUN } from '../modules/nf-core/abricate/run/main'
-include { MOBSUITE_RECON } from '../modules/nf-core/mobsuite/recon/main'
-include { AMRFINDERPLUS_RUN } from '../modules/nf-core/amrfinderplus/run/main'
-include { MLST } from '../modules/nf-core/mlst/main'
+
 
 include { BUSCO       } from '../modules/local/busco/main'
 
@@ -35,6 +27,8 @@ include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin
 
 
 include { ANY2FASTA } from '../modules/local/any2fasta/main'
+
+include { ANNOTATION } from '../subworkflows/local/annotation/main.nf'
 /*
 
 
@@ -49,19 +43,19 @@ workflow BACTISEQ {
     // SAMPLESHEETFILTERING.out.view()
 
     // ch_input.view()
-    // ch_input = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input.json")))
-    // ch_input.view()
-    ch_input = Channel.fromPath("./TestDatasetNfcore/test_genomic.gbff") | map { fna ->
-        [ [id: fna.baseName], fna ]  // meta + file
-    }
+    // ch_input_test = Channel.fromList(samplesheetToList(params.input, file("assets/schema_input.json")))
+    // ch_input_test.view()
 
+    // ch_input = Channel.fromPath("./TestDatasetNfcore/test_genomic.gbff") | map { fna ->
+    //     [ [id: fna.baseName], fna ]  // meta + file
+    // }
 
-    ANY2FASTA(ch_input)
+    Channel.fromList([]).ifEmpty('Hello').view()
     // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
     // SAMPLESHEETFILTERING(list)
 
 
-
+    // ANNOTATION(ch_input_test)
     // def string_list = DATACHECK(list)
     // string_list.view()
     // def l = Eval.me(string_list)
