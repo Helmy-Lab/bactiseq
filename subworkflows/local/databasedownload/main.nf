@@ -2,7 +2,7 @@ include { BAKTADB             } from '../../../modules/local/baktadb/main'
 include { AMRDB               } from '../../../modules/local/amrdb/main'
 include { CARDDB              } from '../../../modules/local/carddb/main'
 include { CHECKM2_DATABASEDOWNLOAD } from '../../../modules/local/checkm2db/main'
-include {BUSCO_DOWNLOAD} from '../../../modules/local/buscodb/main'
+include { BUSCO_DOWNLOAD      } from '../../../modules/local/buscodb/main'
 workflow DATABASEDOWNLOAD {
 
     main:
@@ -28,21 +28,6 @@ workflow DATABASEDOWNLOAD {
     log.info "DBs to download: ${downloadData.join(', ')}"
     // 2. Conditionally run process
 
-    //Initiate the AMR database if they exist already in the database folder (downloaded from previous run)
-
- 
-    // amr_ch = !downloadData.contains('amrdb') ? Channel.fromPath(params.db_path + '/amrdb'): Channel.empty()
-    // amr_ch = params.amr_db != null ? Channel.fromPath(params.amr_db): downloadData.contains('amrdb') ? AMRDB() : amr_ch
-
-    //TODO: MAKE IT SO IT CAN GET DB-LIGHT OR NORMAL SIZE DB PERMA'D LIGHT DATABASE IN THE MODULE 
-    //Inititae the download of BAKTA LIGHT database
-    // bakta_ch = !downloadData.contains('baktadb') ? Channel.fromPath(params.db_path + '/baktadb/db-light'): Channel.empty()
-    // bakta_ch = params.bakta_db != null ? Channel.fromPath(params.bakta_db): downloadData.contains('baktadb') ? BAKTADB() : bakta_ch 
-
-    //Inititae the download of BAKTA LIGHT database
-    // card_ch = !downloadData.contains('carddb') ? Channel.fromPath(params.db_path + '/carddb'): "None"
-    // card_ch = params.card_db != null ? Channel.fromPath(params.card_db): downloadData.contains('carddb') ? CARDDB() : card_ch
-
     //DOWNLOAD CARD/RGI DATABASE
     def card_ch = Channel.empty()
     if (params.card_db == null && downloadData.contains('carddb')){   
@@ -64,7 +49,7 @@ workflow DATABASEDOWNLOAD {
         amr_ch = Channel.fromPath(params.db_path + '/amrdb/amrfinderdb.tar.gz')
     }
     
-    //DOWNLOAD BAKTA DATABASE IT IS PERMA DB-LIGHT RIGHT NOW
+    //TODO: MAKE IT SO IT CAN GET DB-LIGHT OR NORMAL SIZE DB PERMA'D LIGHT DATABASE IN THE MODULE 
     def bakta_ch = Channel.empty()
     if (params.bakta_db == null && downloadData.contains('baktadb')){
         BAKTADB()
