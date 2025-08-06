@@ -10,7 +10,7 @@ process RGI_MAIN {
     input:
     tuple val(meta), path(fasta)
     path(card)
-    path(wildcard) //optional wildCARD database
+    path(wildcard)
 
     output:
     tuple val(meta), path("*.json"), emit: json

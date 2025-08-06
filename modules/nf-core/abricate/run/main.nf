@@ -9,7 +9,7 @@ process ABRICATE_RUN {
 
     input:
     tuple val(meta), path(assembly)
-    path databasedir //optional local copy of database files
+    path databasedir
 
     output:
     tuple val(meta), path("*.txt"), emit: report
