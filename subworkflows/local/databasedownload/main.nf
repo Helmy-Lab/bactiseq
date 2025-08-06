@@ -1,8 +1,16 @@
-include { BAKTADB             } from '../../../modules/local/baktadb/main'
-include { AMRDB               } from '../../../modules/local/amrdb/main'
+// include { BAKTADB             } from '../../../modules/local/baktadb/main'
+// include { AMRDB               } from '../../../modules/local/amrdb/main'
+
+// include { CHECKM2_DATABASEDOWNLOAD } from '../../../modules/local/checkm2db/main'
+// include { BUSCO_DOWNLOAD      } from '../../../modules/local/buscodb/main'
+
+//Nf-core modules
+include { AMRFINDERPLUS_UPDATE } from '../../../modules/nf-core/amrfinderplus/update/main'
+include { BUSCO_DOWNLOAD } from '../../../modules/nf-core/busco/download/main'
+include { BAKTA_BAKTADBDOWNLOAD } from '../../../modules/nf-core/bakta/baktadbdownload/main'
+// include { CHECKM2_DATABASEDOWNLOAD}  from '../../../modules/nf-core/checkm2/databasedownload/main'
+include { CHECKM2_DATABASEDOWNLOAD}  from '../../../modules/local/checkm2Download/main'
 include { CARDDB              } from '../../../modules/local/carddb/main'
-include { CHECKM2_DATABASEDOWNLOAD } from '../../../modules/local/checkm2db/main'
-include { BUSCO_DOWNLOAD      } from '../../../modules/local/buscodb/main'
 workflow DATABASEDOWNLOAD {
 
     main:
@@ -41,10 +49,10 @@ workflow DATABASEDOWNLOAD {
     //DOWNLOAD AMR FINDER PLUS DATABASE
     def amr_ch = Channel.empty()
     if (params.amr_db == null && downloadData.contains('amrdb')){   
-        AMRDB()
-        amr_ch = amr_ch.mix(AMRDB.out)
+        AMRFINDERPLUS_UPDATE()
+        amr_ch = amr_ch.mix(AMRFINDERPLUS_UPDATE.out.db)
     }else if (params.amr_db != null){
-        amr_ch = Channel.fromPath(params.card_db)
+        amr_ch = Channel.fromPath(params.amr_db)
     }else if (params.amr_db == null && !downloadData.contains('amrdb')){
         amr_ch = Channel.fromPath(params.db_path + '/amrdb/amrfinderdb.tar.gz')
     }
@@ -52,8 +60,8 @@ workflow DATABASEDOWNLOAD {
     //TODO: MAKE IT SO IT CAN GET DB-LIGHT OR NORMAL SIZE DB PERMA'D LIGHT DATABASE IN THE MODULE 
     def bakta_ch = Channel.empty()
     if (params.bakta_db == null && downloadData.contains('baktadb')){
-        BAKTADB()
-        bakta_ch = bakta_ch.mix(BAKTADB.out)
+        BAKTA_BAKTADBDOWNLOAD()
+        bakta_ch = bakta_ch.mix(BAKTA_BAKTADBDOWNLOAD.out.db)
     }else if (params.bakta_db != null){
         bakta_ch = Channel.fromPath(params.bakta_db)
     }else if (params.bakta_db == null && !downloadData.contains("baktadb")){
@@ -64,7 +72,7 @@ workflow DATABASEDOWNLOAD {
     def checmk2_ch = Channel.empty()
     if (params.checkm2_db == null && downloadData.contains('checkm2db')){
         CHECKM2_DATABASEDOWNLOAD(params.checkm2_ver)
-        checmk2_ch = checmk2_ch.mix(CHECKM2_DATABASEDOWNLOAD.out)
+        checmk2_ch = checmk2_ch.mix(CHECKM2_DATABASEDOWNLOAD.out.database)
     }else if (params.checkm2_db != null){
         checmk2_ch = Channel.fromPath(params.checkm2_db)
     }else if (params.checkm2_db == null && !downloadData.contains('checkm2db')){
@@ -73,12 +81,12 @@ workflow DATABASEDOWNLOAD {
 
     def busco_ch = Channel.empty()
     if (params.buscodb == null && downloadData.contains('buscodb')){
-        BUSCO_DOWNLOAD()
+        BUSCO_DOWNLOAD(params.busco_db_type)
         busco_ch = busco_ch.concat(BUSCO_DOWNLOAD.out.download_dir)
     }else if (params.buscodb != null) {
         busco_ch = Channel.fromPath(params.buscodb)
     } else if (params.buscodb == null && !downloadData.contains('buscodb')){
-        busco_ch = Channel.fromPath("${params.db_path}/buscodb/lineages")
+        busco_ch = Channel.fromPath("${params.db_path}/buscodb/busco_downloads/lineages")
     }
 
     // bakta_ch.view()

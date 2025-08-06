@@ -1,57 +1,37 @@
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
-name: "baktadb"
-## TODO nf-core: Add a description of the module and list keywords
-description: write your description here
+name: "bakta_baktadbdownload"
+description: Downloads BAKTA database from Zenodo
 keywords:
-  - sort
-  - example
-  - genomics
+  - bakta
+  - annotation
+  - fasta
+  - bacteria
+  - database
+  - download
 tools:
-  - "baktadb":
-      ## TODO nf-core: Add a description and other details for the software below
-      description: ""
-      homepage: ""
-      documentation: ""
-      tool_dev_url: ""
-      doi: ""
-      licence:
-      identifier:
-
-## TODO nf-core: Add a description of all of the variables used as input
-input:
-  #
-  ## TODO nf-core: Delete / customise this example input
-  - bam:
-      type: file
-      description: Sorted BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-      ontologies:
-        - edam: "http://edamontology.org/format_2572" # BAM
-        - edam: "http://edamontology.org/format_2573" # CRAM
-        - edam: "http://edamontology.org/format_3462" # SAM
-
-## TODO nf-core: Add a description of all of the variables used as output
+  - bakta:
+      description: Rapid & standardized annotation of bacterial genomes, MAGs & plasmids
+      homepage: https://github.com/oschwengers/bakta
+      documentation: https://github.com/oschwengers/bakta
+      tool_dev_url: https://github.com/oschwengers/bakta
+      doi: "10.1099/mgen.0.000685"
+      licence: ["GPL v3"]
+      identifier: biotools:bakta
 output:
-  - bam:
-      #
-      ## TODO nf-core: Delete / customise this example output
-      - "*.bam":
-          type: file
-          description: Sorted BAM/CRAM/SAM file
-          pattern: "*.{bam,cram,sam}"
-          ontologies:
-            - edam: "http://edamontology.org/format_2572" # BAM
-            - edam: "http://edamontology.org/format_2573" # CRAM
-            - edam: "http://edamontology.org/format_3462" # SAM
-
-  - versions:
-      - "versions.yml":
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
-
+  db:
+    - db*:
+        type: directory
+        description: BAKTA database directory
+        pattern: "db*/"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
-  - "@sylvia"
+  - "@jfy133"
+  - "@jasmezz"
 maintainers:
-  - "@sylvia"
+  - "@jfy133"
+  - "@jasmezz"

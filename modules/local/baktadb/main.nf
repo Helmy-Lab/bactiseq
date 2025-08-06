@@ -5,7 +5,7 @@ process BAKTADB {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bakta:1.10.4--pyhdfd78af_0' :
         'biocontainers/bakta:1.10.4--pyhdfd78af_0' }"
-
+//
 
     publishDir "${params.db_path + '/baktadb'}", mode: 'copy', overwrite: true //Save the baktaDB into a local folder
 

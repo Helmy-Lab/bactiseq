@@ -29,6 +29,13 @@ include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin
 include { ANY2FASTA } from '../modules/local/any2fasta/main'
 
 include { ANNOTATION } from '../subworkflows/local/annotation/main.nf'
+include { BAKTA_BAKTA            } from '../modules/nf-core/bakta/bakta/main'
+include { PROKKA                 } from '../modules/nf-core/prokka/main'
+include { RGI_MAIN               } from '../modules/nf-core/rgi/main'
+include { ABRICATE_RUN           } from '../modules/nf-core/abricate/run/main'
+include { MOBSUITE_RECON         } from '../modules/nf-core/mobsuite/recon/main'
+include { AMRFINDERPLUS_RUN      } from '../modules/nf-core/amrfinderplus/run/main'
+
 /*
 
 
@@ -49,6 +56,11 @@ workflow BACTISEQ {
     // ch_input = Channel.fromPath("./TestDatasetNfcore/test_genomic.gbff") | map { fna ->
     //     [ [id: fna.baseName], fna ]  // meta + file
     // }
+
+    ch_input = Channel.fromPath("./TestDatasetNfcore/GCA_040556925.1_ASM4055692v1_genomic.fna") | map { fna ->
+        [ [id: fna.baseName], fna ]  // meta + file
+    }
+    // BUSCO_DOWNLOAD(params.busco_db_type)
 
     Channel.fromList([]).ifEmpty('Hello').view()
     // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
@@ -73,7 +85,7 @@ workflow BACTISEQ {
     // Channel.fromPath(params.db_path + '/amrdb').view()
 
     // 2. Now proceed with your workflow
-    // DATABASEDOWNLOAD()
+    DATABASEDOWNLOAD()
     // DATABASEDOWNLOAD.out.buscodb.view()
     // 2. Debug the database outputs
     // DATABASEDOWNLOAD.out.baktadb.view { "BAKTA DB PATH: $it" }
@@ -100,18 +112,18 @@ workflow BACTISEQ {
     // // // ch_versions = ch_versions.mix(db_results.versions.virst())
     // // // db_results.db.view { "Database files: $it" }
     // // // 3. Run BAKTA analysis
-    // BAKTA_BAKTA(
-    //     ch_input,
-    //     DATABASEDOWNLOAD.out.baktadb,
-    //     [], // No proteins 
-    //     []  // No prodigal-tf
-    // )
+    BAKTA_BAKTA(
+        ch_input,
+        DATABASEDOWNLOAD.out.baktadb,
+        [], // No proteins 
+        []  // No prodigal-tf
+    )
 
-    // RGI_MAIN(ch_input, DATABASEDOWNLOAD.out.carddb, [])
+    RGI_MAIN(ch_input, DATABASEDOWNLOAD.out.carddb, [])
     // PROKKA(ch_input, [], [])
     // ABRICATE_RUN(ch_input, [])
     // MOBSUITE_RECON(ch_input)
-    // AMRFINDERPLUS_RUN(ch_input, DATABASEDOWNLOAD.out.amrdb)
+    AMRFINDERPLUS_RUN(ch_input, DATABASEDOWNLOAD.out.amrdb)
     // MLST(ch_input)
     // ch_db = DATABASEDOWNLOAD.out.checkm2db.map { db_path ->
     //     tuple(
@@ -121,7 +133,7 @@ workflow BACTISEQ {
     // }
     // CHECKM2_PREDICT(ch_input, ch_db)
     // DATABASEDOWNLOAD.out.buscodb.view()
-    // BUSCO(ch_input, 'genome', params.busco_db_type, DATABASEDOWNLOAD.out.buscodb, [], true)
+    BUSCO(ch_input, 'genome', params.busco_db_type, DATABASEDOWNLOAD.out.buscodb, [], true)
 
     // DATABASEDOWNLOAD.out.buscodb.view { "Value: $it (Type: ${it.getClass().simpleName})" }
     emit:

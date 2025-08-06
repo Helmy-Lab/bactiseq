@@ -2,20 +2,15 @@ process CHECKM2_DATABASEDOWNLOAD {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container { 
-        workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/0a/0af812c983aeffc99c0fca9ed2c910816b2ddb9a9d0dcad7b87dab0c9c08a16f/data' :
-        'community.wave.seqera.io/library/checkm2:1.1.0--60f287bc25d7a10d' 
-    }
-  
-
-    publishDir "${params.db_path + '/checkm2db'}", mode: 'copy', overwrite: true //Save the checkm2DB into a local folder
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/95/95c0d3d867f5bc805b926b08ee761a993b24062739743eb82cc56363e0f7817d/data':
+        'community.wave.seqera.io/library/aria2:1.37.0--3a9ec328469995dd' }"
 
     input:
     val(db_zenodo_id)
 
     output:
-    path("checkm2_db_v${db_version}.dmnd"), emit: database
+    tuple val(meta), path("checkm2_db_v${db_version}.dmnd"), emit: database
     path("versions.yml")                                   , emit: versions
 
     when:
@@ -24,15 +19,7 @@ process CHECKM2_DATABASEDOWNLOAD {
     script:
     def args        = task.ext.args ?: ''
     zenodo_id       = db_zenodo_id ?: 14897628  // Default to version 3 if no ID provided
-    // api_data        = (new groovy.json.JsonSlurper()).parseText(file("https://zenodo.org/api/records/${zenodo_id}").text)
-    // Create URL connection with proper headers
-    def url = new URL("https://zenodo.org/api/records/${zenodo_id}")
-    def connection = url.openConnection()
-    connection.setRequestProperty("Accept", "application/json")
-
-    // Get and parse the response
-    def api_data = (new groovy.json.JsonSlurper()).parseText(connection.content.text)
-    // def api_data = new groovy.json.JsonSlurper().parse("https://zenodo.org/api/records/${zenodo_id}" as URL)
+    api_data        = (new groovy.json.JsonSlurper()).parseText(file("https://zenodo.org/api/records/${zenodo_id}").text)
     db_version      = api_data.metadata.version
     checksum        = api_data.files[0].checksum.replaceFirst(/^md5:/, "md5=")
     meta            = [id: 'checkm2_db', version: db_version]

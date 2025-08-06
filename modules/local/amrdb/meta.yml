@@ -1,57 +1,37 @@
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
-name: "amrdb"
-## TODO nf-core: Add a description of the module and list keywords
-description: write your description here
+name: amrfinderplus_update
+description: Identify antimicrobial resistance in gene or protein sequences
 keywords:
-  - sort
-  - example
-  - genomics
+  - bacteria
+  - fasta
+  - antibiotic resistance
 tools:
-  - "amrdb":
-      ## TODO nf-core: Add a description and other details for the software below
-      description: ""
-      homepage: ""
-      documentation: ""
-      tool_dev_url: ""
-      doi: ""
-      licence:
-      identifier:
-
-## TODO nf-core: Add a description of all of the variables used as input
-input:
-  #
-  ## TODO nf-core: Delete / customise this example input
-  - bam:
-      type: file
-      description: Sorted BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-      ontologies:
-        - edam: "http://edamontology.org/format_2572" # BAM
-        - edam: "http://edamontology.org/format_2573" # CRAM
-        - edam: "http://edamontology.org/format_3462" # SAM
-
-## TODO nf-core: Add a description of all of the variables used as output
+  - amrfinderplus:
+      description: AMRFinderPlus finds antimicrobial resistance and other genes in protein
+        or nucleotide sequences.
+      homepage: https://github.com/ncbi/amr/wiki
+      documentation: https://github.com/ncbi/amr/wiki
+      tool_dev_url: https://github.com/ncbi/amr
+      doi: "10.1038/s41598-021-91456-0"
+      licence: ["Public Domain"]
+      identifier: biotools:amrfinderplus
+# this module does have any input.
 output:
-  - bam:
-      #
-      ## TODO nf-core: Delete / customise this example output
-      - "*.bam":
-          type: file
-          description: Sorted BAM/CRAM/SAM file
-          pattern: "*.{bam,cram,sam}"
-          ontologies:
-            - edam: "http://edamontology.org/format_2572" # BAM
-            - edam: "http://edamontology.org/format_2573" # CRAM
-            - edam: "http://edamontology.org/format_3462" # SAM
-
-  - versions:
-      - "versions.yml":
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
-
+  db:
+    - amrfinderdb.tar.gz:
+        type: file
+        description: The latest AMRFinder+ database in a compressed tarball
+        pattern: "*.tar.gz"
+        ontologies:
+          - edam: "http://edamontology.org/format_3981" # TAR format
+          - edam: http://edamontology.org/format_3989 # GZIP format
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: "http://edamontology.org/format_3750" # YAML
 authors:
-  - "@sylvia"
+  - "@rpetit3"
 maintainers:
-  - "@sylvia"
+  - "@rpetit3"
