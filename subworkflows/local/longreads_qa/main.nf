@@ -1,28 +1,33 @@
 include { NANOPLOT                } from '../../../modules/nf-core/nanoplot/main'
 include { FASTQC                  } from '../../../modules/nf-core/fastqc/main'
 include { SEQKIT_STATS            } from '../../../modules/nf-core/seqkit/stats/main'
+
+
 workflow LONGREADS_QA {
 
     take:
-    ch_bam // channel: [ val(meta), [ bam ] ]
+    ch_input // channel: [ val(meta), [ bam ] ]
 
     main:
-
     ch_versions = Channel.empty()
 
-    // TODO nf-core: substitute modules here for the modules of your subworkflow
+    NANOPLOT(
+        ch_input
+    )
+    ch_versions = ch_versions.mix(NANOPLOT.out.versions)
 
-    SAMTOOLS_SORT ( ch_bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
+    FASTQC(
+        ch_input
+    )
+    ch_versions = ch_versions.mix(FASTQC.out.versions)
 
-    SAMTOOLS_INDEX ( SAMTOOLS_SORT.out.bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+    SEQKIT_STATS(
+        ch_input
+    )
+    ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions)
+
 
     emit:
-    // TODO nf-core: edit emitted channels
-    bam      = SAMTOOLS_SORT.out.bam           // channel: [ val(meta), [ bam ] ]
-    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
