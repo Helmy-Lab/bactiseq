@@ -7,7 +7,10 @@ process SAMTOOLS {
 
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
     conda "${moduleDir}/environment.yml"
-    // container "txx99/bamdash:latest" //--5fbbd7a07fc865335571e5589773157bd08c77b483e75e828b85f65919071bd3"
+    //     container "${ workflow.containerEngine == 'docker' && !task.ext.singularity_pull_docker_container ?
+    //     'https://depot.galaxyproject.org/singularity/ncbi-amrfinderplus:3.12.8--h283d18e_0':
+    //     'biocontainers/ncbi-amrfinderplus:3.12.8--h283d18e_0' }"
+    container "staphb/samtools:1.22.1" //--5fbbd7a07fc865335571e5589773157bd08c77b483e75e828b85f65919071bd3"
     // container 'community.wave.seqera.io/library/samtools:1.22.1--eccb42ff8fb55509'
 
     input:

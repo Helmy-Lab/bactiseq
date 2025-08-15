@@ -1,24 +1,23 @@
 
 process BAMDASH {
-    label 'process_single'
+    label 'process_low'
 
     //  nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
     conda "${moduleDir}/environment.yml"
-    // container "txx99/bamdash:latest"
     // container 'community.wave.seqera.io/library/pip_bamdash:48d26bfffda77a05'
 
     publishDir "results/bamdash", mode: 'copy'
+    container "community.wave.seqera.io/library/pip_bamdash:48d26bfffda77a05"
 
     input:
         path bam_file
         val seq_id
-        // path seq_ids
         path bai
 
     
     output:
         path "*_plot.html", emit: html 
-        // path "*.pdf", emit: pdf
+        path "*.pdf", emit: pdf
         // path "*.jpg", emit: jpg
         // path "*.png", emit: png
 
@@ -26,11 +25,9 @@ process BAMDASH {
     script:
     """
     echo ${seq_id}
-    bamdash -b ${bam_file} -r ${seq_id}
+    bamdash -b ${bam_file} -r ${seq_id} -e pdf
     """
 }
-
-
 
 
 
@@ -65,20 +62,8 @@ process BAMDASH {
 
 
 
-// MAYBE MEMROY ERROR FIXED? BUT DOESNT RECOGNISE INDEX FILE
-    // while IFS= read -r seq_id
-    //     do
-    //         echo \$seq_id
-    //         samtools view -b ${bam_file} \$seq_id > temp_\${seq_id}.bam
-    //         bamdash -b temp_\${seq_id}.bam -r \$seq_id -e pdf
-    //         rm temp_\${seq_id}.bam
-    // done < $seq_ids
 
-
-
-
-
-// -e flag only takes one input --> how ot do multiple -e images? 
+// -e flag only takes one input --> how to do multiple -e images? 
 
     // # bamdash -b ${bam_file} -r \${seq_id} -e jpg
     // # bamdash -b ${bam_file} -r \${seq_id} -e png
