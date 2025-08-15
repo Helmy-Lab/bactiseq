@@ -11,7 +11,7 @@ process SAMTOOLS_FASTQ {
     tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*fastq.gz")      , optional:true, emit: fastq
+    tuple val(meta), path("*fastq.gz")      , emit: fastq
     path  "versions.yml"                           , emit: versions
 
     when:
