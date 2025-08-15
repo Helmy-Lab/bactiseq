@@ -1,6 +1,6 @@
 {
     "name": "nfcore",
-    "image": "txx99/bamdash:latest",
+    // "image": "txx99/bamdash:latest",
     // "image": "nfcore/gitpod:latest",
     "remoteUser": "gitpod",
     "runArgs": ["--privileged"],
