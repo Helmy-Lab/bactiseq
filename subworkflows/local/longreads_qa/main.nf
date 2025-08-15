@@ -6,7 +6,7 @@ include { SEQKIT_STATS            } from '../../../modules/nf-core/seqkit/stats/
 workflow LONGREADS_QA {
 
     take:
-    ch_input // channel: [ val(meta), [ bam ] ]
+    ch_input // channel: [ val(meta), [ long read file] ]
 
     main:
     ch_versions = Channel.empty()
@@ -28,6 +28,5 @@ workflow LONGREADS_QA {
 
 
     emit:
-
     versions = ch_versions                     // channel: [ versions.yml ]
 }
