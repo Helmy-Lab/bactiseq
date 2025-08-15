@@ -101,7 +101,7 @@ workflow DATABASEDOWNLOAD {
     }else if (params.gambit_db != null){
         gambit_ch = Channel.fromPath(params.gambit_db)
     }else if (params.gambit_db == null && !downloadData.contains('gambitdb')){
-        gambit_ch = Channel.fromPath("${params.db_path}/gambitdb/gambit")
+        gambit_ch = Channel.fromPath("${params.db_path}/gambitdb")
     }
     // bakta_ch.view()
     // println(card_ch.out.stdout)

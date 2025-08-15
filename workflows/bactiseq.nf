@@ -78,12 +78,15 @@ workflow BACTISEQ {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    // KRAKEN2_BUILDSTANDARD(true)
+    KRAKEN2_BUILDSTANDARD(true)
 
     // DATABASEDOWNLOAD()
     // DATABASEDOWNLOAD.out.gambitdb.view()
+    // DATABASEDOWNLOAD.out.baktadb.view()
+    // DATABASEDOWNLOAD.out.amrdb.view()
+    // DATABASEDOWNLOAD.out.carddb.view()
+    // DATABASEDOWNLOAD.out.checkm2db.view()
 
-    
     // ANNOTATION(ch_input,
     // DATABASEDOWNLOAD.out.baktadb,
     // DATABASEDOWNLOAD.out.amrdb,
