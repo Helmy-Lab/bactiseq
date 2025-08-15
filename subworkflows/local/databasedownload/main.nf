@@ -1,20 +1,16 @@
-// include { BAKTADB             } from '../../../modules/local/baktadb/main'
-// include { AMRDB               } from '../../../modules/local/amrdb/main'
-
-// include { CHECKM2_DATABASEDOWNLOAD } from '../../../modules/local/checkm2db/main'
-// include { BUSCO_DOWNLOAD      } from '../../../modules/local/buscodb/main'
 
 //Nf-core modules
 include { AMRFINDERPLUS_UPDATE } from '../../../modules/nf-core/amrfinderplus/update/main'
 include { BUSCO_DOWNLOAD } from '../../../modules/nf-core/busco/download/main'
 include { BAKTA_BAKTADBDOWNLOAD } from '../../../modules/nf-core/bakta/baktadbdownload/main'
-// include { CHECKM2_DATABASEDOWNLOAD}  from '../../../modules/nf-core/checkm2/databasedownload/main'
+include { KRAKEN2_BUILDSTANDARD } from '../../../modules/nf-core/kraken2/buildstandard/main'
+//Local made modules because for some reason it doesn't work
 include { CHECKM2_DATABASEDOWNLOAD}  from '../../../modules/local/checkm2Download/main'
 include { CARDDB              } from '../../../modules/local/carddb/main'
 workflow DATABASEDOWNLOAD {
 
     main:
-    database_list =['baktadb', 'amrdb', 'checkm2db', 'carddb', 'buscodb'] as Set //All the databases we need
+    database_list =['baktadb', 'amrdb', 'checkm2db', 'carddb', 'buscodb', 'kraken2'] as Set //All the databases we need
     // 1. First validate params.db_path exists or create it
     db_dir = new File(params.db_path)
     if (!db_dir.exists()) { // If database directory does not exist
@@ -75,8 +71,10 @@ workflow DATABASEDOWNLOAD {
         checmk2_ch = checmk2_ch.mix(CHECKM2_DATABASEDOWNLOAD.out.database)
     }else if (params.checkm2_db != null){
         checmk2_ch = Channel.fromPath(params.checkm2_db)
+        .map { file -> tuple([id: "user_downloaded_checkm2db"], file) }
     }else if (params.checkm2_db == null && !downloadData.contains('checkm2db')){
         checmk2_ch = Channel.fromPath("${params.db_path}/checkm2db/*.dmnd")
+        .map { file -> tuple([id: "pre_downloaded_checkm2db"], file) }
     }
 
     def busco_ch = Channel.empty()
