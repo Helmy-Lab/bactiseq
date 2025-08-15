@@ -4,13 +4,16 @@ include { AMRFINDERPLUS_UPDATE } from '../../../modules/nf-core/amrfinderplus/up
 include { BUSCO_DOWNLOAD } from '../../../modules/nf-core/busco/download/main'
 include { BAKTA_BAKTADBDOWNLOAD } from '../../../modules/nf-core/bakta/baktadbdownload/main'
 include { KRAKEN2_BUILDSTANDARD } from '../../../modules/nf-core/kraken2/buildstandard/main'
-//Local made modules because for some reason it doesn't work
+
+//Local made modules to download
 include { CHECKM2_DATABASEDOWNLOAD}  from '../../../modules/local/checkm2Download/main'
 include { CARDDB              } from '../../../modules/local/carddb/main'
+include { WGET_GAMBITDB } from '../../../modules/local/wget_gambitdb/main'
+
 workflow DATABASEDOWNLOAD {
 
     main:
-    database_list =['baktadb', 'amrdb', 'checkm2db', 'carddb', 'buscodb', 'kraken2'] as Set //All the databases we need
+    database_list =['baktadb', 'amrdb', 'checkm2db', 'carddb', 'buscodb', 'kraken2', 'gambitdb'] as Set //All the databases we need
     // 1. First validate params.db_path exists or create it
     db_dir = new File(params.db_path)
     if (!db_dir.exists()) { // If database directory does not exist
@@ -77,6 +80,7 @@ workflow DATABASEDOWNLOAD {
         .map { file -> tuple([id: "pre_downloaded_checkm2db"], file) }
     }
 
+    //Download BUSCO database
     def busco_ch = Channel.empty()
     if (params.buscodb == null && downloadData.contains('buscodb')){
         BUSCO_DOWNLOAD(params.busco_db_type)
@@ -87,6 +91,18 @@ workflow DATABASEDOWNLOAD {
         busco_ch = Channel.fromPath("${params.db_path}/buscodb/busco_downloads/lineages")
     }
 
+    //Download gambit database
+    def gambit_ch = Channel.empty()
+    if (params.gambit_db == null && downloadData.contains('gambitdb')){
+        WGET_GAMBITDB(
+        "https://storage.googleapis.com/jlumpe-gambit/public/databases/refseq-curated/1.0/gambit-refseq-curated-1.0.gdb",
+        "https://storage.googleapis.com/jlumpe-gambit/public/databases/refseq-curated/1.0/gambit-refseq-curated-1.0.gs" )
+        gambit_ch = gambit_ch.concat(WGET_GAMBITDB.out.database_dir)
+    }else if (params.gambit_db != null){
+        gambit_ch = Channel.fromPath(params.gambit_db)
+    }else if (params.gambit_db == null && !downloadData.contains('gambitdb')){
+        gambit_ch = Channel.fromPath("${params.db_path}/gambitdb/gambit")
+    }
     // bakta_ch.view()
     // println(card_ch.out.stdout)
 // println "All subdirectories: ${allSubdirs}"
@@ -116,4 +132,5 @@ workflow DATABASEDOWNLOAD {
         carddb = card_ch.last() //Get the last item, because if you downloaded the database, it will be last in channel, works too if already downloaded the channel will only have 1 item in the channel anyways
         checkm2db= checmk2_ch.first()
         buscodb = busco_ch.last()
+        gambitdb = gambit_ch.first()
 }

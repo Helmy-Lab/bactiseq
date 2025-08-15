@@ -71,9 +71,9 @@ workflow BACTISEQ {
     def list = samplesheetToList(params.input, file("assets/schema_input.json"))
 
     // SAMPLESHEETFILTERING(list)
-    PACBIO_SUBWORKFLOW(ch_input, false, false)
-    ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.output)
-    ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db,  DATABASEDOWNLOAD.out.buscodb )
+    // PACBIO_SUBWORKFLOW(ch_input, false, false)
+    // ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.output)
+    // ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db,  DATABASEDOWNLOAD.out.buscodb )
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
@@ -81,7 +81,9 @@ workflow BACTISEQ {
     // KRAKEN2_BUILDSTANDARD(true)
 
     // DATABASEDOWNLOAD()
+    // DATABASEDOWNLOAD.out.gambitdb.view()
 
+    
     // ANNOTATION(ch_input,
     // DATABASEDOWNLOAD.out.baktadb,
     // DATABASEDOWNLOAD.out.amrdb,
