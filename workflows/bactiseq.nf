@@ -65,6 +65,18 @@ workflow BACTISEQ {
             Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
                 | map { fna -> [ [id: "${fna.baseName}_copy2"], fna ] }
     )
+
+    ch_input2 = Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
+    | map { fna -> [ [id: "${fna.baseName}_copy1"], 'hello' ] } \
+    | mix( 
+        Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
+            | map { fna -> [ [id: "${fna.baseName}_copy2"], 'hello2' ] }
+    )
+
+    // ch_out = ch_input.join(ch_input2)
+
+    // ch_out.view()
+    ch_input2.meta.view()
     // BUSCO_DOWNLOAD(params.busco_db_type)
     // ch_input.view()
     // Channel.fromList([]).ifEmpty('Hello').view()
@@ -78,7 +90,7 @@ workflow BACTISEQ {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    KRAKEN2_BUILDSTANDARD(true)
+    // KRAKEN2_BUILDSTANDARD(true)
 
     // DATABASEDOWNLOAD()
     // DATABASEDOWNLOAD.out.gambitdb.view()
