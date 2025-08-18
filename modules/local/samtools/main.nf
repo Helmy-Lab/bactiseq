@@ -17,7 +17,7 @@ process SAMTOOLS {
         path bam_file
 
     output:
-        path "seq_ids.txt" , emit: seq_ids
+        path "*seq_ids.txt" , emit: seq_ids
         path "*.bam.bai", emit: bai
 
     script:
@@ -25,8 +25,9 @@ process SAMTOOLS {
     # create .bai
     samtools index ${bam_file}
     # Extract sequence ID from BAM file using samtools
-    samtools view -H ${bam_file} | head -5 | grep '^@SQ' | sed -n 's/.*SN:\\([^ \\t]*\\).*/\\1/p' > seq_ids.txt
+    samtools view -H ${bam_file} | head -5 | grep '^@SQ' | sed -n 's/.*SN:\\([^ \\t]*\\).*/\\1/p' > ${bam_file}seq_ids.txt
     """
 }
 
 // removed the | head -1 | pipe section so we get mutliple 
+//
