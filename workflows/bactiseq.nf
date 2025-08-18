@@ -18,7 +18,6 @@ include { PACBIO_SUBWORKFLOW }  from '../subworkflows/local/pacbio_subworkflow/m
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
 
-include { ANY2FASTA } from '../modules/local/any2fasta/main'
 include { NANOPLOT                } from '../modules/nf-core/nanoplot/main'
 
 include { ANNOTATION } from '../subworkflows/local/annotation/main.nf'
