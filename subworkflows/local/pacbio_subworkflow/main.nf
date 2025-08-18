@@ -54,13 +54,13 @@ workflow PACBIO_SUBWORKFLOW {
     POST_FILTER_QA(qc_reads)
 
     FLYE(qc_reads, "--pacbio-hifi")
-    TAXONOMY(FLYE.out.fasta, gambitdb, krakendb)
+    TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
 
     ch_assembled = FLYE.out.fasta
         .map{meta, fasta -> [meta, fasta]}
         .collect()
         .flatMap()
-    
+
     // FLYE.out.fasta.view()
     if (polish == 'short'){
         MINIMAP2_ALIGN(ch_polish, FLYE.out.fasta, true, 'bai', false, false)

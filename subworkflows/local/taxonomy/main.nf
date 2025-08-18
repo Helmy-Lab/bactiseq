@@ -4,13 +4,14 @@ workflow TAXONOMY {
 
     take:
     ch_input // channel: [ val(meta), [ input ] ]
+    ch_assembled // [val(meta), [assembled data]]
     krakendb //Path to kraken2db
     gambitdb //path to gambitdb
 
     main:
     ch_versions = Channel.empty()
 
-    GAMBIT(ch_input, gambitdb)
+    GAMBIT(ch_assembled, gambitdb)
     ch_versions.mix(GAMBIT.out.versions)
     KRAKEN2_KRAKEN2(ch_input, krakendb, true, true)
     ch_versions.mix(KRAKEN2_KRAKEN2.out.versions)
