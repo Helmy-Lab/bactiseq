@@ -7,7 +7,11 @@ process BAMDASH {
     // container 'community.wave.seqera.io/library/pip_bamdash:48d26bfffda77a05'
 
     publishDir "results/bamdash", mode: 'copy'
-    container "community.wave.seqera.io/library/pip_bamdash:48d26bfffda77a05"
+    // container "community.wave.seqera.io/library/pip_bamdash:48d26bfffda77a05"
+
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'community.wave.seqera.io/library/pip_bamdash:48d26bfffda77a05':
+        'community.wave.seqera.io/library/pip_bamdash:48d26bfffda77a05' }"
 
     input:
         path bam_file
