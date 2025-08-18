@@ -8,17 +8,13 @@ workflow TAXONOMY {
     gambitdb //path to gambitdb
 
     main:
-
     ch_versions = Channel.empty()
 
     GAMBIT(ch_input, gambitdb)
+    ch_versions.mix(GAMBIT.out.versions)
     KRAKEN2_KRAKEN2(ch_input, krakendb, true, true)
+    ch_versions.mix(KRAKEN2_KRAKEN2.out.versions)
 
     emit:
-    // TODO nf-core: edit emitted channels
-    bam      = SAMTOOLS_SORT.out.bam           // channel: [ val(meta), [ bam ] ]
-    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
-
     versions = ch_versions                     // channel: [ versions.yml ]
 }

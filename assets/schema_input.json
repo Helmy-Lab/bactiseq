@@ -49,7 +49,7 @@
         },
       "ONT_basecaller": {
         "type": "string",
-        "default": "AUTO",
+        "default": "NA",
         "description": "Baecaller used, so medaka can polish correctly on nanopore reads, try to autpmatically detect model else, use r1041_e82_400bps_sup_v4.2.0",
         "errorMessage": "",
         "meta": ["basecaller"]
