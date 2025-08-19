@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Sylvia's pipeline - params.input // --input samplesheet.csv schema",
-  "description": "Schema for the file provided with params.input",
+  "title": "Sylvia's pipeline - params.input schema",
+  "description": "Schema for the samplesheet.csv input",
   "type": "array",
   "items": {
     "type": "object",
@@ -14,82 +14,80 @@
       },
       "short_fastq1": {
         "type": "string",
-        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-        "default": "short1NA",
-        "format": "file-path",
-        "errorMessage": "FastQ file for short reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+        "pattern": "^(\\S+\\.f(ast)?q\\.gz|short1NA)$",
+        "default": "short1NA"
       },
       "short_fastq2": {
-        "errorMessage": "FastQ file for short reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-        "type": "string",
-        "default": "short2NA",
-        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-        "format": "file-path"
+        "type": "string", 
+        "pattern": "^(\\S+\\.f(ast)?q\\.gz|short2NA)$",
+        "default": "short2NA"
       },
       "long_fastq": {
-        "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
         "type": "string",
-        "default": "longNA",
-        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-        "format": "file-path"
+        "pattern": "^(\\S+\\.f(ast)?q\\.gz|longNA)$",
+        "default": "longNA"
       },
       "assembly": {
-        "errorMessage": "File for assembly cannot contain spaces and must have extension 'fasta' or 'gb/gbk/gbff/genbank/gff/gff3'",
         "type": "string",
-        "default": "assemblyNA",
-        "pattern": "^\\S+\\.(fasta|gbk?|gbff|genbank|gff3?)$",
-        "format": "file-path"
+        "pattern": "^(\\S+\\.(fasta|gbk?|gbff|genbank|gff3?)|assemblyNA)$",
+        "default": "assemblyNA"
       },
       "polish": {
-        "type": "boolean",
-        "default": false,
-        "description": "Whether to perform assembly polishing (true/false)",
-        "errorMessage": "Must be 'true' or 'false'",
+        "type": "string",
+        "pattern": "^(short|long|NA)$",
+        "default": "NA",
         "meta": ["polish"]
-        },
+      },
       "ONT_basecaller": {
         "type": "string",
         "default": "NA",
-        "description": "Baecaller used, so medaka can polish correctly on nanopore reads, try to autpmatically detect model else, use r1041_e82_400bps_sup_v4.2.0",
-        "errorMessage": "",
         "meta": ["basecaller"]
-        }
+      }
     },
-
-    "$comment": "BELOW: Asks if every row of the csv fits the requirements. illumina paired ends? long reads? pre-assembled?",
+    "required": ["sample"],
     "oneOf": [
-        {
-        "required": ["sample","short_fastq1", "short_fastq2"],
-        "properties":{
-            "assembly": false,
-            "polish": false,
-            "ONT_basecaller": false
-            }
-        },
-        {
-        "required": ["sample", "long_fastq"],
+      {
+        "description": "Hybrid assembly: short + long reads",
         "properties": {
-            "assembly": false
-        }
+          "short_fastq1": { "not": { "const": "short1NA" } },
+          "long_fastq": { "not": { "const": "longNA" } },
+          "assembly": { "const": "assemblyNA" }
         },
-        {
-        "required": ["sample", "short_fastq1","long_fastq"],
+        "required": ["sample", "short_fastq1", "long_fastq"]
+      },
+      {
+        "description": "Illumina-only assembly", 
         "properties": {
-            "assembly": false
-        }
+          "short_fastq1": { "not": { "const": "short1NA" } },
+          "short_fastq2": { "not": { "const": "short2NA" } },
+          "assembly": { "const": "assemblyNA" },
+          "long_fastq": { "const": "longNA" }
         },
-        {
-        "required": ["sample", "assembly"],
+        "required": ["sample", "short_fastq1", "short_fastq2"]
+      },
+      {
+        "description": "Long-read-only assembly",
         "properties": {
-            "polish": false,
-            "short_fastq1": false,
-            "short_fastq2": false,
-            "ONT_basecaller": false,
-            "long_fastq": false
-        }
-        }
+          "long_fastq": { "not": { "const": "longNA" } },
+          "assembly": { "const": "assemblyNA" },
+          "short_fastq1": { "const": "short1NA" },
+          "short_fastq2": { "const": "short2NA" }
+        },
+        "required": ["sample", "long_fastq"]
+      },
+      {
+        "description": "Pre-assembled input",
+        "properties": {
+          "assembly": { "not": { "const": "assemblyNA" } },
+          "short_fastq1": { "const": "short1NA" },
+          "short_fastq2": { "const": "short2NA" },
+          "long_fastq": { "const": "longNA" }
+        },
+        "required": ["sample", "assembly"]
+      }
     ],
-    "messages": {"oneOf": "A or multiple sample data input in samplesheet does not fit criteria (missing sample name? some data inputs do not require or PROHIBIT other input data)"}
-
+    "errorMessage": {
+      "oneOf": "Invalid input combination. Choose: 1) short+long reads, 2) paired-end short reads, 3) long reads only, or 4) pre-assembled genome"
+    }
   }
 }
