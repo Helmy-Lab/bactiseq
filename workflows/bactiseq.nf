@@ -58,31 +58,47 @@ workflow BACTISEQ {
     //     [ [id: fna.baseName], fna ]  // meta + file
     // }
     // Create two copies of the same file with different meta IDs
-    ch_input = Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
-        | map { fna -> [ [id: "${fna.baseName}_copy1"], fna ] } \
-        | mix( 
-            Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
-                | map { fna -> [ [id: "${fna.baseName}_copy2"], fna ] }
-    )
-
-    ch_input2 = Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
-    | map { fna -> [ [id: "${fna.baseName}_copy1"], 'hello' ] } \
-    | mix( 
-        Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
-            | map { fna -> [ [id: "${fna.baseName}_copy2"], 'hello2' ] }
-    )
+    // ch_input = Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
+    //     | map { fna -> [ [id: "${fna.baseName}_copy1"], fna ] } \
+    //     | mix( 
+    //         Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
+    //             | map { fna -> [ [id: "${fna.baseName}_copy2"], fna ] }
+    // )
+    // ch_input.view()
+    // ch_input2 = Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
+    // | map { fna -> [ [id: "${fna.baseName}_copy1"], 'hello' ] } \
+    // | mix( 
+    //     Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
+    //         | map { fna -> [ [id: "${fna.baseName}_copy2"], 'hello2' ] }
+    // )
 
     // ch_out = ch_input.join(ch_input2)
 
     // ch_out.view()
-    ch_input2.meta.view()
+    // ch_input2.meta.view()
     // BUSCO_DOWNLOAD(params.busco_db_type)
     // ch_input.view()
     // Channel.fromList([]).ifEmpty('Hello').view()
     def list = samplesheetToList(params.input, file("assets/schema_input.json"))
 
-    // SAMPLESHEETFILTERING(list)
-    // PACBIO_SUBWORKFLOW(ch_input, false, false)
+    SAMPLESHEETFILTERING(list)
+
+
+    
+    // def channel_test = Channel.fromList(SAMPLESHEETFILTERING.out.list_longpac_shortPolish)
+    def channel_test = SAMPLESHEETFILTERING.out.list_longpac_shortPolish
+
+    channel_test
+        .map { item -> [item[0], file(item[1])] } // Extract first and last for each list
+        .set{ ch_polishing}
+
+    channel_test
+        .map{item -> [item[0], file(item[3])]}
+        .set{ch_pac_input}
+    ch_polishing.view()
+    ch_pac_input.view()
+    DATABASEDOWNLOAD()
+    PACBIO_SUBWORKFLOW(ch_pac_input,ch_polishing, false, "short", DATABASEDOWNLOAD.out.gambitdb, [])
     // ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.output)
     // ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db,  DATABASEDOWNLOAD.out.buscodb )
 
