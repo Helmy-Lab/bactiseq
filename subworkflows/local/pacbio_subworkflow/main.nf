@@ -68,7 +68,7 @@ workflow PACBIO_SUBWORKFLOW {
             .combine(MINIMAP2_ALIGN.out.index)
             .map { meta, bam, meta2, index -> [meta, bam, index] }
         PILON( FLYE.out.fasta, align_ch, "bam")
-        ch_output = ch_output.mix(PILON.improved_assembly)
+        ch_output = ch_output.mix(PILON.out.improved_assembly)
     }else if (polish == 'long'){
         MINIMAP2_ALIGN(ch_polish, FLYE.out.fasta, false, [], true, false)
         RACON(FLYE.out.fasta,  MINIMAP2_ALIGN.out.paf, ch_polish)

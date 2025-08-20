@@ -211,11 +211,11 @@ workflow SAMPLESHEETFILTERING {
 
     list_longpac_noPolish = (longpac_noPolish)
     list_longpac_longPolish = (longpac_longPolish)
-    list_longpac_shortPolish = Channel.fromList(longpac_shortPolish)
+    list_longpac_shortPolish = (longpac_shortPolish)
 
     list_longbam_noPolish = (longbam_noPolish)
     list_longbam_longPolish = (longbam_longPolish)
-    list_longbam_shortPolish = (longbam_shortPolish)
+    list_longbam_shortPolish = Channel.fromList(longbam_shortPolish)
 
     list_hybrid_longPolish = (hybrid_longPolish)
     list_hybrid_shortPolish = (hybrid_shortPolish)
