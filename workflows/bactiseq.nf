@@ -30,7 +30,6 @@ include { ABRICATE_RUN           } from '../modules/nf-core/abricate/run/main'
 include { MOBSUITE_RECON         } from '../modules/nf-core/mobsuite/recon/main'
 include { AMRFINDERPLUS_RUN      } from '../modules/nf-core/amrfinderplus/run/main'
 
-include { KRAKEN2_BUILDSTANDARD } from '../modules/nf-core/kraken2/buildstandard/main'
 
 
 include {FASTQC} from '../modules/nf-core/fastqc/main'
@@ -86,18 +85,18 @@ workflow BACTISEQ {
 
     
     // def channel_test = Channel.fromList(SAMPLESHEETFILTERING.out.list_longpac_shortPolish)
-    def channel_test = SAMPLESHEETFILTERING.out.list_longpac_shortPolish
+    // def channel_test = SAMPLESHEETFILTERING.out.list_longpac_shortPolish
 
-    channel_test
-        .map { item -> [item[0], file(item[1])] } // Extract first and last for each list
-        .set{ ch_polishing}
+    // channel_test
+    //     .map { item -> [item[0], file(item[1])] } // Extract first and last for each list
+    //     .set{ ch_polishing}
 
-    channel_test
-        .map{item -> [item[0], file(item[3])]}
-        .set{ch_pac_input}
-    ch_polishing.view()
-    ch_pac_input.view()
-    
+    // channel_test
+    //     .map{item -> [item[0], file(item[3])]}
+    //     .set{ch_pac_input}
+    // ch_polishing.view()
+    // ch_pac_input.view()
+
     DATABASEDOWNLOAD()
     // PACBIO_SUBWORKFLOW(ch_pac_input,ch_polishing, false, "short", DATABASEDOWNLOAD.out.gambitdb, [])
     // ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.output)
