@@ -1,7 +1,5 @@
 include {LONGREADS_QA                       } from '../../../subworkflows/local/longreads_qa/main'
 include {LONGREADS_QA as POST_FILTER_QA     } from '../../../subworkflows/local/longreads_qa/main'
-include {SEQKIT_STATS                       } from '../../../modules/nf-core/seqkit/stats/main'
-include {SEQKIT_STATS as POST_FILTER_SEQKIT } from '../../../modules/nf-core/seqkit/stats/main'
 include { PORECHOP_PORECHOP                 } from '../../../modules/nf-core/porechop/porechop/main'
 include { CHOPPER                           } from '../../../modules/nf-core/chopper/main'
 include {MEDAKA                           } from '../../../modules/local/medaka/main'
@@ -25,8 +23,6 @@ workflow NANOPORE_SUBWORKFLOW {
     ch_output = Channel.empty()
 
     LONGREADS_QA(ch_input)
-    SEQKIT_STATS(ch_input)
-    ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions)
 
     PORECHOP_PORECHOP(ch_input)
     ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
@@ -34,7 +30,6 @@ workflow NANOPORE_SUBWORKFLOW {
     ch_versions = ch_versions.mix(CHOPPER.out.versions)
 
     POST_FILTER_QA(CHOPPER.out.fastq)
-    SEQKIT_STATS(CHOPPER.out.fastq)
 
     FLYE(CHOPPER.out.fastq, '--nano-raw')
     ch_versions = ch_versions.mix(FLYE.out.versions)
