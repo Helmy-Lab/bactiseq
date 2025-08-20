@@ -21,14 +21,13 @@ process WGETKRAKEN2DB {
     """
     mkdir -p kraken2db
     wget \\
-        $args
-        $url
+        $args \\
+        ${url}
     tar -xzvf *.tar.gz -C ./kraken2db
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        tar: \$(tar --version)
-        wget: \$(wget --version)
+        wget: \$(wget --version | head -1 | cut -d ' ' -f 3)
     END_VERSIONS
     """
 
@@ -52,7 +51,7 @@ process WGETKRAKEN2DB {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        wgetkraken2db: \$(wgetkraken2db --version)
+        \$(wget --version | head -1 | cut -d ' ' -f 3)
     END_VERSIONS
     """
 }
