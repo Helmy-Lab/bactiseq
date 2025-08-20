@@ -31,8 +31,7 @@ process RACON {
         -t $task.cpus \\
         ${reads} \\
         ${paf} \\
-        ${fasta} \\
-        > polished.fasta
+        ${fasta} > polished.fasta
 
 
     cat <<-END_VERSIONS > versions.yml
