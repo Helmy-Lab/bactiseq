@@ -205,26 +205,26 @@ workflow SAMPLESHEETFILTERING {
     
 
     emit:
-    list_longnano_noPolish = (longnano_noPolish)
-    list_longnano_longPolish = (longnano_longPolish)
-    list_longnano_shortPolish = (longnano_shortPolish)
+    list_longnano_noPolish = Channel.fromList(longnano_noPolish)
+    list_longnano_longPolish = Channel.fromList(longnano_longPolish)
+    list_longnano_shortPolish = Channel.fromList(longnano_shortPolish)
 
-    list_longpac_noPolish = (longpac_noPolish)
-    list_longpac_longPolish = (longpac_longPolish)
-    list_longpac_shortPolish = (longpac_shortPolish)
+    list_longpac_noPolish = Channel.fromList(longpac_noPolish)
+    list_longpac_longPolish = Channel.fromList(longpac_longPolish)
+    list_longpac_shortPolish = Channel.fromList(longpac_shortPolish)
 
-    list_longbam_noPolish = (longbam_noPolish)
-    list_longbam_longPolish = (longbam_longPolish)
+    list_longbam_noPolish = Channel.fromList(longbam_noPolish)
+    list_longbam_longPolish = Channel.fromList(longbam_longPolish)
     list_longbam_shortPolish = Channel.fromList(longbam_shortPolish)
 
-    list_hybrid_longPolish = (hybrid_longPolish)
-    list_hybrid_shortPolish = (hybrid_shortPolish)
-    list_hybrid_noPolish = (hybrid_noPolish)
+    list_hybrid_longPolish = Channel.fromList(hybrid_longPolish)
+    list_hybrid_shortPolish = Channel.fromList(hybrid_shortPolish)
+    list_hybrid_noPolish = Channel.fromList(hybrid_noPolish)
 
-    list_short_longPolish = (short_longPolish)
-    list_short_noPolish = (short_noPolish)
-    list_short_shortPolish = (short_shortPolish)
+    list_short_longPolish = Channel.fromList(short_longPolish)
+    list_short_noPolish = Channel.fromList(short_noPolish)
+    list_short_shortPolish = Channel.fromList(short_shortPolish)
 
-    list_assembled_convert = (assembled_convert)
-    list_assembled = (assembled)
+    list_assembled_convert = Channel.fromList(assembled_convert)
+    list_assembled = Channel.fromList(assembled)
 }
