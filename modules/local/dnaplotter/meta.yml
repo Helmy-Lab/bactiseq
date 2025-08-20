@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+# # TODO nf-core: Add a description of the module and list keywords
+name: "artemis_dnaplotter"
+description: write your description here
+keywords:
+  - sort
+  - example
+  - genomics
+tools:
+  ## TODO nf-core: Add a description and other details for the software below
+  - "artemis":
+      description: "A set of Java genome visualization tools including the Artemis genome
+        browser & annotation tool, ACT DNA sequence comparison viewer, DNA Plotter image
+        generation tool and the BamView BAM/CRAM file viewer."
+      homepage: "None"
+      documentation: "None"
+      tool_dev_url: "None"
+      doi: ""
+      licence: ["GPL v3"]
+      identifier: biotools:artemis3D
+
+input:
+  # TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
+  - - meta:
+        type: map
+        description: Groovy Map containing sample information. e.g. `[
+          id:'sample1' ]`
+    - nucleic_acid_structure:
+        type: file
+        description: nucleic_acid_structure file
+        pattern: "*.{mmcif,pdb}"
+        ontologies:
+          - edam: http://edamontology.org/data_1459 # Nucleic acid structure
+          - edam: http://edamontology.org/format_1477 # mmCIF
+          - edam: http://edamontology.org/format_1476 # PDB
+output:
+  # TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
+  nucleic_acid_structure_alignment:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information. e.g. `[
+            id:'sample1' ]`
+      - "*.{textual}":
+          type: file
+          description: nucleic_acid_structure_alignment file
+          pattern: "*.{textual}"
+          ontologies:
+            - edam: http://edamontology.org/data_1482 # Nucleic acid structure alignment
+            - edam: http://edamontology.org/format_2330 # Textual format
+  structure_similarity_score:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information. e.g. `[
+            id:'sample1' ]`
+      - "*.{textual}":
+          type: file
+          description: structure_similarity_score file
+          pattern: "*.{textual}"
+          ontologies:
+            - edam: http://edamontology.org/data_0888 # Structure similarity score
+            - edam: http://edamontology.org/format_2330 # Textual format
+  nucleic_acid_structure:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information. e.g. `[
+            id:'sample1' ]`
+      - "*.{mmcif,pdb}":
+          type: file
+          description: nucleic_acid_structure file
+          pattern: "*.{mmcif,pdb}"
+          ontologies:
+            - edam: http://edamontology.org/data_1459 # Nucleic acid structure
+            - edam: http://edamontology.org/format_1477 # mmCIF
+            - edam: http://edamontology.org/format_1476 # PDB
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: versions.yml
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@txx99"
+maintainers:
+  - "@txx99"
