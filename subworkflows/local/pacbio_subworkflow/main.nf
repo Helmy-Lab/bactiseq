@@ -3,7 +3,7 @@ include {HIFIADAPTERFILT               } from '../../../modules/local/hifiadapte
 
 include {  FLYE                        } from '../../../modules/nf-core/flye/main'
 include {  SAMTOOLS_FASTQ              } from '../../../modules/local/fastqsamtools/main'
-
+include { CHOPPER                           } from '../../../modules/nf-core/chopper/main'
 include { ANNOTATION                   } from '../../../subworkflows/local/annotation/main.nf'
 include { TAXONOMY                     } from '../../../subworkflows/local/taxonomy/main.nf'
 include { ASSEMBLY_QA                  } from '../../../subworkflows/local/assembly_qa/main'
@@ -48,12 +48,12 @@ workflow PACBIO_SUBWORKFLOW {
     HIFIADAPTERFILT.out.filt
         .filter {meta, filt -> filt.size() > 0 && filt.countFastq() > 0}
         .set{qc_reads}
-
+    CHOPPER(HIFIADAPTERFILT.out.filt, [])
     // qc_reads.view()
 
-    POST_FILTER_QA(qc_reads)
+    POST_FILTER_QA(CHOPPER.out.fastq)
 
-    FLYE(qc_reads, "--pacbio-hifi")
+    FLYE(CHOPPER.out.fastq, "--pacbio-hifi")
     TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
 
     ch_assembled = FLYE.out.fasta
