@@ -97,8 +97,9 @@ workflow BACTISEQ {
         .set{ch_pac_input}
     ch_polishing.view()
     ch_pac_input.view()
+    
     DATABASEDOWNLOAD()
-    PACBIO_SUBWORKFLOW(ch_pac_input,ch_polishing, false, "short", DATABASEDOWNLOAD.out.gambitdb, [])
+    // PACBIO_SUBWORKFLOW(ch_pac_input,ch_polishing, false, "short", DATABASEDOWNLOAD.out.gambitdb, [])
     // ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.output)
     // ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db,  DATABASEDOWNLOAD.out.buscodb )
 

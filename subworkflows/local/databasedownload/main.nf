@@ -1,14 +1,15 @@
 
 //Nf-core modules
-include { AMRFINDERPLUS_UPDATE } from '../../../modules/nf-core/amrfinderplus/update/main'
-include { BUSCO_DOWNLOAD } from '../../../modules/nf-core/busco/download/main'
+include { AMRFINDERPLUS_UPDATE  } from '../../../modules/nf-core/amrfinderplus/update/main'
+include { BUSCO_DOWNLOAD        } from '../../../modules/nf-core/busco/download/main'
 include { BAKTA_BAKTADBDOWNLOAD } from '../../../modules/nf-core/bakta/baktadbdownload/main'
-include { KRAKEN2_BUILDSTANDARD } from '../../../modules/nf-core/kraken2/buildstandard/main'
+
 
 //Local made modules to download
 include { CHECKM2_DATABASEDOWNLOAD}  from '../../../modules/local/checkm2Download/main'
-include { CARDDB              } from '../../../modules/local/carddb/main'
-include { WGET_GAMBITDB } from '../../../modules/local/wget_gambitdb/main'
+include { CARDDB                  } from '../../../modules/local/carddb/main'
+include { WGET_GAMBITDB           } from  '../../../modules/local/wget_gambitdb/main'
+include { WGETKRAKEN2DB           } from '../../../modules/local/wgetkraken2db/main'
 
 workflow DATABASEDOWNLOAD {
 
@@ -103,6 +104,16 @@ workflow DATABASEDOWNLOAD {
     }else if (params.gambit_db == null && !downloadData.contains('gambitdb')){
         gambit_ch = Channel.fromPath("${params.db_path}/gambitdb")
     }
+
+    def kraken2_ch = Channel.empty()
+    if (params.kraken2_db == null && downloadData.contains('kraken2')){
+        WGETKRAKEN2DB('https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08_GB_20250714.tar.gz')
+        kraken2_ch = kraken2_ch.concat(WGETKRAKEN2DB.out.database_dir)
+    }else if (params.kraken2_db != null){
+        kraken2_ch = Channel.fromPath(params.kraken2_db)
+    }else if (params.kraken2_db == null && !downloadData.contains('kraken2')){
+        kraken2_ch = Channel.fromPath("${params.db_path}/kraken2db")
+    }
     // bakta_ch.view()
     // println(card_ch.out.stdout)
 // println "All subdirectories: ${allSubdirs}"
@@ -133,4 +144,5 @@ workflow DATABASEDOWNLOAD {
         checkm2db= checmk2_ch.first()
         buscodb = busco_ch.last()
         gambitdb = gambit_ch.first()
+        krakendb = kraken2_ch.first()
 }
