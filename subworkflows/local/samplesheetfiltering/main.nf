@@ -158,7 +158,7 @@ workflow SAMPLESHEETFILTERING {
             if (polishInput == 'short' && check_long(file_long, header) == 'nanopore'){ //If we are polishing by short, we assemble long
                 //BASECALLER MODE GET IT
                 if (base_caller == 'AUTO' && parseBasecallModelVersion(header) != null){
-                    item[0]['basecaller'] = parseBasecallModelVersion(header)
+                    item[0]['basecaller'] = parseBasecallModelVersion(header) //Set meta data for basecaller mode
                 }
                 longnano_shortPolish.add(item)
             }else if (polishInput == 'short' && check_long(file_long, header) == 'pacbio'){
@@ -173,6 +173,23 @@ workflow SAMPLESHEETFILTERING {
         //Given long reads, and short reads, what type of assembly and polish are we doing. HYBRID ASSEMBLY
         }else if (file_long != "longNA" && (file_short1 != "short1NA" || file_short2 != "short2NA") && params.hybrid_assembler != null){
             println("third else")
+            //What type of long read did we input? spades needs to know
+            if (check_long(file_long, header) == 'nanopore'){
+                item[0]['long'] = 'nano'
+            }else if (check_long(file_long, header) == 'pacbio'){
+                item[0]['long'] = 'pac'
+            }else if (check_long(file_long, header) == 'bam'){
+                item[0]['long'] = 'bam'
+            }
+            //Are we single ended or paired end short reads? (illumina reads)
+            if (file_short1 != "short1NA" && file_short2 != "short2NA"){
+                //We are paired end reads
+                item[0]['single_end'] = false
+            }else{
+                //else we are single end
+                item[0]['single_end'] = true
+            }
+            
             if (polishInput == 'short'){ //If we are polishing by short, we assemble long
                 hybrid_shortPolish.add(item)
             }else if (polishInput == 'long'){

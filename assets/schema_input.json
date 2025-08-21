@@ -47,7 +47,7 @@
     "required": ["sample"],
     "oneOf": [
       {
-        "description": "Hybrid assembly: short + long reads",
+        "description": "Hybrid assembly: short + long reads or polishing with short mayve",
         "properties": {
           "short_fastq1": { "not": { "const": "short1NA" } },
           "long_fastq": { "not": { "const": "longNA" } },
