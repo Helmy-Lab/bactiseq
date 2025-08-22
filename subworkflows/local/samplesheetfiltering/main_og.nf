@@ -83,16 +83,26 @@ workflow SAMPLESHEETFILTERING {
     def hybrid_polishing_order = []
     def short_polishing_order = []
 
-    def longnano = []
+    def longnano_noPolish = []
+    def longnano_longPolish = []
+    def longnano_shortPolish = []
 
-    def longpac= []
+    def longpac_noPolish = []
+    def longpac_longPolish = []
+    def longpac_shortPolish = []
     
 
-    def longbam = []
+    def longbam_noPolish = []
+    def longbam_longPolish = []
+    def longbam_shortPolish = []
 
-    def hybrid=[]
+    def hybrid_longPolish = []
+    def hybrid_shortPolish = []
+    def hybrid_noPolish = []
 
-    def short_reads = []
+    def short_longPolish = []
+    def short_noPolish = []
+    def short_shortPolish = []
 
     samplesheet.each{item ->
     
@@ -100,6 +110,7 @@ workflow SAMPLESHEETFILTERING {
         def sample = 0
 
         def list_string = item.join(',').split(',')
+        println(list_string)
         // println(list_string)
         // println(list_string[1])
 
@@ -119,32 +130,33 @@ workflow SAMPLESHEETFILTERING {
         //Check the long read data, what type of read data is it? Nanopore, Pacbio, BAM?
         if (file_long != "longNA" && file_short1 == "short1NA" && file_short2 == "short2NA"){
             //Extract header from fastq file to check type of reads
+            println("long only")
             if (check_long(file_long, header) == 'nanopore'){
                 //What basecaller was used (if not given)
                 if (base_caller == 'AUTO' && parseBasecallModelVersion(header) != null){
                     item[0]['basecaller'] = parseBasecallModelVersion(header)
                 }
-                longnano.add(item)
+
                 //What type of polishing do we need to do?
                 if (polishInput == 'NA'){
-                    long_nano_polishing_order.add('none')
+                    longnano_noPolish.add(item)
+                    long_nano_polishing_order.add(item)
                 }else{
-                    long_nano_polishing_order.add('long')
+                    longnano_longPolish.add(item)
                 }
             } else if (check_long(file_long, header) == 'pacbio'){
                 if (polishInput == 'NA'){
-                    longpac_polishing_order.add('none')
+                    longpac_noPolish.add(item)
                 }else{
-                    longpac_polishing_order.add('long')
+                    longpac_longPolish.add(item)
                 }
-                longpac.add(item)
             } else if (check_long(file_long, header) == 'bam'){
+                println('bam')
                 if (polishInput == 'NA'){
-                    long_bam_polishing_order.add('none')
+                    longbam_noPolish.add(item)
                 }else{
-                    long_bam_polishing_order.add('long')
+                    longbam_longPolish.add(item)
                 }
-                longbam.add(item)
             } else if (check_long(file_long, header) == 'none'){
                 println(item)
                 throw new Exception("Long read file: Read type (Nanopore or Pacbio cannot be determined from filename or headers. Nanopore data: filename has nanopore within, header has runid or basecall_model inside) Pacbio data: Filename has hifi/Bam/Sam within, or header has ccs or @m in the line")
@@ -152,28 +164,25 @@ workflow SAMPLESHEETFILTERING {
         
         //Given long reads, and short reads, what type of assembly and polish are we doing. NO HYBRID ASSEMBLY
         }else if (file_long != "longNA" && (file_short1 != "short1NA" || file_short2 != "short2NA") && params.hybrid_assembler == null ){
+            println("second else")
             if (polishInput == 'short' && check_long(file_long, header) == 'nanopore'){ //If we are polishing by short, we assemble long
                 //BASECALLER MODE GET IT
                 if (base_caller == 'AUTO' && parseBasecallModelVersion(header) != null){
                     item[0]['basecaller'] = parseBasecallModelVersion(header) //Set meta data for basecaller mode
                 }
-                longnano.add(item)
-                long_nano_polishing_order.add('short')
-
+                longnano_shortPolish.add(item)
             }else if (polishInput == 'short' && check_long(file_long, header) == 'pacbio'){
-                longpac.add(item)
-                longpac_polishing_order.add('short')
+                longpac_shortPolish.add(item)
             }else if (polishInput == 'short' && check_long(file_long, header) == 'bam'){
-                long_bam_polishing_order.add('short')
-                longbam.add(item)
+                longbam_shortPolish.add(item)
+
             }else if (polishInput == 'long'){ //If we are polishing by long, we assemble short
-                short_reads.add(item)
-                short_polishing_order.add('long')
+                short_longPolish.add(item)
             }
         
         //Given long reads, and short reads, what type of assembly and polish are we doing. HYBRID ASSEMBLY
         }else if (file_long != "longNA" && (file_short1 != "short1NA" || file_short2 != "short2NA") && params.hybrid_assembler != null){
-            hybrid.add(item)
+            println("third else")
             //What type of long read did we input? spades needs to know
             if (check_long(file_long, header) == 'nanopore'){
                 item[0]['long'] = 'nano'
@@ -192,22 +201,22 @@ workflow SAMPLESHEETFILTERING {
             }
 
             if (polishInput == 'short'){ //If we are polishing by short, we assemble long
-                hybrid_polishing_order.add('short')
+                hybrid_shortPolish.add(item)
             }else if (polishInput == 'long'){
-                hybrid_polishing_order.add('long')
+                hybrid_longPolish.add(item)
             }else if (polishInput == 'false'){
-                hybrid_polishing_order.add('none')
+                hybrid_noPolish.add(item)
             }
 
         //Illumina reads only
         }else if (file_long == 'longNA' && (file_short1 != "short1NA" || file_short2 != "short2NA")){
-            short_reads.add(item)
+            println("forth else")
             if (polishInput == 'short'){
-                short_polishing_order.add('short')
+                short_shortPolish.add(item)
             }else if (polishInput == 'long'){
                 throw new Exception("Cannot polish long if only given short reads for the sample")
-            }else if (polishInput == 'NA'){
-                short_polishing_order.add('none')
+            }else if (polishInput == 'false'){
+                short_noPolish.add(item)
             }
         //Assembled files put in
         }else if (assemble_file != 'assemblyNA'){
@@ -223,17 +232,25 @@ workflow SAMPLESHEETFILTERING {
     
 
     emit:
-    pacbio_reads = Channel.fromList(longpac)
-    nano_reads = Channel.fromList(longnano)
-    bam_reads = Channel.fromList(longbam)
-    hybrid_reads = Channel.fromList(hybrid)
-    illumina_reads = Channel.fromList(short_reads)
+    list_longnano_noPolish = (longnano_noPolish)
+    list_longnano_longPolish =(longnano_longPolish)
+    list_longnano_shortPolish = (longnano_shortPolish)
 
-    pac_polish = Channel.fromList(longpac_polishing_order)
-    nano_polish = Channel.fromList(long_nano_polishing_order)
-    bam_polish = Channel.fromList(long_bam_polishing_order)
-    hyrid_polish = Channel.fromList(hybrid_polishing_order)
-    short_polish = Channel.fromList(short_polishing_order)
+    list_longpac_noPolish = Channel.fromList(longpac_noPolish)
+    list_longpac_longPolish = Channel.fromList(longpac_longPolish)
+    list_longpac_shortPolish = Channel.fromList(longpac_shortPolish)
+
+    list_longbam_noPolish =Channel.fromList(longbam_noPolish)
+    list_longbam_longPolish = Channel.fromList(longbam_longPolish)
+    list_longbam_shortPolish = Channel.fromList(longbam_shortPolish)
+
+    list_hybrid_longPolish = (hybrid_longPolish)
+    list_hybrid_shortPolish = (hybrid_shortPolish)
+    list_hybrid_noPolish = (hybrid_noPolish)
+
+    list_short_longPolish =(short_longPolish)
+    list_short_noPolish =(short_noPolish)
+    list_short_shortPolish = (short_shortPolish)
 
     list_assembled_convert = (assembled_convert)
     list_assembled = (assembled)

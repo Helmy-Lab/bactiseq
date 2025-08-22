@@ -32,15 +32,14 @@ workflow PACBIO_SUBWORKFLOW {
     ch_input_full.view()
     def ch_input = ch_input_full.map{item -> [item[0], file(item[3])]}
     def ch_polish = ch_input_full.map{item -> [item[0], file(item[3])]} //Default is the same reads from long reads are the reads to polish
-    def polish = ch_input_full.map
     ch_polish = ch_input_full.map{item -> 
-            (item[2] != null && !item[2].toString().trim().isEmpty() && item[0].polish == 'short') //if not null && not string representation is empty ''
+            (item[2] != null && !item[2].toString().trim().isEmpty() && polish == 'short') //if not null && not string representation is empty ''
                 ? [item[0], file(item[1]), file(item[2])] //True then take both short reads
                 : [item[0], file(item[1])] //else only 1 short read
         }
     
     ch_polish = ch_input_full.map{item -> 
-            (item[2] != null && !item[2].toString().trim().isEmpty() && item[0].polish == 'long') //if not null && not string representation is empty ''
+            (item[2] != null && !item[2].toString().trim().isEmpty() && polish == 'long') //if not null && not string representation is empty ''
                 ? ch_input //True then take the default, long reads
                 : ch_polish //else, the short reads may have been set, take it
         }

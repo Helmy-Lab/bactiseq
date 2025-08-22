@@ -79,7 +79,8 @@ workflow BACTISEQ {
     
 
     SAMPLESHEETFILTERING(list)
-
+    SAMPLESHEETFILTERING.out.illumina_reads.view()
+    SAMPLESHEETFILTERING.out.short_polish.count().view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
     //PARSE THE OUTPUT/SAMPLESHEET TO START THE PIPELINE
         ////---------------------------------------------------------
@@ -185,7 +186,6 @@ workflow BACTISEQ {
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
     // def channel_test = Channel.fromList(SAMPLESHEETFILTERING.out.list_longpac_shortPolish)
-    def channel_test = SAMPLESHEETFILTERING.out.list_longpac_longPolish
 
     // channel_test
     //     .map { item -> [item[0], file(item[3])] } // Extract first and last for each list
