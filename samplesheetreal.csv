@@ -1,2 +1,4 @@
 sample,short_fastq1,short_fastq2,long_fastq,assembly,polish,ONT_basecaller
-Sample1,,,./testDatasetNfcore/Pacbio_illuminaPolish/PacbioSRR27591472.hifi.fastq.gz,,long,
+Sample1,,,TestDatasetNfcore/Pacbio_illuminaPolish/PacbioSRR27591472.hifi.fastq.gz,,long,
+Sample2,,,TestDatasetNfcore/Pacbio_illuminaPolish/PacbioSRR27591472.hifi.fastq.gz,,long,
+Sample3,TestDatasetNfcore/Pacbio_illuminaPolish/IlluminaSRR22858233.fastq.gz,,TestDatasetNfcore/Pacbio_illuminaPolish/PacbioSRR27591472.hifi.fastq.gz,,short,
