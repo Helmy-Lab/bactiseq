@@ -18,7 +18,7 @@ process CHECKM2_DATABASEDOWNLOAD {
 
     script:
     def args        = task.ext.args ?: ''
-    zenodo_id       = db_zenodo_id ?: 14897628  // Default to version 3 if no ID provided
+    def zenodo_id       = db_zenodo_id ?: 14897628  // Default to version 3 if no ID provided
     
     def url = new URL("https://zenodo.org/api/records/${zenodo_id}")
     def connection = url.openConnection()
