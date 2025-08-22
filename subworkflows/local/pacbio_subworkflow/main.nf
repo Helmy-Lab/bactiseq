@@ -29,8 +29,9 @@ workflow PACBIO_SUBWORKFLOW {
     main:
     def ch_output = Channel.empty()
     def ch_versions = Channel.empty()
-    ch_input_full.view()
+
     def ch_input = ch_input_full.map{item -> [item[0], file(item[3])]}
+
     def ch_polish = ch_input_full.map{item -> [item[0], file(item[3])]} //Default is the same reads from long reads are the reads to polish
     ch_polish = ch_input_full.map{item -> 
             (item[2] != null && !item[2].toString().trim().isEmpty() && polish == 'short') //if not null && not string representation is empty ''
@@ -48,10 +49,10 @@ workflow PACBIO_SUBWORKFLOW {
         meta.long == 'bam'
     }
 
-    // ch_converted = Channel.empty()
-    GATK4_SAMTOFASTQ(bam_files)
-    // ch_converted = ch_converted.concat(SAMTOOLS_FASTQ.out.fastq)
-    ch_input = GATK4_SAMTOFASTQ.out.fastq
+    // // ch_converted = Channel.empty()
+    // GATK4_SAMTOFASTQ(bam_files)
+    // // ch_converted = ch_converted.concat(SAMTOOLS_FASTQ.out.fastq)
+    // ch_input = GATK4_SAMTOFASTQ.out.fastq
     
     LONGREADS_QA(ch_input)
 
@@ -67,7 +68,7 @@ workflow PACBIO_SUBWORKFLOW {
     POST_FILTER_QA(CHOPPER.out.fastq)
 
     FLYE(CHOPPER.out.fastq, "--pacbio-hifi")
-    TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
+    //TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
 
     ch_assembled = FLYE.out.fasta
         .map{meta, fasta -> [meta, fasta]}
