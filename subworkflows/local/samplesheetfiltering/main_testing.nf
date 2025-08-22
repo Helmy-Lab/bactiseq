@@ -77,25 +77,13 @@ workflow SAMPLESHEETFILTERING {
     def assembled = [] //Assembled genomes that are in fasta format
     def assembled_convert = [] //assembled genomes that arent fasta format
 
-    def longnano_noPolish = []
-    def longnano_longPolish = []
-    def longnano_shortPolish = []
+    def long_pac = []
 
-    def longpac_noPolish = []
-    def longpac_longPolish = []
-    def longpac_shortPolish = []
+    def long_nano = []
 
-    def longbam_noPolish = []
-    def longbam_longPolish = []
-    def longbam_shortPolish = []
+    def hybrid = []
 
-    def hybrid_longPolish = []
-    def hybrid_shortPolish = []
-    def hybrid_noPolish = []
-
-    def short_longPolish = []
-    def short_noPolish = []
-    def short_shortPolish = []
+    def illumina = []
 
     samplesheet.each{item ->
         //Item is the row in the sample sheet
@@ -128,26 +116,16 @@ workflow SAMPLESHEETFILTERING {
                 if (base_caller == 'AUTO' && parseBasecallModelVersion(header) != null){
                     item[0]['basecaller'] = parseBasecallModelVersion(header)
                 }
-
-                //What type of polishing do we need to do?
-                if (polishInput == 'NA'){
-                    longnano_noPolish.add(item)
-                }else{
-                    longnano_longPolish.add(item)
-                }
+                item[0]['long'] = 'nano'
+                long_nano.add(item)
             } else if (check_long(file_long, header) == 'pacbio'){
-                if (polishInput == 'NA'){
-                    longpac_noPolish.add(item)
-                }else{
-                    longpac_longPolish.add(item)
-                }
+                item[0]['long'] = 'pac'
+                item[0]['bam'] = false
+                long_pac.add(item)
             } else if (check_long(file_long, header) == 'bam'){
-                println('bam')
-                if (polishInput == 'NA'){
-                    longbam_noPolish.add(item)
-                }else{
-                    longbam_longPolish.add(item)
-                }
+                item[0]['long'] = 'bam'
+                item[0]['bam'] = true
+                long_pac.add(item)
             } else if (check_long(file_long, header) == 'none'){
                 println(item)
                 throw new Exception("Long read file: Read type (Nanopore or Pacbio cannot be determined from filename or headers. Nanopore data: filename has nanopore within, header has runid or basecall_model inside) Pacbio data: Filename has hifi/Bam/Sam within, or header has ccs or @m in the line")
@@ -161,14 +139,17 @@ workflow SAMPLESHEETFILTERING {
                 if (base_caller == 'AUTO' && parseBasecallModelVersion(header) != null){
                     item[0]['basecaller'] = parseBasecallModelVersion(header) //Set meta data for basecaller mode
                 }
-                longnano_shortPolish.add(item)
+                item[0]['long'] = 'nano'
+                long_nano.add(item)
             }else if (polishInput == 'short' && check_long(file_long, header) == 'pacbio'){
-                longpac_shortPolish.add(item)
+                item[0]['bam'] = false
+                long_pac.add(item)
             }else if (polishInput == 'short' && check_long(file_long, header) == 'bam'){
-                longbam_shortPolish.add(item)
+                item[0]['bam'] = true
+                long_pac.add(item)
 
             }else if (polishInput == 'long'){ //If we are polishing by long, we assemble short
-                short_longPolish.add(item)
+                illumina.add(item)
             }
         
         //Given long reads, and short reads, what type of assembly and polish are we doing. HYBRID ASSEMBLY
@@ -190,25 +171,22 @@ workflow SAMPLESHEETFILTERING {
                 //else we are single end
                 item[0]['single_end'] = true
             }
-
-            if (polishInput == 'short'){ //If we are polishing by short, we assemble long
-                hybrid_shortPolish.add(item)
-            }else if (polishInput == 'long'){
-                hybrid_longPolish.add(item)
-            }else if (polishInput == 'false'){
-                hybrid_noPolish.add(item)
-            }
+            hybrid.add(item)
+            // if (polishInput == 'short'){ //If we are polishing by short, we assemble long
+            //     hybrid.add(item)
+            // }else if (polishInput == 'long'){
+            //     hybrid.add(item)
+            // }else if (polishInput == 'false'){
+                
+            // }
 
         //Illumina reads only
         }else if (file_long == 'longNA' && (file_short1 != "short1NA" || file_short2 != "short2NA")){
             println("forth else")
-            if (polishInput == 'short'){
-                short_shortPolish.add(item)
-            }else if (polishInput == 'long'){
+            if (polishInput == 'long'){
                 throw new Exception("Cannot polish long if only given short reads for the sample")
-            }else if (polishInput == 'false'){
-                short_noPolish.add(item)
             }
+            illumina.add(item)
         //Assembled files put in
         }else if (assemble_file != 'assemblyNA'){
             println("fifth else")
@@ -223,26 +201,11 @@ workflow SAMPLESHEETFILTERING {
     
 
     emit:
-    list_longnano_noPolish = (longnano_noPolish)
-    list_longnano_longPolish =(longnano_longPolish)
-    list_longnano_shortPolish = (longnano_shortPolish)
-
-    list_longpac_noPolish = (longpac_noPolish)
-    list_longpac_longPolish = (longpac_longPolish)
-    list_longpac_shortPolish = (longpac_shortPolish)
-
-    list_longbam_noPolish =(longbam_noPolish)
-    list_longbam_longPolish = (longbam_longPolish)
-    list_longbam_shortPolish = (longbam_shortPolish)
-
-    list_hybrid_longPolish = (hybrid_longPolish)
-    list_hybrid_shortPolish = (hybrid_shortPolish)
-    list_hybrid_noPolish = (hybrid_noPolish)
-
-    list_short_longPolish =(short_longPolish)
-    list_short_noPolish =(short_noPolish)
-    list_short_shortPolish = (short_shortPolish)
-
-    list_assembled_convert = (assembled_convert)
-    list_assembled = (assembled)
+    long_pacbio = Channel.fromList(long_pac)
+    long_nanopore =  Channel.fromList(long_nano)
+    short_illumina =  Channel.fromList(illumina)
+    hybrid_assembler =  Channel.fromList(hybrid)
+    
+    list_assembled_convert =  Channel.fromList(assembled_convert)
+    list_assembled =  Channel.fromList(assembled)
 }

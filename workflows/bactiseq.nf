@@ -12,8 +12,10 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 
 //Test bakta
 include { DATABASEDOWNLOAD       } from '../subworkflows/local/databasedownload/main.nf'
-include { SAMPLESHEETFILTERING   } from '../subworkflows/local/samplesheetfiltering/main'
+include { SAMPLESHEETFILTERING   } from '../subworkflows/local/samplesheetfiltering/main.nf'
+
 include { PACBIO_SUBWORKFLOW }  from '../subworkflows/local/pacbio_subworkflow/main'
+include { NANOPORE_SUBWORKFLOW }  from '../subworkflows/local/nanopore_subworkflow/main'
 
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
@@ -64,12 +66,12 @@ workflow BACTISEQ {
     //             | map { fna -> [ [id: "${fna.baseName}_copy2"], fna ] }
     // )
     // ch_input.view()
-    // ch_input2 = Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
-    // | map { fna -> [ [id: "${fna.baseName}_copy1"], 'hello' ] } \
-    // | mix( 
-    //     Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
-    //         | map { fna -> [ [id: "${fna.baseName}_copy2"], 'hello2' ] }
-    // )
+    ch_input2 = Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
+    | map { fna -> [ [id: "${fna.baseName}_copy1"], 'hello' ] } \
+    | mix( 
+        Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
+            | map { fna -> [ [id: "${fna.baseName}_copy2"], 'hello2' ] }
+    )
 
     // ch_out = ch_input.join(ch_input2)
 
@@ -78,12 +80,91 @@ workflow BACTISEQ {
     // BUSCO_DOWNLOAD(params.busco_db_type)
     // ch_input.view()
     // Channel.fromList([]).ifEmpty('Hello').view()
+
+    DATABASEDOWNLOAD()
     def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    
 
     SAMPLESHEETFILTERING(list)
 
+    //PARSE THE OUTPUT/SAMPLESHEET TO START THE PIPELINE
+        ////---------------------------------------------------------
+        ///----**************PACBIO WORKFLOW*************--------------
+        ////---------------------------------------------------------
+        //LONG POLISH
+    def longpac_longpolish = SAMPLESHEETFILTERING.out.list_longpac_longPolish
+    def flattened_result = longpac_longpolish
+        .filter { value -> value instanceof List && !value.isEmpty() }
+        .flatMap()
+    flattened_result.view()
+    // ch_input2.view()
+    PACBIO_SUBWORKFLOW(flattened_result)
 
-    
+    //     //SHORT POLISH
+    // def longpac_shortpolish = SAMPLESHEETFILTERING.out.list_longpac_shortPolish
+    // longpac_shortpolish.branch { value ->
+    //     empty: value instanceof List && value.isEmpty()  // Check if value is an empty list
+    //     non_empty: value instanceof List && !value.isEmpty()  // Check if value is a non-empty list
+    // }.set { result }
+    // flattened_result = result.non_empty.flatMap()
+    //     // Run your process only if channel has data
+    // PACBIO_SUBWORKFLOW(flattened_result, false, 'short', DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb)
+    // ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+
+    //     //NO POLISH
+    // def longpac_nopolish = SAMPLESHEETFILTERING.out.list_longpac_noPolish
+    // longpac_nopolish.branch { value ->
+    //     empty: value instanceof List && value.isEmpty()  // Check if value is an empty list
+    //     non_empty: value instanceof List && !value.isEmpty()  // Check if value is a non-empty list
+    // }.set { result }
+    // flattened_result = result.non_empty.flatMap()
+    //     // Run your process only if channel has data
+    // PACBIO_SUBWORKFLOW(flattened_result, false, 'NA', DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb)
+    // ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+
+    // def longbam_longpolish = SAMPLESHEETFILTERING.out.list_longbam_longPolish
+    // longbam_longpolish.branch { value ->
+    //     empty: value instanceof List && value.isEmpty()  // Check if value is an empty list
+    //     non_empty: value instanceof List && !value.isEmpty()  // Check if value is a non-empty list
+    // }.set { result }
+    // flattened_result = result.non_empty.flatMap()
+    // // Check if channel is not empty
+    //     // Run your process only if channel has data
+    // PACBIO_SUBWORKFLOW(flattened_result, true, 'long', DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb)
+    // ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+
+    //     //SHORT POLISH
+    // def longbam_shortpolish = SAMPLESHEETFILTERING.out.list_longbam_shortPolish
+    // longbam_shortpolish.branch { value ->
+    //     empty: value instanceof List && value.isEmpty()  // Check if value is an empty list
+    //     non_empty: value instanceof List && !value.isEmpty()  // Check if value is a non-empty list
+    // }.set { result }
+    // flattened_result = result.non_empty.flatMap()
+    //     // Run your process only if channel has data
+    // PACBIO_SUBWORKFLOW(flattened_result, true, 'short', DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb)
+    // ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+
+    //     //NO POLISH
+    // def longbam_nopolish = SAMPLESHEETFILTERING.out.list_longbam_noPolish
+    // longbam_nopolish.branch { value ->
+    //     empty: value instanceof List && value.isEmpty()  // Check if value is an empty list
+    //     non_empty: value instanceof List && !value.isEmpty()  // Check if value is a non-empty list
+    // }.set { result }
+    // flattened_result = result.non_empty.flatMap()
+    //     // Run your process only if channel has data
+    // PACBIO_SUBWORKFLOW(flattened_result, true, 'NA', DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb)
+    // ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+
+    //     ////---------------------------------------------------------
+    //     ///----************** NANOPORE *************--------------
+    //     ////---------------------------------------------------------
+    // SAMPLESHEETFILTERING.out.list_longnano_longPolish.branch{value ->
+    //     empty: value.isEmpty()
+    //     non_empty: value.isEmpty()
+    // }.set{result}
+
+    ////++++++++++++++++++++++++++++++++++++
+    ////++++++++++++++++++++++++++++++++++++
     // def channel_test = Channel.fromList(SAMPLESHEETFILTERING.out.list_longpac_shortPolish)
     // def channel_test = SAMPLESHEETFILTERING.out.list_longpac_shortPolish
 
@@ -97,7 +178,7 @@ workflow BACTISEQ {
     // ch_polishing.view()
     // ch_pac_input.view()
 
-    DATABASEDOWNLOAD()
+
     // PACBIO_SUBWORKFLOW(ch_pac_input,ch_polishing, false, "short", DATABASEDOWNLOAD.out.gambitdb, [])
     // ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.output)
     // ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db,  DATABASEDOWNLOAD.out.buscodb )

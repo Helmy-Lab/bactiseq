@@ -14,7 +14,7 @@ include { WGETKRAKEN2DB           } from '../../../modules/local/wgetkraken2db/m
 workflow DATABASEDOWNLOAD {
 
     main:
-    database_list =['baktadb', 'amrdb', 'checkm2db', 'carddb', 'buscodb', 'kraken2', 'gambitdb'] as Set //All the databases we need
+    database_list =['baktadb', 'amrdb', 'checkm2db', 'carddb', 'buscodb', 'kraken2db', 'gambitdb'] as Set //All the databases we need
     // 1. First validate params.db_path exists or create it
     db_dir = new File(params.db_path)
     if (!db_dir.exists()) { // If database directory does not exist
