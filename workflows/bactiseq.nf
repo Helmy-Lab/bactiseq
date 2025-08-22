@@ -66,13 +66,6 @@ workflow BACTISEQ {
     //             | map { fna -> [ [id: "${fna.baseName}_copy2"], fna ] }
     // )
     // ch_input.view()
-    ch_input2 = Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
-    | map { fna -> [ [id: "${fna.baseName}_copy1"], 'hello' ] } \
-    | mix( 
-        Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
-            | map { fna -> [ [id: "${fna.baseName}_copy2"], 'hello2' ] }
-    )
-
     // ch_out = ch_input.join(ch_input2)
 
     // ch_out.view()
@@ -98,7 +91,7 @@ workflow BACTISEQ {
         .flatMap()
     flattened_result.view()
     // ch_input2.view()
-    PACBIO_SUBWORKFLOW(flattened_result)
+    PACBIO_SUBWORKFLOW(flattened_result, false, 'long', DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb )
 
     //     //SHORT POLISH
     // def longpac_shortpolish = SAMPLESHEETFILTERING.out.list_longpac_shortPolish
