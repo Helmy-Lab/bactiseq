@@ -3,6 +3,7 @@ include {HIFIADAPTERFILT               } from '../../../modules/local/hifiadapte
 
 include {  FLYE                        } from '../../../modules/nf-core/flye/main'
 include {  SAMTOOLS_FASTQ              } from '../../../modules/local/fastqsamtools/main'
+include { GATK4_SAMTOFASTQ            } from '../../../modules/nf-core/gatk4/samtofastq/main'
 include { CHOPPER                           } from '../../../modules/nf-core/chopper/main'
 include { ANNOTATION                   } from '../../../subworkflows/local/annotation/main.nf'
 include { TAXONOMY                     } from '../../../subworkflows/local/taxonomy/main.nf'
@@ -21,7 +22,6 @@ workflow PACBIO_SUBWORKFLOW {
 
     take:
     ch_input_full // channel: [ val(meta), files/data, files/data, files/data..etc ]
-    bam_file
     polish
     gambitdb
     krakendb
@@ -29,9 +29,10 @@ workflow PACBIO_SUBWORKFLOW {
     main:
     def ch_output = Channel.empty()
     def ch_versions = Channel.empty()
-
-    def ch_polish = ch_input_full.map{item -> [item[0], file(item[3])]} //Default is the same reads from long reads are the reads to polish
+    ch_input_full.view()
     def ch_input = ch_input_full.map{item -> [item[0], file(item[3])]}
+    def ch_polish = ch_input_full.map{item -> [item[0], file(item[3])]} //Default is the same reads from long reads are the reads to polish
+    def polish = ch_input_full.map
     ch_polish = ch_input_full.map{item -> 
             (item[2] != null && !item[2].toString().trim().isEmpty() && item[0].polish == 'short') //if not null && not string representation is empty ''
                 ? [item[0], file(item[1]), file(item[2])] //True then take both short reads
@@ -41,18 +42,18 @@ workflow PACBIO_SUBWORKFLOW {
     ch_polish = ch_input_full.map{item -> 
             (item[2] != null && !item[2].toString().trim().isEmpty() && item[0].polish == 'long') //if not null && not string representation is empty ''
                 ? ch_input //True then take the default, long reads
-                : ch_input //else, the short reads may have been set, take it
+                : ch_polish //else, the short reads may have been set, take it
         }
 
-    if (bam_file){
-        // ch_converted = Channel.empty()
-        SAMTOOLS_FASTQ(ch_input)
-        // ch_converted = ch_converted.concat(SAMTOOLS_FASTQ.out.fastq)
-        ch_input = SAMTOOLS_FASTQ.out.fastq
-            .map { meta, fastq -> [meta, fastq] }  // Preserve metadata
-            .collect()
-            .flatMap()
+    def bam_files = ch_input.filter { meta, long1 ->
+        meta.long == 'bam'
     }
+
+    // ch_converted = Channel.empty()
+    GATK4_SAMTOFASTQ(bam_files)
+    // ch_converted = ch_converted.concat(SAMTOOLS_FASTQ.out.fastq)
+    ch_input = GATK4_SAMTOFASTQ.out.fastq
+    
     LONGREADS_QA(ch_input)
 
     HIFIADAPTERFILT(ch_input)

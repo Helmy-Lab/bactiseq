@@ -76,6 +76,12 @@ workflow SAMPLESHEETFILTERING {
     
     def assembled = [] //Assembled genomes that are in fasta format
     def assembled_convert = [] //assembled genomes that arent fasta format
+    
+    def longpac_polishing_order = []
+    def long_nano_polishing_order = []
+    def long_bam_polishing_order = []
+    def hybrid_polishing_order = []
+    def short_polishing_order = []
 
     def longnano_noPolish = []
     def longnano_longPolish = []
@@ -84,6 +90,7 @@ workflow SAMPLESHEETFILTERING {
     def longpac_noPolish = []
     def longpac_longPolish = []
     def longpac_shortPolish = []
+    
 
     def longbam_noPolish = []
     def longbam_longPolish = []
@@ -98,6 +105,7 @@ workflow SAMPLESHEETFILTERING {
     def short_shortPolish = []
 
     samplesheet.each{item ->
+    
         //Item is the row in the sample sheet
         def sample = 0
 
@@ -227,13 +235,13 @@ workflow SAMPLESHEETFILTERING {
     list_longnano_longPolish =(longnano_longPolish)
     list_longnano_shortPolish = (longnano_shortPolish)
 
-    list_longpac_noPolish = (longpac_noPolish)
-    list_longpac_longPolish = (longpac_longPolish)
-    list_longpac_shortPolish = (longpac_shortPolish)
+    list_longpac_noPolish = Channel.fromList(longpac_noPolish)
+    list_longpac_longPolish = Channel.fromList(longpac_longPolish)
+    list_longpac_shortPolish = Channel.fromList(longpac_shortPolish)
 
-    list_longbam_noPolish =(longbam_noPolish)
-    list_longbam_longPolish = (longbam_longPolish)
-    list_longbam_shortPolish = (longbam_shortPolish)
+    list_longbam_noPolish =Channel.fromList(longbam_noPolish)
+    list_longbam_longPolish = Channel.fromList(longbam_longPolish)
+    list_longbam_shortPolish = Channel.fromList(longbam_shortPolish)
 
     list_hybrid_longPolish = (hybrid_longPolish)
     list_hybrid_shortPolish = (hybrid_shortPolish)

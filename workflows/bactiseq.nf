@@ -80,18 +80,44 @@ workflow BACTISEQ {
 
     SAMPLESHEETFILTERING(list)
 
+    // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
     //PARSE THE OUTPUT/SAMPLESHEET TO START THE PIPELINE
         ////---------------------------------------------------------
         ///----**************PACBIO WORKFLOW*************--------------
         ////---------------------------------------------------------
         //LONG POLISH
-    def longpac_longpolish = SAMPLESHEETFILTERING.out.list_longpac_longPolish
-    def flattened_result = longpac_longpolish
-        .filter { value -> value instanceof List && !value.isEmpty() }
-        .flatMap()
-    flattened_result.view()
+
+    // def longpac_longpolish = SAMPLESHEETFILTERING.out.list_longpac_longPolish.flatMap()
+    // longpac_longpolish.branch { value ->
+    //     empty: value = null || value.isEmpty()
+    //     non_empty: !value.isEmpty()
+    // }.set{result}
+    // result.non_empty.view()
+
+
+    // println(" i gate my life")
+    // def test = SAMPLESHEETFILTERING.out.list_longbam_noPolish.flatMap()
+    // test.branch{ value ->
+    //     empty: value = null || value.isEmpty()
+    //     non_empty: !value.isEmpty()
+    // }.set{result}
+    // result.non_empty.view()
+
+
+    // ch_input.view()
+    // longpac_longpolish.flatMap().view()
+    // def test = SAMPLESHEETFILTERING.out.list_longbam_noPolish.flatMap()
+    // ch_input = SAMPLESHEETFILTERING.out.list_longpac_noPolish.flatMap().ifEmpty(Channel.from(1,2,3,4))
+    // ch_input.view()
+    //     .set{ch_pac_input}
+    // def flattened_result = longpac_longpolish
+    //     .filter { value -> value instanceof List && !value.isEmpty() }
+    //     .flatMap()
+    // flattened_result.map{item -> [item[0], file(item[3])]}
+    //             .set{ch_input}
+    // ch_input.view()
     // ch_input2.view()
-    PACBIO_SUBWORKFLOW(flattened_result, false, 'long', DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb )
+    // PACBIO_SUBWORKFLOW(ch_input,[], false, 'long', DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb )
 
     //     //SHORT POLISH
     // def longpac_shortpolish = SAMPLESHEETFILTERING.out.list_longpac_shortPolish
@@ -159,10 +185,10 @@ workflow BACTISEQ {
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
     // def channel_test = Channel.fromList(SAMPLESHEETFILTERING.out.list_longpac_shortPolish)
-    // def channel_test = SAMPLESHEETFILTERING.out.list_longpac_shortPolish
+    def channel_test = SAMPLESHEETFILTERING.out.list_longpac_longPolish
 
     // channel_test
-    //     .map { item -> [item[0], file(item[1])] } // Extract first and last for each list
+    //     .map { item -> [item[0], file(item[3])] } // Extract first and last for each list
     //     .set{ ch_polishing}
 
     // channel_test
