@@ -72,7 +72,7 @@ workflow PACBIO_SUBWORKFLOW {
     TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
 
 
-    def polish_branch = FLYE.out.fasta {meta, value ->
+    def polish_branch = FLYE.out.fasta.branch {meta, value ->
         short_polish: meta.polish == 'short'
         long_polish: meta.polish == 'long'
         no_polish: meta.polish == 'NA'
