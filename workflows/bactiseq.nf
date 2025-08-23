@@ -74,7 +74,7 @@ workflow BACTISEQ {
     // ch_input.view()
     // Channel.fromList([]).ifEmpty('Hello').view()
 
-    DATABASEDOWNLOAD()
+    //DATABASEDOWNLOAD()
     def list = samplesheetToList(params.input, file("assets/schema_input.json"))
     
 
@@ -87,8 +87,8 @@ workflow BACTISEQ {
         //LONG POLISH
     // SAMPLESHEETFILTERING.out.pacbio_reads.view()
     PACBIO_SUBWORKFLOW(SAMPLESHEETFILTERING.out.pacbio_reads, [],[])
-    // ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
-    // ch_all_assembly.view()
+    ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+    ch_all_assembly.view()
     //     ////---------------------------------------------------------
     //     ///----************** NANOPORE *************--------------
     //     ////---------------------------------------------------------
