@@ -16,7 +16,7 @@ process RACON {
 
     output:
     // TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
-    tuple val(meta), path("*.{fasta}"), emit: polished
+    tuple val(meta), path("polished.fasta"), emit: polished
     path "versions.yml"           , emit: versions
 
     when:
