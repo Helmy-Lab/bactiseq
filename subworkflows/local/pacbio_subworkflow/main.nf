@@ -34,18 +34,15 @@ workflow PACBIO_SUBWORKFLOW {
 
     def ch_input = ch_input_full.map{item -> [item[0], file(item[3])]}
 
-    def ch_polish = ch_input_full.map{item -> [item[0], file(item[3])]} //Default is the same reads from long reads are the reads to polish
-    ch_polish = ch_input_full.map{item -> 
-            (item[2] != null && !item[2].toString().trim().isEmpty() && item[0]['polish'] == 'short') //if not null && not string representation is empty ''
-                ? [item[0], file(item[1]), file(item[2])] //True then take both short reads
-                : [item[0], file(item[1])] //else only 1 short read
+    def ch_polish_final = ch_input_full.map { meta, short1, short2, long_reads, assembly ->
+        if (meta.polish == 'short' && short2 != 'short2NA' && !short2.toString().trim().isEmpty()) {
+            [meta, file(short1), file(short2)]  // Both short reads
+        } else if (meta.polish == 'long' && short2 != 'short2NA' && !short2.toString().trim().isEmpty()) {
+            [meta, file(long_reads)]  // Long reads
+        } else {
+            [meta, file(short1)]  // Default: first short read
         }
-    
-    ch_polish = ch_input_full.map{item -> 
-            (item[2] != null && !item[2].toString().trim().isEmpty() && item[0]['polish'] == 'long') //if not null && not string representation is empty ''
-                ? ch_input //True then take the default, long reads
-                : ch_polish //else, the short reads may have been set, take it
-        }
+    }
 
     def bam_files = ch_input.filter { meta, long1 ->
         meta.long == 'bam'
@@ -72,14 +69,14 @@ workflow PACBIO_SUBWORKFLOW {
     TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
 
 
-    def polish_branch = FLYE.out.fasta.branch {meta, value ->
+    FLYE.out.fasta.branch {meta, value ->
         short_polish: meta.polish == 'short'
         long_polish: meta.polish == 'long'
         no_polish: meta.polish == 'NA'
-    }
+    }.set { polish_branch }
 
         // Also branch ch_polish the same way
-    def polish_data_branch = ch_polish.branch { meta, data ->
+    ch_polish_final.branch { meta, data ->
         short_polish: meta.polish == 'short'
         long_polish: meta.polish == 'long'
         no_polish: meta.polish == 'NA'
