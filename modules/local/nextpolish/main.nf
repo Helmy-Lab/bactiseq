@@ -13,7 +13,7 @@ process NEXTPOLISH {
 
     output:
     // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
-    tuple val(meta), path("*.{fasta}"), emit: fasta
+    tuple val(meta), path("*.fasta"), emit: fasta
     tuple val(meta), path("*.fasta.stat"), emit: stats
     // TODO nf-core: List additional required output channels/values here
     path "versions.yml"           , emit: versions
