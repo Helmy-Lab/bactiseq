@@ -120,6 +120,7 @@ workflow SAMPLESHEETFILTERING {
         if (file_long != "longNA" && file_short1 == "short1NA" && file_short2 == "short2NA"){
             //Extract header from fastq file to check type of reads
             if (check_long(file_long, header) == 'nanopore'){
+                item[0]['long'] = 'nano'
                 //What basecaller was used (if not given)
                 if (base_caller == 'AUTO' && parseBasecallModelVersion(header) != null){
                     item[0]['basecaller'] = parseBasecallModelVersion(header)
@@ -132,6 +133,7 @@ workflow SAMPLESHEETFILTERING {
                     long_nano_polishing_order.add('long')
                 }
             } else if (check_long(file_long, header) == 'pacbio'){
+                item[0]['long'] = 'pac'
                 if (polishInput == 'NA'){
                     longpac_polishing_order.add('none')
                 }else{
@@ -139,6 +141,7 @@ workflow SAMPLESHEETFILTERING {
                 }
                 longpac.add(item)
             } else if (check_long(file_long, header) == 'bam'){
+                item[0]['long'] = 'bam'
                 if (polishInput == 'NA'){
                     long_bam_polishing_order.add('none')
                 }else{
@@ -161,12 +164,14 @@ workflow SAMPLESHEETFILTERING {
                 long_nano_polishing_order.add('short')
 
             }else if (polishInput == 'short' && check_long(file_long, header) == 'pacbio'){
+                item[0]['long'] = 'pac'
                 longpac.add(item)
                 longpac_polishing_order.add('short')
             }else if (polishInput == 'short' && check_long(file_long, header) == 'bam'){
+                item[0]['long'] = 'bam'
                 long_bam_polishing_order.add('short')
                 longbam.add(item)
-            }else if (polishInput == 'long'){ //If we are polishing by long, we assemble short
+            }else if (polishInput == 'long'){ //If we are polishing by long, we assemble short            
                 short_reads.add(item)
                 short_polishing_order.add('long')
             }

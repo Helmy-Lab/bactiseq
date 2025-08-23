@@ -85,9 +85,10 @@ workflow BACTISEQ {
         ///----**************PACBIO WORKFLOW*************--------------
         ////---------------------------------------------------------
         //LONG POLISH
-    PACBIO_SUBWORKFLOW(SAMPLESHEETFILTERING.out.pacbio_reads, SAMPLESHEETFILTERING.out.pac_polish, [],[])
-    ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
-    ch_all_assembly.view()
+    // SAMPLESHEETFILTERING.out.pacbio_reads.view()
+    PACBIO_SUBWORKFLOW(Channel.empty(), [],[])
+    // ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+    // ch_all_assembly.view()
     //     ////---------------------------------------------------------
     //     ///----************** NANOPORE *************--------------
     //     ////---------------------------------------------------------
