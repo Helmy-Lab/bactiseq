@@ -15,7 +15,7 @@ include {PACLONGPOLISH             } from '../../../subworkflows/local/paclongpo
 include {NOPOLISH             } from '../../../subworkflows/local/nopolish/main'
 
 include { FASTQC                  } from '../../../modules/nf-core/fastqc/main'
-include { NANOPLOT                } from '../../../modules/nf-core/nanoplot/main'
+
 
 
 include { PILON } from '../../../modules/nf-core/pilon/main'

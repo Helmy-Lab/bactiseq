@@ -155,7 +155,14 @@ workflow SAMPLESHEETFILTERING {
                 item[0]['long'] = 'bam'
                 longbam.add(item)
                 longpac.add(item)
-            }else if (polishInput == 'long'){ //If we are polishing by long, we assemble short            
+            }else if (polishInput == 'long'){ //If we are polishing by long, we assemble short
+                if (file_short1 != "short1NA" && file_short2 != "short2NA"){
+                    //We are paired end reads
+                    item[0]['single_end'] = false
+                }else{
+                    //else we are single end
+                    item[0]['single_end'] = true
+                }            
                 short_reads.add(item)
             }
         
@@ -181,9 +188,16 @@ workflow SAMPLESHEETFILTERING {
             hybrid.add(item)
         //Illumina reads only
         }else if (file_long == 'longNA' && (file_short1 != "short1NA" || file_short2 != "short2NA")){
+            if (file_short1 != "short1NA" && file_short2 != "short2NA"){
+                //We are paired end reads
+                item[0]['single_end'] = false
+            }else{
+                //else we are single end
+                item[0]['single_end'] = true
+            }            
+        
             short_reads.add(item)
-            if (polishInput == 'short'){
-            }else if (polishInput == 'long'){
+            if (polishInput == 'long'){
                 throw new Exception("Cannot polish long if only given short reads for the sample")
             }
         //Assembled files put in
