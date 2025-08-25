@@ -3,8 +3,8 @@ include { KRAKEN2_KRAKEN2 } from '../../../modules/nf-core/kraken2/kraken2/main'
 workflow TAXONOMY {
 
     take:
-    ch_input // channel: [ val(meta), [ input ] ]
-    ch_assembled // [val(meta), [assembled data]]
+    ch_input // channel: [ val(meta), [ input ] ] //the reads for kraken2
+    ch_assembled // [val(meta), [assembled data]] //fasta for gambit
     krakendb //Path to kraken2db
     gambitdb //path to gambitdb
 

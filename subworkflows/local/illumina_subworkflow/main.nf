@@ -1,9 +1,12 @@
 include {SHORTREADQA          } from '../../../subworkflows/local/shortreadqa/main.nf'
 include {SHORTREADQA  as POST_FILTER_QA        } from '../../../subworkflows/local/shortreadqa/main.nf'
+include { TAXONOMY                     } from '../../../subworkflows/local/taxonomy/main.nf'
+
+
 include { BBMAP_BBDUK } from '../../../modules/nf-core/bbmap/bbduk/main'
-
-
 include { SPADES                             } from '../../../modules/nf-core/spades/main'
+include { UNICYCLER                          } from '../../../modules/nf-core/unicycler/main'
+
 workflow ILLUMINA_SUBWORKFLOW {
 
     take:
@@ -55,8 +58,26 @@ workflow ILLUMINA_SUBWORKFLOW {
     def ch_assembled = Channel.empty()
     if (params.hybrid_assembler == null){
         SPADES(ch_input, [],[])
-        ch_output.mix()
-    } else if 
+        ch_assembled = (SPADES.out.scaffolds)
+    } else if (params.hybrid_assembler == 'spades'){
+        def ch_hybrid = ch_input.join(ch_long).map{meta, illumina, long_read ->
+            if (meta.long == 'pac'){
+                [meta, illumina, long_read, []]
+            }else if (meta.long == 'nano') {
+                [meta, illumina, [], long_read]
+            }
+        }
+        SPADES(ch_hybrid, [],[])
+        ch_assembled = (SPADES.out.scaffolds)
+    }else if (params.hybrid_assembler == 'unicycler'){
+        def ch_hybrid = ch_input.join(ch_long)
+        UNICYCLER(ch_hybrid)
+        ch_assembled = (UNICYCLER.out.scaffolds)
+    }
+
+    TAXONOMY(ch_input, ch_assembled, gambitdb, krakendb)
+
+    
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
 }
