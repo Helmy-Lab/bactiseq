@@ -57,6 +57,7 @@ workflow PACBIO_SUBWORKFLOW {
             [meta, file(short1)]  // Default: first short read
         }
     }
+
     LONGREADS_QA(ch_input)
     
     HIFIADAPTERFILT(ch_input)
