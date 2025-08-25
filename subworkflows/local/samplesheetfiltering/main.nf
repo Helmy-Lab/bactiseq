@@ -77,11 +77,11 @@ workflow SAMPLESHEETFILTERING {
     def assembled = [] //Assembled genomes that are in fasta format
     def assembled_convert = [] //assembled genomes that arent fasta format
 
-    def longpac_polishing_order = []
-    def long_nano_polishing_order = []
-    def long_bam_polishing_order = []
-    def hybrid_polishing_order = []
-    def short_polishing_order = []
+    // def longpac_polishing_order = []
+    // def long_nano_polishing_order = []
+    // def long_bam_polishing_order = []
+    // def hybrid_polishing_order = []
+    // def short_polishing_order = []
 
     def longnano = []
 
@@ -127,27 +127,13 @@ workflow SAMPLESHEETFILTERING {
                 }
                 longnano.add(item)
                 //What type of polishing do we need to do?
-                if (polishInput == 'NA'){
-                    long_nano_polishing_order.add('none')
-                }else{
-                    long_nano_polishing_order.add('long')
-                }
             } else if (check_long(file_long, header) == 'pacbio'){
                 item[0]['long'] = 'pac'
-                if (polishInput == 'NA'){
-                    longpac_polishing_order.add('none')
-                }else{
-                    longpac_polishing_order.add('long')
-                }
                 longpac.add(item)
             } else if (check_long(file_long, header) == 'bam'){
                 item[0]['long'] = 'bam'
-                if (polishInput == 'NA'){
-                    long_bam_polishing_order.add('none')
-                }else{
-                    long_bam_polishing_order.add('long')
-                }
                 longbam.add(item)
+                longpac.add(item)
             } else if (check_long(file_long, header) == 'none'){
                 println(item)
                 throw new Exception("Long read file: Read type (Nanopore or Pacbio cannot be determined from filename or headers. Nanopore data: filename has nanopore within, header has runid or basecall_model inside) Pacbio data: Filename has hifi/Bam/Sam within, or header has ccs or @m in the line")
@@ -161,24 +147,21 @@ workflow SAMPLESHEETFILTERING {
                     item[0]['basecaller'] = parseBasecallModelVersion(header) //Set meta data for basecaller mode
                 }
                 longnano.add(item)
-                long_nano_polishing_order.add('short')
 
             }else if (polishInput == 'short' && check_long(file_long, header) == 'pacbio'){
                 item[0]['long'] = 'pac'
                 longpac.add(item)
-                longpac_polishing_order.add('short')
             }else if (polishInput == 'short' && check_long(file_long, header) == 'bam'){
                 item[0]['long'] = 'bam'
-                long_bam_polishing_order.add('short')
                 longbam.add(item)
+                longpac.add(item)
             }else if (polishInput == 'long'){ //If we are polishing by long, we assemble short            
                 short_reads.add(item)
-                short_polishing_order.add('long')
             }
         
         //Given long reads, and short reads, what type of assembly and polish are we doing. HYBRID ASSEMBLY
         }else if (file_long != "longNA" && (file_short1 != "short1NA" || file_short2 != "short2NA") && params.hybrid_assembler != null){
-            hybrid.add(item)
+
             //What type of long read did we input? spades needs to know
             if (check_long(file_long, header) == 'nanopore'){
                 item[0]['long'] = 'nano'
@@ -195,24 +178,13 @@ workflow SAMPLESHEETFILTERING {
                 //else we are single end
                 item[0]['single_end'] = true
             }
-
-            if (polishInput == 'short'){ //If we are polishing by short, we assemble long
-                hybrid_polishing_order.add('short')
-            }else if (polishInput == 'long'){
-                hybrid_polishing_order.add('long')
-            }else if (polishInput == 'false'){
-                hybrid_polishing_order.add('none')
-            }
-
+            hybrid.add(item)
         //Illumina reads only
         }else if (file_long == 'longNA' && (file_short1 != "short1NA" || file_short2 != "short2NA")){
             short_reads.add(item)
             if (polishInput == 'short'){
-                short_polishing_order.add('short')
             }else if (polishInput == 'long'){
                 throw new Exception("Cannot polish long if only given short reads for the sample")
-            }else if (polishInput == 'NA'){
-                short_polishing_order.add('none')
             }
         //Assembled files put in
         }else if (assemble_file != 'assemblyNA'){
@@ -234,11 +206,11 @@ workflow SAMPLESHEETFILTERING {
     hybrid_reads = Channel.fromList(hybrid)
     illumina_reads = Channel.fromList(short_reads)
 
-    pac_polish = Channel.fromList(longpac_polishing_order)
-    nano_polish = Channel.fromList(long_nano_polishing_order)
-    bam_polish = Channel.fromList(long_bam_polishing_order)
-    hyrid_polish = Channel.fromList(hybrid_polishing_order)
-    short_polish = Channel.fromList(short_polishing_order)
+    // pac_polish = Channel.fromList(longpac_polishing_order)
+    // nano_polish = Channel.fromList(long_nano_polishing_order)
+    // bam_polish = Channel.fromList(long_bam_polishing_order)
+    // hyrid_polish = Channel.fromList(hybrid_polishing_order)
+    // short_polish = Channel.fromList(short_polishing_order)
 
     list_assembled_convert = (assembled_convert)
     list_assembled = (assembled)

@@ -66,12 +66,11 @@ workflow PACBIO_SUBWORKFLOW {
         .filter {meta, filt -> filt.size() > 0 && filt.countFastq() > 0}
         .set{qc_reads}
     CHOPPER(HIFIADAPTERFILT.out.filt, [])
-    // qc_reads.view()
 
     POST_FILTER_QA(CHOPPER.out.fastq)
 
     FLYE(CHOPPER.out.fastq, "--pacbio-hifi")
-    // TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
+    TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
 
 
     FLYE.out.fasta.branch {meta, value ->
