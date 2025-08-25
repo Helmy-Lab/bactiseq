@@ -58,7 +58,7 @@ workflow PACBIO_SUBWORKFLOW {
         }
     }
     LONGREADS_QA(ch_input)
-
+    
     HIFIADAPTERFILT(ch_input)
     ch_versions.mix(HIFIADAPTERFILT.out.versions)
 
