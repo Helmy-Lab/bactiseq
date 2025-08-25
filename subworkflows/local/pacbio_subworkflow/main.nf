@@ -32,26 +32,31 @@ workflow PACBIO_SUBWORKFLOW {
     def ch_output = Channel.empty()
     def ch_versions = Channel.empty()
 
-    def ch_input = ch_input_full.map{item -> [item[0], file(item[3])]}
+    def ch_input_initial = ch_input_full.map{item -> [item[0], file(item[3])]}
+
+
+    //Make channel if bam files are given
+    def bam_files = ch_input_initial.filter { meta, long1 ->
+        meta.long == 'bam'
+    }
+    //If the inputs are bam files, make them into fastq files, else, 
+    GATK4_SAMTOFASTQ(bam_files)
+
+    //If no conversions were done, take the normal ch_input
+    def ch_input = GATK4_SAMTOFASTQ.out.fastq.concat(ch_input_initial.toList()).first().flatMap()
 
     def ch_polish_final = ch_input_full.map { meta, short1, short2, long_reads, assembly ->
         if (meta.polish == 'short' && short2 != 'short2NA' && !short2.toString().trim().isEmpty()) {
             [meta, file(short1), file(short2)]  // Both short reads
-        } else if (meta.polish == 'long' ) {
+        } else if (meta.polish == 'long' && meta.long != 'bam') {
             [meta, file(long_reads)]  // Long reads
-        } else {
+        }else if (meta.polish == 'long' && meta.long == 'bam'){
+            [meta, GATK4_SAMTOFASTQ.out.fastq]
+        } 
+        else {
             [meta, file(short1)]  // Default: first short read
         }
     }
-
-    def bam_files = ch_input.filter { meta, long1 ->
-        meta.long == 'bam'
-    }
-
-    // GATK4_SAMTOFASTQ(bam_files)
-    // GATK4_SAMTOFASTQ.collect().concat
-    // ch_input = GATK4_SAMTOFASTQ.out.fastq.ifEmpty(ch_input)
-    
     LONGREADS_QA(ch_input)
 
     HIFIADAPTERFILT(ch_input)
