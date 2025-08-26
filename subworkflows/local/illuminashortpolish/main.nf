@@ -1,7 +1,7 @@
 include { PILON } from '../../../modules/nf-core/pilon/main'
 include { MINIMAP2_ALIGN } from '../../../modules/nf-core/minimap2/align/main'
 
-workflow PACSHORTPOLISH {
+workflow ILLUMINASHORTPOLISH {
 
     take:
     assembly // channel: [ val(meta), [ bam ] ]

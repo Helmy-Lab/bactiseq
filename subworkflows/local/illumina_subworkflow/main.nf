@@ -1,7 +1,8 @@
 include {SHORTREADQA          } from '../../../subworkflows/local/shortreadqa/main.nf'
 include {SHORTREADQA  as POST_FILTER_QA        } from '../../../subworkflows/local/shortreadqa/main.nf'
 include { TAXONOMY                     } from '../../../subworkflows/local/taxonomy/main.nf'
-
+include {ILLUMINASHORTPOLISH             } from '../../../subworkflows/local/illuminashortpolish/main'
+include {ILLUMINALONGPOLISH             } from '../../../subworkflows/local/illuminalongpolish/main'
 
 include { BBMAP_BBDUK } from '../../../modules/nf-core/bbmap/bbduk/main'
 include { SPADES                             } from '../../../modules/nf-core/spades/main'
@@ -37,6 +38,7 @@ workflow ILLUMINA_SUBWORKFLOW {
             [meta, file(short1)]  // Default: first short read, and no second short read
         }
     }
+
     def ch_long = ch_input_full.map {meta, short1, short2, long_reads, assembly ->
         if (long_reads != 'longNA'){
             [meta, file(long_reads)]
@@ -77,7 +79,25 @@ workflow ILLUMINA_SUBWORKFLOW {
 
     TAXONOMY(ch_input, ch_assembled, gambitdb, krakendb)
 
-    
+    ch_assembled.branch {meta, value ->
+        short_polish: meta.polish == 'short'
+        long_polish: meta.polish == 'long'
+        no_polish: meta.polish == 'NA'
+    }.set { polish_branch }
+
+    // Also branch ch_polish the same way
+    ch_polish_final.branch { meta, data ->
+        short_polish: meta.polish == 'short'
+        long_polish: meta.polish == 'long'
+        no_polish: meta.polish == 'NA'
+    }.set { polish_result }
+
+    ILLUMINASHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
+    ILLUMINALONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
+
+    ch_output.mix(ILLUMINASHORTPOLISH.out.polished)
+    ch_output.mix(ILLUMINALONGPOLISH.out.polished)
+    ch_output.mix(polish_branch.nopolish)
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
 }
