@@ -64,11 +64,10 @@ workflow NANOPORE_SUBWORKFLOW {
 
     NANOSHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
     NANOLONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
-    NOPOLISH(polish_branch.no_polish)
 
     ch_output = ch_output.mix(NANOSHORTPOLISH.out.polished)
     ch_output = ch_output.mix(NANOLONGPOLISH.out.polished)
-    ch_output = ch_output.mix(NOPOLISH.out.output)
+    ch_output = ch_output.mix(polish_branch.no_polish)
     
     emit:
     output = ch_output

@@ -12,9 +12,9 @@ workflow TAXONOMY {
     ch_versions = Channel.empty()
 
     GAMBIT(ch_assembled, gambitdb)
-    ch_versions.mix(GAMBIT.out.versions)
+    ch_versions = ch_versions.mix(GAMBIT.out.versions)
     KRAKEN2_KRAKEN2(ch_input, krakendb, true, true)
-    ch_versions.mix(KRAKEN2_KRAKEN2.out.versions)
+    ch_versions = ch_versions.mix(KRAKEN2_KRAKEN2.out.versions)
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
