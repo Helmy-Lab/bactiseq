@@ -2,9 +2,11 @@ include { CGVIEW } from './modules/local/cgview/main.nf'
 
 params.sequence = null 
 params.format = 'png'
+params.extra = ""
+
 // 
 workflow {
-    CGVIEW (params.sequence, params.format)
+    CGVIEW (params.sequence, params.format, params.extra)
 }
 
 

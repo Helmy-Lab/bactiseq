@@ -13,6 +13,8 @@ process CGVIEW {
     input:
         path sequence //genbank, fasta, embl
         val format
+        val extra
+
 
     output:
         path 'map_*', emit: map
@@ -22,7 +24,7 @@ process CGVIEW {
     # convert to cgview-type xml file
     perl /usr/bin/cgview_xml_builder.pl -sequence $sequence -output ${sequence}.xml 
     # input to cgview
-    java -jar /usr/bin/cgview.jar -i ${sequence}.xml -o map_${sequence}.$format -f $format
+    java -jar /usr/bin/cgview.jar -i ${sequence}.xml -o map_${sequence}.$format -f $format $extra
 
     """
 }
