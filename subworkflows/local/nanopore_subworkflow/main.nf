@@ -31,7 +31,7 @@ workflow NANOPORE_SUBWORKFLOW {
             [meta, file(long_reads)]  // Long reads
         }
         else {
-            [meta, file(short1), '']  // Default: first short read, and no second short read
+            [meta, file(short1)]  // Default: first short read, and no second short read
         }
     }
 
