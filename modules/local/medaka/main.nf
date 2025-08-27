@@ -8,7 +8,8 @@ process MEDAKA {
         'biocontainers/medaka:2.1.0--py38ha0c3a46_0' }"
 
     input:
-    tuple val(meta), path(reads), path(assembly)
+    tuple val(meta), path(reads)
+    tuple val(meta2), path(assembly)
     
     output:
     tuple val(meta), path("*.fa.gz"), emit: assembly
