@@ -95,9 +95,9 @@ workflow ILLUMINA_SUBWORKFLOW {
     ILLUMINASHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
     ILLUMINALONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
 
-    ch_output.mix(ILLUMINASHORTPOLISH.out.polished)
-    ch_output.mix(ILLUMINALONGPOLISH.out.polished)
-    ch_output.mix(polish_branch.nopolish)
+    ch_output = ch_output.mix(ILLUMINASHORTPOLISH.out.polished)
+    ch_output = ch_output.mix(ILLUMINALONGPOLISH.out.polished)
+    ch_output = ch_output.mix(polish_branch.nopolish)
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
 }

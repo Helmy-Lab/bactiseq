@@ -11,8 +11,8 @@ workflow NANOSHORTPOLISH {
     ch_versions = Channel.empty()
 
     NEXTPOLISH(ch_assembled, ch_polish)
-    ch_versions.mix(NEXTPOLISH.out.versions)
-    ch_output.mix(NEXTPOLISH.out.fasta)
+    ch_versions = ch_versions.mix(NEXTPOLISH.out.versions)
+    ch_output = ch_output.mix(NEXTPOLISH.out.fasta)
 
     emit:
     polished = ch_output

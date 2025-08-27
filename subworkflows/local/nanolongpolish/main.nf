@@ -12,8 +12,8 @@ workflow NANOLONGPOLISH {
     ch_medaka = ch_assembled.join(ch_polish)
     MEDAKA(ch_medaka)
 
-    ch_output.mix(MEDAKA.out.assembly)
-    ch_versions.mix(MEDAKA.out.versions)
+    ch_output = ch_output.mix(MEDAKA.out.assembly)
+    ch_versions = ch_versions.mix(MEDAKA.out.versions)
 
 
     emit:

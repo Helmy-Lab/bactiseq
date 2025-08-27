@@ -91,9 +91,9 @@ workflow PACBIO_SUBWORKFLOW {
     PACLONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
     NOPOLISH(polish_branch.no_polish)
 
-    ch_output.mix(PACSHORTPOLISH.out.polished)
-    ch_output.mix(PACLONGPOLISH.out.polished)
-    ch_output.mix(NOPOLISH.out.output)
+    ch_output = ch_output.mix(PACSHORTPOLISH.out.polished)
+    ch_output = ch_output.mix(PACLONGPOLISH.out.polished)
+    ch_output = ch_output.mix(NOPOLISH.out.output)
 
     emit:
     output = ch_output

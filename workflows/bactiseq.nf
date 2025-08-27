@@ -75,8 +75,8 @@ workflow BACTISEQ {
     // Channel.fromList([]).ifEmpty('Hello').view()
 
     //DATABASEDOWNLOAD()
-    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
-    SAMPLESHEETFILTERING(list)
+    // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    // SAMPLESHEETFILTERING(list)
     // def test = Channel
     //     .from([
     //         ['sample1', ['sample1_1.fastq.gz', 'sample1_2.fastq.gz']],
@@ -89,31 +89,32 @@ workflow BACTISEQ {
 
     // test.view()
         // Channel 1: Illumina paired-end reads
-    ch_illumina = Channel.from([
-        [[id: "sample1", single_end: false], ["sample1_illumina_1.fq.gz", "sample1_illumina_2.fq.gz"]],
-        [[id: "sample2", single_end: false], ["sample2_illumina_1.fq.gz", "sample2_illumina_2.fq.gz"]]
-    ])
+    // ch_illumina = Channel.from([
+    //     [[id: "sample1", single_end: false], ["sample1_illumina_1.fq.gz", "sample1_illumina_2.fq.gz"]],
+    //     [[id: "sample2", single_end: false], ["sample2_illumina_1.fq.gz", "sample2_illumina_2.fq.gz"]]
+    // ])
 
-    // Channel 2: PacBio reads  
-    ch_pacbio = Channel.from([
-        [[id: "sample1", single_end: false], ["sample1_pacbio.fq.gz"]],
-        [[id: "sample2", single_end: false], ["sample2_pacbio.fq.gz"]]
-    ])
+    // // Channel 2: PacBio reads  
+    // ch_pacbio = Channel.from([
+    //     [[id: "sample1", single_end: false], ["sample1_pacbio.fq.gz"]],
+    //     [[id: "sample2", single_end: false], ["sample2_pacbio.fq.gz"]]
+    // ])
 
-    ch_combined = ch_illumina
-    .join(ch_pacbio)
-    .map { meta, illumina_files, pacbio_files ->
-        tuple(meta, illumina_files, pacbio_files, [])
-    }
-    ch_combined.view()
+    // ch_combined = ch_illumina
+    // .join(ch_pacbio)
+    // .map { meta, illumina_files, pacbio_files ->
+    //     tuple(meta, illumina_files, pacbio_files, [])
+    // }
+    // ch_combined.view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
     //PARSE THE OUTPUT/SAMPLESHEET TO START THE PIPELINE
     ////---------------------------------------------------------
     ///----**************PACBIO WORKFLOW*************--------------
     ////---------------------------------------------------------
 
-    // PACBIO_SUBWORKFLOW(SAMPLESHEETFILTERING.out.pacbio_reads, [],[])
-    //ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+    PACBIO_SUBWORKFLOW(SAMPLESHEETFILTERING.out.pacbio_reads, [],[])
+    ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+    ch_all_assembly.view()
 
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
