@@ -73,11 +73,13 @@ For more details and further functionality, please refer to the [usage documenta
 ### CGview Usage:
 Takes in a sequence file of formats GenBank, FASTA, or EMBL and converts them to a CGview xml file (NOT the same as a raw xml file) before running the CGview command with a default png output that can be altered using the --format parameter. The Other CGview parameters can be adjusted using the --extra flag follwoed by standard CGview flag options found at "https://github.com/paulstothard/cgview/tree/master?tab=readme-ov-file" 
 
+```bash
 nextflow run scriptcgview.nf \
 -profile <docker/singularity/...> \
 --sequence <path/to/sequence_file.gb/.fasta/.embl> \
 [OPTIONAL] --format <default png/jpg/svg> \
 [OPTIONAL] --extra " -cgview_flag value"
+```
 
 ## Pipeline output
 
