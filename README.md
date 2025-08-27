@@ -77,7 +77,7 @@ Takes in a sequence file of formats GenBank, FASTA, or EMBL and converts them to
 nextflow run scriptcgview.nf \
 -profile <docker/singularity/...> \
 --sequence <path/to/sequence_file.gb/.fasta/.embl> \
-[OPTIONAL] --format <default png/jpg/svg> \
+[OPTIONAL] --format <png (default)/jpg/svg> \
 [OPTIONAL] --extra " -cgview_flag value"
 ```
 
