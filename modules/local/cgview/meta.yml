@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+# # TODO nf-core: Add a description of the module and list keywords
+name: "cgview"
+description: write your description here
+keywords:
+- sort
+- example
+- genomics
+tools:
+## TODO nf-core: Add a description and other details for the software below
+- "cgview":
+    description: "CGView is a Java package for generating high quality, zoomable maps
+      of circular genomes. Its primary purpose is to serve as a component of sequence
+      annotation pipelines, as a means of generating visual output suitable for the
+      web. "
+    homepage: "None"
+    documentation: "None"
+    tool_dev_url: "None"
+    doi: ""
+    licence: ['GPL, Version 2.0']
+    identifier: biotools:cgview
+
+input:
+# TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
+  []
+output:
+# TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
+  versions: -
+    versions.yml:
+      type: file
+      description: File containing software versions
+      pattern: versions.yml
+      ontologies:
+      - edam: http://edamontology.org/format_3750  # YAML
+authors:
+- "@txx99"
+maintainers:
+- "@txx99"

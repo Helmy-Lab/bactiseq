@@ -69,6 +69,15 @@ nextflow run nf-core/bactiseq \
 
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/bactiseq/usage) and the [parameter documentation](https://nf-co.re/bactiseq/parameters).
 
+
+### CGview Usage:
+Takes in a sequence file of formats GenBank, FASTA, or EMBL and converts them to a CGview xml file (NOT the same as a raw xml file) before running the CGview command with a default png output that can be altered using the --format parameter. 
+
+nextflow run scriptcgview.nf \
+-profile <docker/singularity/...> \
+--sequence <path/to/sequence_file.gb/.fasta/.embl> \
+[OPTIONAL]--format <default png/jpg/svg>
+
 ## Pipeline output
 
 To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/bactiseq/results) tab on the nf-core website pipeline page.
