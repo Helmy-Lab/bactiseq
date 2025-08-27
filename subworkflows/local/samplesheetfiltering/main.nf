@@ -53,10 +53,10 @@ def check_long(file_name, header){
     Checks filename from long fastq column in samplesheet in string form
     returns: 
     */
-     if (header.contains('runid') || header.contains('basecall_model') || file_name.contains('nanopore')){
+     if (header.contains('runid') || header.contains('basecall_model') || file_name.toLowerCase().contains('nanopore')){
         //What type of polishing do we need to do?
         return 'nanopore'
-    } else if (header.contains('ccs') || header.contains('@m') || file_name.contains('hifi.')){
+    } else if (header.contains('ccs') || header.contains('@m') || file_name.contains('hifi.') || file_name.toLowerCase().contains('pacbio')){
         return 'pacbio'
     } else if (file_name.contains('bam') || file_name.contains('sam') || header.contains('@SQ')){
         return 'bam'
