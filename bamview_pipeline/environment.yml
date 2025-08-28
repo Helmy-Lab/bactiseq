@@ -1,0 +1,9 @@
+name: bamview_pipeline
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - nextflow
+  - samtools
