@@ -9,13 +9,11 @@ process NEXTPOLISH {
 
     input:
     tuple val(meta), path(assembly)
-    tuple val(meta2), path(short_read1), path(short_read2)
+    tuple val(meta2), path(short_reads)
 
     output:
-    // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
     tuple val(meta), path("*.fasta"), emit: fasta
     tuple val(meta), path("*.fasta.stat"), emit: stats
-    // TODO nf-core: List additional required output channels/values here
     path "versions.yml"           , emit: versions
 
     when:
@@ -24,11 +22,24 @@ process NEXTPOLISH {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def illumina_reads = short_reads ? ( meta.single_end ? "$short_reads" : "${short_reads[0]} ${short_reads[1]}" ) : ""
     """
-    ls ${short_read1} ${short_read2} > sgs.fofn
-    echo -e "task = best\ngenome = ${assembly}\nmultithread_jobs = ${task.cpus}\nworkdir = .\nsgs_fofn = sgs.fofn" > run.cfg
+    # Create FOFN file based on read type
+    if [ "${meta.single_end}" == "true" ]; then
+        echo "${short_reads}" > sgs.fofn
+    else
+       echo "${short_reads[0]}" > sgs.fofn
+       echo "${short_reads[1]}" >> sgs.fofn
+    fi
+
+    gunzip -c ${assembly} > assembly.fasta
+    echo -e "task = best\ngenome = assembly.fasta\nmultithread_jobs = ${task.cpus}\nworkdir = ./nextpolish_workdir\nsgs_fofn = sgs.fofn" > run.cfg
     
     nextPolish run.cfg
+
+    # Copy all fasta and fasta.stat files from nextpolish_workdir to current directory
+    cp nextpolish_workdir/*.fasta ./
+    cp nextpolish_workdir/*.fasta.stat ./
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

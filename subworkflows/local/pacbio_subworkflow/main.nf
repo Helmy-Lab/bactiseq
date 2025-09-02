@@ -46,7 +46,7 @@ workflow PACBIO_SUBWORKFLOW {
     def ch_input = GATK4_SAMTOFASTQ.out.fastq.concat(ch_input_initial.toList()).first().flatMap()
 
     def ch_polish_final = ch_input_full.map { meta, short1, short2, long_reads, assembly ->
-        if (meta.polish == 'short' && short2 != 'short2NA' && !short2.toString().trim().isEmpty()) {
+        if (meta.polish == 'short' && short2 != 'short2NA') {
             [meta, [file(short1), file(short2)]]  // Both short reads
         } else if (meta.polish == 'long' && meta.long != 'bam') {
             [meta, file(long_reads)]  // Long reads

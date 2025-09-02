@@ -9,8 +9,7 @@ workflow NANOLONGPOLISH {
     ch_output = Channel.empty()
     ch_versions = Channel.empty()
 
-    ch_medaka = ch_assembled.join(ch_polish)
-    MEDAKA(ch_medaka)
+    MEDAKA(ch_assembled, ch_polish)
 
     ch_output = ch_output.mix(MEDAKA.out.assembly)
     ch_versions = ch_versions.mix(MEDAKA.out.versions)

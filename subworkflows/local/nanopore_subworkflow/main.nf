@@ -2,7 +2,7 @@ include {LONGREADS_QA                       } from '../../../subworkflows/local/
 include {LONGREADS_QA as POST_FILTER_QA     } from '../../../subworkflows/local/longreads_qa/main'
 include { PORECHOP_PORECHOP                 } from '../../../modules/nf-core/porechop/porechop/main'
 include { CHOPPER                           } from '../../../modules/nf-core/chopper/main'
-
+include { SAMTOOLS_BGZIP } from '../../../modules/nf-core/samtools/bgzip/main'
 
 
 include { TAXONOMY                     } from '../../../subworkflows/local/taxonomy/main.nf'
@@ -63,7 +63,9 @@ workflow NANOPORE_SUBWORKFLOW {
     }.set { polish_result }
 
     NANOSHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
-    NANOLONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
+    SAMTOOLS_BGZIP(polish_branch.long_polish)
+    ch_versions = ch_versions.mix(SAMTOOLS_BGZIP.out.versions)
+    NANOLONGPOLISH(SAMTOOLS_BGZIP.out.fasta, polish_result.long_polish)
 
     ch_output = ch_output.mix(NANOSHORTPOLISH.out.polished)
     ch_output = ch_output.mix(NANOLONGPOLISH.out.polished)

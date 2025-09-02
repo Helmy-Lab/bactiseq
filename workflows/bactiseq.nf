@@ -33,8 +33,9 @@ include { MOBSUITE_RECON         } from '../modules/nf-core/mobsuite/recon/main'
 include { AMRFINDERPLUS_RUN      } from '../modules/nf-core/amrfinderplus/run/main'
 
 
-
+include {MEDAKA} from '../modules/local/medaka/main'
 include {FASTQC} from '../modules/nf-core/fastqc/main'
+include { SAMTOOLS_BGZIP } from '../modules/nf-core/samtools/bgzip/main'
 /*
 
 
@@ -65,18 +66,25 @@ workflow BACTISEQ {
     //         Channel.fromPath("./TestDatasetNfcore/OS0131AD_EA076372_bc2074.hifi.fq.gz") \
     //             | map { fna -> [ [id: "${fna.baseName}_copy2"], fna ] }
     // )
-    // ch_input.view()
-    // ch_out = ch_input.join(ch_input2)
+    
+    def test = Channel.from([
+        [
+            [id: 'hello', basecaller: 'NA'], 
+            file('./TestDatasetNfcore/chopper/Nanopore2.chopper.fastq.gz')
+        ]
+    ])
 
-    // ch_out.view()
-    // ch_input2.meta.view()
-    // BUSCO_DOWNLOAD(params.busco_db_type)
-    // ch_input.view()
-    // Channel.fromList([]).ifEmpty('Hello').view()
-
+    def assembled = Channel.from([
+        [
+        [id: 'hello', basecaller: 'NA'], 
+        file('./TestDatasetNfcore/FLYE/Nanopore2.assembly.fasta.gz')
+        ]
+    ])
+    SAMTOOLS_BGZIP(assembled)
+    MEDAKA(SAMTOOLS_BGZIP.out.fasta, test)
     //DATABASEDOWNLOAD()
-    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
-    SAMPLESHEETFILTERING(list)
+    // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    // SAMPLESHEETFILTERING(list)
 
     // ch_combined.view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
@@ -85,8 +93,8 @@ workflow BACTISEQ {
     ///----**************PACBIO WORKFLOW*************--------------
     ////---------------------------------------------------------
 
-    PACBIO_SUBWORKFLOW(SAMPLESHEETFILTERING.out.pacbio_reads, [],[])
-    ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
+    // PACBIO_SUBWORKFLOW(SAMPLESHEETFILTERING.out.pacbio_reads, [],[])
+    // ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
 
 
     ////++++++++++++++++++++++++++++++++++++
@@ -95,19 +103,24 @@ workflow BACTISEQ {
     ////---------------------------------------------------------
     ///----************** NANOPORE *************--------------
     ////---------------------------------------------------------
-    NANOPORE_SUBWORKFLOW(SAMPLESHEETFILTERING.out.nano_reads, [], [])
-    ch_all_assembly = ch_all_assembly.mix(NANOPORE_SUBWORKFLOW.out.output)
-    ch_all_assembly.view()
+    // NANOPORE_SUBWORKFLOW(SAMPLESHEETFILTERING.out.nano_reads, [], [])
+    // ch_all_assembly = ch_all_assembly.mix(NANOPORE_SUBWORKFLOW.out.output)
+    // ch_all_assembly.view()
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
 
     ////---------------------------------------------------------
-    ///----************** ILLUMINA - NO HYBRID/NOHYBRID *************--------------
+    ///----************** ILLUMINA **************--------------
     ////---------------------------------------------------------
 
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
+
+    ////---------------------------------------------------------
+    ///----************** PRE-ASSEMBLED **************--------------
+    ////---------------------------------------------------------
+
 
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
