@@ -16,6 +16,7 @@ include { SAMPLESHEETFILTERING   } from '../subworkflows/local/samplesheetfilter
 
 include { PACBIO_SUBWORKFLOW }  from '../subworkflows/local/pacbio_subworkflow/main'
 include { NANOPORE_SUBWORKFLOW }  from '../subworkflows/local/nanopore_subworkflow/main'
+include {ILLUMINA_SUBWORKFLOW  } from '../subworkflows/local/illumina_subworkflow/main'
 
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
@@ -113,6 +114,8 @@ workflow BACTISEQ {
     ////---------------------------------------------------------
     ///----************** ILLUMINA **************--------------
     ////---------------------------------------------------------
+
+    
 
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++

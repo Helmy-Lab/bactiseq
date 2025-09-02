@@ -33,7 +33,8 @@ process MEDAKA {
             -o .
 	gzip -n ${prefix}.fa
 	mv consensus.fasta ${prefix}.fa
-        cat <<-END_VERSIONS > versions.yml
+    
+    cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         medaka: \$( medaka --version 2>&1 | sed 's/medaka //g' )
     END_VERSIONS
