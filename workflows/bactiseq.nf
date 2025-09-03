@@ -17,6 +17,8 @@ include { SAMPLESHEETFILTERING   } from '../subworkflows/local/samplesheetfilter
 include { PACBIO_SUBWORKFLOW }  from '../subworkflows/local/pacbio_subworkflow/main'
 include { NANOPORE_SUBWORKFLOW }  from '../subworkflows/local/nanopore_subworkflow/main'
 include {ILLUMINA_SUBWORKFLOW  } from '../subworkflows/local/illumina_subworkflow/main'
+include {ASSEMBLED_SUBWORKFLOW } from '../subworkflows/local/assembled_subworkflow/main'
+
 
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
@@ -116,14 +118,14 @@ workflow BACTISEQ {
     ////---------------------------------------------------------
 
     ILLUMINA_SUBWORKFLOW(SAMPLESHEETFILTERING.out.illumina_reads, [],[])
-
+    ch_all_assembly = ch_all_assembly.mix(ILLUMINA_SUBWORKFLOW.out.outupt)
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
     ////---------------------------------------------------------
     ///----************** PRE-ASSEMBLED **************--------------
     ////---------------------------------------------------------
-
+    ASSEMBLED_SUBWORKFLOW()
 
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
