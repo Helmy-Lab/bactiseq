@@ -203,7 +203,7 @@ workflow SAMPLESHEETFILTERING {
         //Assembled files put in
         }else if (assemble_file != 'assemblyNA'){
             println("fifth else")
-            if (!assemble_file.contains('.fasta')){
+            if (!assemble_file.endsWith('.fasta') && !assemble_file.endsWith('.fa')){
                 assembled_convert.add(item)
             }else{
                 assembled.add(item)
@@ -226,6 +226,6 @@ workflow SAMPLESHEETFILTERING {
     // hyrid_polish = Channel.fromList(hybrid_polishing_order)
     // short_polish = Channel.fromList(short_polishing_order)
 
-    list_assembled_convert = (assembled_convert)
-    list_assembled = (assembled)
+    list_assembled_convert = Channel.fromList(assembled_convert)
+    list_assembled = Channel.fromList(assembled)
 }
