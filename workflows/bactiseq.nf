@@ -23,17 +23,8 @@ include {ASSEMBLED_SUBWORKFLOW } from '../subworkflows/local/assembled_subworkfl
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
 
-include { NANOPLOT                } from '../modules/nf-core/nanoplot/main'
-
 include { ANNOTATION } from '../subworkflows/local/annotation/main.nf'
 include { ASSEMBLY_QA } from '../subworkflows/local/assembly_qa/main'
-
-include { BAKTA_BAKTA            } from '../modules/nf-core/bakta/bakta/main'
-include { PROKKA                 } from '../modules/nf-core/prokka/main'
-include { RGI_MAIN               } from '../modules/nf-core/rgi/main'
-include { ABRICATE_RUN           } from '../modules/nf-core/abricate/run/main'
-include { MOBSUITE_RECON         } from '../modules/nf-core/mobsuite/recon/main'
-include { AMRFINDERPLUS_RUN      } from '../modules/nf-core/amrfinderplus/run/main'
 
 
 include {MEDAKA} from '../modules/local/medaka/main'
@@ -125,26 +116,15 @@ workflow BACTISEQ {
     ////---------------------------------------------------------
     ///----************** PRE-ASSEMBLED **************--------------
     ////---------------------------------------------------------
-    ASSEMBLED_SUBWORKFLOW(SAMPLESHEETFILTERING.out.)
-
+    ASSEMBLED_SUBWORKFLOW(SAMPLESHEETFILTERING.out.assembled_convert, [])
+    ch_all_assembly = ch_all_assembly.mix(ASSEMBLED_SUBWORKFLOW.out.output)
+    ch_all_assembly = ch_all_assembly.mix(SAMPLESHEETFILTERING.out.assembled)
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
-    // def channel_test = Channel.fromList(SAMPLESHEETFILTERING.out.list_longpac_shortPolish)
-
-    // channel_test
-    //     .map { item -> [item[0], file(item[3])] } // Extract first and last for each list
-    //     .set{ ch_polishing}
-
-    // channel_test
-    //     .map{item -> [item[0], file(item[3])]}
-    //     .set{ch_pac_input}
-    // ch_polishing.view()
-    // ch_pac_input.view()
 
 
     // PACBIO_SUBWORKFLOW(ch_pac_input,ch_polishing, false, "short", DATABASEDOWNLOAD.out.gambitdb, [])
-    // ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.output)
-    // ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db,  DATABASEDOWNLOAD.out.buscodb )
+
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
