@@ -10,8 +10,8 @@ workflow ASSEMBLED_SUBWORKFLOW {
     ch_versions = Channel.empty()
 
     ANY2FASTA(ch_input)
-    ch_output.mix(ANY2FASTA.out.fasta_file)
-    ch_versions.mix(ANY2FASTA.out.versions)
+    ch_output = ch_output.mix(ANY2FASTA.out.fasta_file)
+    ch_versions = ch_versions.mix(ANY2FASTA.out.versions)
 
     GAMBIT(ANY2FASTA.out.fasta_file, gambitdb)
     ch_versions = ch_versions.mix(GAMBIT.out.versions)

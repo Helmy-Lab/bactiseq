@@ -226,6 +226,6 @@ workflow SAMPLESHEETFILTERING {
     // hyrid_polish = Channel.fromList(hybrid_polishing_order)
     // short_polish = Channel.fromList(short_polishing_order)
 
-    list_assembled_convert = Channel.fromList(assembled_convert)
-    list_assembled = Channel.fromList(assembled)
+    assembled_convert = Channel.fromList(assembled_convert)
+    assembled = Channel.fromList(assembled)
 }
