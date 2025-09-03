@@ -86,8 +86,8 @@ workflow BACTISEQ {
     // SAMTOOLS_BGZIP(assembled)
     // MEDAKA(SAMTOOLS_BGZIP.out.fasta, test)
     //DATABASEDOWNLOAD()
-    // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
-    // SAMPLESHEETFILTERING(list)
+    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    SAMPLESHEETFILTERING(list)
 
     // ch_combined.view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
