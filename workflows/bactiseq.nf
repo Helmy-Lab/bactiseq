@@ -70,21 +70,21 @@ workflow BACTISEQ {
     //             | map { fna -> [ [id: "${fna.baseName}_copy2"], fna ] }
     // )
     
-    def test = Channel.from([
-        [
-            [id: 'hello', basecaller: 'NA'], 
-            file('./TestDatasetNfcore/chopper/Nanopore2.chopper.fastq.gz')
-        ]
-    ])
+    // def test = Channel.from([
+    //     [
+    //         [id: 'hello', basecaller: 'NA'], 
+    //         file('./TestDatasetNfcore/chopper/Nanopore2.chopper.fastq.gz')
+    //     ]
+    // ])
 
-    def assembled = Channel.from([
-        [
-        [id: 'hello', basecaller: 'NA'], 
-        file('./TestDatasetNfcore/FLYE/Nanopore2.assembly.fasta.gz')
-        ]
-    ])
-    SAMTOOLS_BGZIP(assembled)
-    MEDAKA(SAMTOOLS_BGZIP.out.fasta, test)
+    // def assembled = Channel.from([
+    //     [
+    //     [id: 'hello', basecaller: 'NA'], 
+    //     file('./TestDatasetNfcore/FLYE/Nanopore2.assembly.fasta.gz')
+    //     ]
+    // ])
+    // SAMTOOLS_BGZIP(assembled)
+    // MEDAKA(SAMTOOLS_BGZIP.out.fasta, test)
     //DATABASEDOWNLOAD()
     // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
     // SAMPLESHEETFILTERING(list)
@@ -106,9 +106,9 @@ workflow BACTISEQ {
     ////---------------------------------------------------------
     ///----************** NANOPORE *************--------------
     ////---------------------------------------------------------
-    // NANOPORE_SUBWORKFLOW(SAMPLESHEETFILTERING.out.nano_reads, [], [])
-    // ch_all_assembly = ch_all_assembly.mix(NANOPORE_SUBWORKFLOW.out.output)
-    // ch_all_assembly.view()
+    NANOPORE_SUBWORKFLOW(SAMPLESHEETFILTERING.out.nano_reads, [], [])
+    ch_all_assembly = ch_all_assembly.mix(NANOPORE_SUBWORKFLOW.out.output)
+    ch_all_assembly.view()
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
@@ -117,15 +117,15 @@ workflow BACTISEQ {
     ///----************** ILLUMINA **************--------------
     ////---------------------------------------------------------
 
-    ILLUMINA_SUBWORKFLOW(SAMPLESHEETFILTERING.out.illumina_reads, [],[])
-    ch_all_assembly = ch_all_assembly.mix(ILLUMINA_SUBWORKFLOW.out.outupt)
+    // ILLUMINA_SUBWORKFLOW(SAMPLESHEETFILTERING.out.illumina_reads, [],[])
+    // ch_all_assembly = ch_all_assembly.mix(ILLUMINA_SUBWORKFLOW.out.outupt)
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
     ////---------------------------------------------------------
     ///----************** PRE-ASSEMBLED **************--------------
     ////---------------------------------------------------------
-    ASSEMBLED_SUBWORKFLOW()
+    // ASSEMBLED_SUBWORKFLOW()
 
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
