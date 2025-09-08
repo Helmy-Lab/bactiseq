@@ -30,8 +30,7 @@ process NEXTPOLISH {
        echo "${short_reads[1]}" >> sgs.fofn
     fi
 
-    gunzip -c ${assembly} > assembly.fasta
-    echo -e "task = best\ngenome = assembly.fasta\nmultithread_jobs = ${task.cpus}\nworkdir = ./nextpolish_workdir\nsgs_fofn = sgs.fofn" > run.cfg
+    echo -e "task = best\ngenome = ${assembly}\nmultithread_jobs = ${task.cpus}\nworkdir = ./nextpolish_workdir\nsgs_fofn = sgs.fofn" > run.cfg
     
     nextPolish run.cfg
 
