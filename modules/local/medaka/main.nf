@@ -31,8 +31,9 @@ process MEDAKA {
             -i ${reads} \\
             -d ${assembly}\\
             -o .
-	gzip -n ${prefix}.fa
+	
 	mv consensus.fasta ${prefix}.fa
+    gzip -n ${prefix}.fa
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
