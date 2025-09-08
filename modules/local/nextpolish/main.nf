@@ -3,9 +3,7 @@ process NEXTPOLISH {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/nextpolish:1.4.1--py312h4e9d295_4':
-        'biocontainers/nextpolish:1.4.1--py312h4e9d295_4' }"
+    container 'docker.io/sli254/nextpolish-custom'
 
     input:
     tuple val(meta), path(assembly)
