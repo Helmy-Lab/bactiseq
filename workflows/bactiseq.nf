@@ -22,7 +22,7 @@ include {ASSEMBLED_SUBWORKFLOW } from '../subworkflows/local/assembled_subworkfl
 
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
-
+include { PIGZ_UNCOMPRESS } from '../modules/nf-core/pigz/uncompress/main'
 include { ANNOTATION } from '../subworkflows/local/annotation/main.nf'
 include { ASSEMBLY_QA } from '../subworkflows/local/assembly_qa/main'
 
@@ -61,22 +61,22 @@ workflow BACTISEQ {
     //             | map { fna -> [ [id: "${fna.baseName}_copy2"], fna ] }
     // )
     
-    // def test = Channel.from([
-    //     [
-    //         [id: 'hello', basecaller: 'NA'], 
-    //         file('./TestDatasetNfcore/chopper/Nanopore2.chopper.fastq.gz')
-    //     ]
-    // ])
-
-    // def assembled = Channel.from([
-    //     [
-    //     [id: 'hello', basecaller: 'NA'], 
-    //     file('./TestDatasetNfcore/FLYE/Nanopore2.assembly.fasta.gz')
-    //     ]
-    // ])
-    // SAMTOOLS_BGZIP(assembled)
-    // MEDAKA(SAMTOOLS_BGZIP.out.fasta, test)
     //DATABASEDOWNLOAD()
+    def test = Channel.from([
+         [
+             [id: 'hello', basecaller: 'NA'],
+             file('./test/Nanopore2/readsQC/chopper/Nanopore2.chopper.fastq.gz')
+         ]
+     ])
+
+     def assembled = Channel.from([
+         [
+         [id: 'hello', basecaller: 'NA'],
+         file('./test/Nanopore2/Assembly/FLYE/Nanopore2.assembly.fasta.gz')
+         ]
+     ])
+    PIGZ_UNCOMPRESS(assembled)
+    MEDAKA(PIGZ_UNCOMPRESS.out.file, test)
     def list = samplesheetToList(params.input, file("assets/schema_input.json"))
     SAMPLESHEETFILTERING(list)
 
@@ -116,9 +116,9 @@ workflow BACTISEQ {
     ////---------------------------------------------------------
     ///----************** PRE-ASSEMBLED **************--------------
     ////---------------------------------------------------------
-    ASSEMBLED_SUBWORKFLOW(SAMPLESHEETFILTERING.out.assembled_convert, [])
-    ch_all_assembly = ch_all_assembly.mix(ASSEMBLED_SUBWORKFLOW.out.output)
-    ch_all_assembly = ch_all_assembly.mix(SAMPLESHEETFILTERING.out.assembled)
+    // ASSEMBLED_SUBWORKFLOW(SAMPLESHEETFILTERING.out.assembled_convert, [])
+    // ch_all_assembly = ch_all_assembly.mix(ASSEMBLED_SUBWORKFLOW.out.output)
+    // ch_all_assembly = ch_all_assembly.mix(SAMPLESHEETFILTERING.out.assembled)
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
