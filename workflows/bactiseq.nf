@@ -25,7 +25,7 @@ include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin
 include { PIGZ_UNCOMPRESS } from '../modules/nf-core/pigz/uncompress/main'
 include { ANNOTATION } from '../subworkflows/local/annotation/main.nf'
 include { ASSEMBLY_QA } from '../subworkflows/local/assembly_qa/main'
-
+include { NEXTPOLISH} from '../modules/local/nextpolish/main'
 
 include {MEDAKA} from '../modules/local/medaka/main'
 include {FASTQC} from '../modules/nf-core/fastqc/main'
@@ -65,18 +65,19 @@ workflow BACTISEQ {
     def test = Channel.from([
          [
              [id: 'hello', basecaller: 'NA'],
-             file('./test/Nanopore2/readsQC/chopper/Nanopore2.chopper.fastq.gz')
+             [file('./test/Nanopore2/readsQC/chopper/Nanopore2.chopper.fastq.gz'),
+              file('')]
          ]
      ])
 
      def assembled = Channel.from([
          [
          [id: 'hello', basecaller: 'NA'],
-         file('./test/Nanopore2/Assembly/FLYE/Nanopore2.assembly.fasta.gz')
+         file('./test/Nanopore1/Assembly/FLYE/Nanopore1.assembly.fasta.gz')
          ]
      ])
     PIGZ_UNCOMPRESS(assembled)
-    MEDAKA(PIGZ_UNCOMPRESS.out.file, test)
+    // MEDAKA(PIGZ_UNCOMPRESS.out.file, test)
     def list = samplesheetToList(params.input, file("assets/schema_input.json"))
     SAMPLESHEETFILTERING(list)
 
