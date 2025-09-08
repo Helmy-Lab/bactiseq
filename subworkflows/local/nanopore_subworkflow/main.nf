@@ -62,7 +62,9 @@ workflow NANOPORE_SUBWORKFLOW {
         no_polish: meta.polish == 'NA'
     }.set { polish_result }
 
-    NANOSHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
+    PIGZ_UNCOMPRESS(polish_branch.short_polish)
+    NANOSHORTPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.short_polish)
+
     PIGZ_UNCOMPRESS(polish_branch.long_polish)
     ch_versions = ch_versions.mix(PIGZ_UNCOMPRESS.out.versions)
     NANOLONGPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.long_polish)
