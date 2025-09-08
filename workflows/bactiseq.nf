@@ -64,22 +64,23 @@ workflow BACTISEQ {
     //DATABASEDOWNLOAD()
     def test = Channel.from([
          [
-             [id: 'hello', basecaller: 'NA'],
-             [file('./test/Nanopore2/readsQC/chopper/Nanopore2.chopper.fastq.gz'),
-              file('')]
+             [id: 'hello', basecaller: 'NA', single_end: false],
+             [file('./testDatasetNfcore/evalData/illumina/SRR10074454_1.fastq.gz'),
+              file('./testDatasetNfcore/evalData/illumina/SRR10074454_2.fastq.gz')]
          ]
      ])
 
      def assembled = Channel.from([
          [
-         [id: 'hello', basecaller: 'NA'],
+         [id: 'hello', basecaller: 'NA', single_end: false],
          file('./test/Nanopore1/Assembly/FLYE/Nanopore1.assembly.fasta.gz')
          ]
      ])
     PIGZ_UNCOMPRESS(assembled)
+    NEXTPOLISH(PIGZ_UNCOMPRESS.out.file, test)
     // MEDAKA(PIGZ_UNCOMPRESS.out.file, test)
-    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
-    SAMPLESHEETFILTERING(list)
+    // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    // SAMPLESHEETFILTERING(list)
 
     // ch_combined.view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
@@ -98,9 +99,9 @@ workflow BACTISEQ {
     ////---------------------------------------------------------
     ///----************** NANOPORE *************--------------
     ////---------------------------------------------------------
-    NANOPORE_SUBWORKFLOW(SAMPLESHEETFILTERING.out.nano_reads, [], [])
-    ch_all_assembly = ch_all_assembly.mix(NANOPORE_SUBWORKFLOW.out.output)
-    ch_all_assembly.view()
+    // NANOPORE_SUBWORKFLOW(SAMPLESHEETFILTERING.out.nano_reads, [], [])
+    // ch_all_assembly = ch_all_assembly.mix(NANOPORE_SUBWORKFLOW.out.output)
+    // ch_all_assembly.view()
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
