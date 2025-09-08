@@ -29,7 +29,7 @@
       },
       "assembly": {
         "type": "string",
-        "pattern": "^(\\S+\\.(fasta|fa|gbk?|gbff|genbank|gff3?)|assemblyNA)$",
+        "pattern": "^(\\S+\\.(fasta|fa|gbk?|gbff|genbank|embl|gff|gff3?)|assemblyNA)$",
         "default": "assemblyNA"
       },
       "polish": {
