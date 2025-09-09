@@ -59,10 +59,13 @@ workflow ILLUMINA_SUBWORKFLOW {
 
     def ch_assembled = Channel.empty()
     if (params.hybrid_assembler == null){
-        SPADES(ch_input, [],[])
+        def ch_no_hybrid =  BBMAP_BBDUK.out.reads.map{meta, illumina_reads ->
+            [meta, illumina_reads, [],[]]
+        }
+        SPADES(ch_no_hybrid, [],[])
         ch_assembled = (SPADES.out.scaffolds)
     } else if (params.hybrid_assembler == 'spades'){
-        def ch_hybrid = ch_input.join(ch_long).map{meta, illumina, long_read ->
+        def ch_hybrid = BBMAP_BBDUK.out.reads.join(ch_long).map{meta, illumina, long_read ->
             if (meta.long == 'pac'){
                 [meta, illumina, long_read, []]
             }else if (meta.long == 'nano') {
@@ -72,7 +75,7 @@ workflow ILLUMINA_SUBWORKFLOW {
         SPADES(ch_hybrid, [],[])
         ch_assembled = (SPADES.out.scaffolds)
     }else if (params.hybrid_assembler == 'unicycler'){
-        def ch_hybrid = ch_input.join(ch_long)
+        def ch_hybrid = BBMAP_BBDUK.out.reads.join(ch_long)
         UNICYCLER(ch_hybrid)
         ch_assembled = (UNICYCLER.out.scaffolds)
     }
