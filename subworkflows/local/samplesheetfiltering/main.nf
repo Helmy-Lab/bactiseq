@@ -185,7 +185,7 @@ workflow SAMPLESHEETFILTERING {
                 //else we are single end
                 item[0]['single_end'] = true
             }
-            hybrid.add(item)
+            short_reads.add(item)
         //Illumina reads only
         }else if (file_long == 'longNA' && (file_short1 != "short1NA" || file_short2 != "short2NA")){
             if (file_short1 != "short1NA" && file_short2 != "short2NA"){
