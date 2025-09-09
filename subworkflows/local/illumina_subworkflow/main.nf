@@ -47,7 +47,7 @@ workflow ILLUMINA_SUBWORKFLOW {
 
     
 
-    SHORTREADQA(ch_input)
+    //SHORTREADQA(ch_input)
 
     if (params.illumina_adapters == null){
         BBMAP_BBDUK(ch_input, [])
@@ -55,7 +55,7 @@ workflow ILLUMINA_SUBWORKFLOW {
         BBMAP_BBDUK(ch_input, params.illumina_adapters)
     }
 
-    POST_FILTER_QA(BBMAP_BBDUK.out.reads)
+    //POST_FILTER_QA(BBMAP_BBDUK.out.reads)
 
     def ch_assembled = Channel.empty()
     if (params.hybrid_assembler == null){

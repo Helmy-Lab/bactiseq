@@ -62,25 +62,25 @@ workflow BACTISEQ {
     // )
     
     //DATABASEDOWNLOAD()
-    def test = Channel.from([
-         [
-             [id: 'hello', basecaller: 'NA', single_end: false],
-             [file('./testDatasetNfcore/evalData/illumina/SRR10074454_1.fastq.gz'),
-              file('./testDatasetNfcore/evalData/illumina/SRR10074454_2.fastq.gz')]
-         ]
-     ])
+    // def test = Channel.from([
+    //      [
+    //          [id: 'hello', basecaller: 'NA', single_end: false],
+    //          [file('./testDatasetNfcore/evalData/illumina/SRR10074454_1.fastq.gz'),
+    //           file('./testDatasetNfcore/evalData/illumina/SRR10074454_2.fastq.gz')]
+    //      ]
+    //  ])
 
-     def assembled = Channel.from([
-         [
-         [id: 'hello', basecaller: 'NA', single_end: false],
-         file('./test/Nanopore1/Assembly/FLYE/Nanopore1.assembly.fasta.gz')
-         ]
-     ])
-    PIGZ_UNCOMPRESS(assembled)
-    NEXTPOLISH(PIGZ_UNCOMPRESS.out.file, test)
+    //  def assembled = Channel.from([
+    //      [
+    //      [id: 'hello', basecaller: 'NA', single_end: false],
+    //      file('./test/Nanopore1/Assembly/FLYE/Nanopore1.assembly.fasta.gz')
+    //      ]
+    //  ])
+    // PIGZ_UNCOMPRESS(assembled)
+    // NEXTPOLISH(PIGZ_UNCOMPRESS.out.file, test)
     // MEDAKA(PIGZ_UNCOMPRESS.out.file, test)
-    // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
-    // SAMPLESHEETFILTERING(list)
+    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    SAMPLESHEETFILTERING(list)
 
     // ch_combined.view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
@@ -110,8 +110,9 @@ workflow BACTISEQ {
     ///----************** ILLUMINA **************--------------
     ////---------------------------------------------------------
 
-    // ILLUMINA_SUBWORKFLOW(SAMPLESHEETFILTERING.out.illumina_reads, [],[])
-    // ch_all_assembly = ch_all_assembly.mix(ILLUMINA_SUBWORKFLOW.out.outupt)
+    ILLUMINA_SUBWORKFLOW(SAMPLESHEETFILTERING.out.illumina_reads, [],[])
+    ch_all_assembly = ch_all_assembly.mix(ILLUMINA_SUBWORKFLOW.out.outupt)
+    ch_all_assembly.view()
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
