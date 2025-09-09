@@ -3,7 +3,7 @@ process NEXTPOLISH {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container 'docker.io/sli254/nextpolish-custom'
+    container 'docker.io/sli254/nextpolish-custom:v1.4.1'
 
     input:
     tuple val(meta), path(assembly)
