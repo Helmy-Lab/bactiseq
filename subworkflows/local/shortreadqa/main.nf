@@ -26,6 +26,7 @@ workflow SHORTREADQA {
         }
     }
 
+    //fastqc works on paired or single end
     FASTQC(
         ch_fastq_files
     )
