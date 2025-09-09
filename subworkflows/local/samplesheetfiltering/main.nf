@@ -227,5 +227,5 @@ workflow SAMPLESHEETFILTERING {
     // short_polish = Channel.fromList(short_polishing_order)
 
     assembled_con = Channel.fromList(assembled_convert)
-    assembled = Channel.fromList(assembled)
+    assembled_fin = Channel.fromList(assembled)
 }
