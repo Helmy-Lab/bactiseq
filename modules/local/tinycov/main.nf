@@ -2,13 +2,13 @@ process TINYCOV {
     tag "$meta.id"
     label 'process_medium'
     conda "${moduleDir}/environment.yml"
-    container 'docker.io/sli254/tinycov-container:0.4.0'
+    container 'docker.io/sli254/tinycov:0.4.0'
 
     input:
     tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam
+    tuple val(meta), path("*.png"), emit: png
     path "versions.yml"           , emit: versions
 
     when:
@@ -18,10 +18,8 @@ process TINYCOV {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    tinycov \\
+    tinycov covhist\\
         $args \\
-        -@ $task.cpus \\
-        -o ${prefix}.bam \\
         $bam
 
     cat <<-END_VERSIONS > versions.yml
