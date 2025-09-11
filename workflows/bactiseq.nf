@@ -90,14 +90,14 @@ workflow BACTISEQ {
     def test = Channel.from([
         [
             [id: 'sam'],
-            [file('./TestDatasetNfcore/aligned_output.sam')]
+            file('./TestDatasetNfcore/aligned_output.sam')
         ],        
         [
             [id: 'bam'],
-            [file('./TestDatasetNfcore/aligned_output.bam')]
+            file('./TestDatasetNfcore/aligned_output.bam')
         ]
     ])
-    VISUALIZATIONS([], test)
+    VISUALIZATIONS([],[], test)
     // ch_combined.view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
     //PARSE THE OUTPUT/SAMPLESHEET TO START THE PIPELINE

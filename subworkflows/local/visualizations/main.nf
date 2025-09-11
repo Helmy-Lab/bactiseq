@@ -13,7 +13,7 @@ workflow VISUALIZATIONS {
     main:
     ch_versions = Channel.empty()
 
-    // CGVIEW(ch_assembled)
+    CGVIEW(ch_assembled)
 
     GUNZIP_GFA
         .out
@@ -23,14 +23,14 @@ workflow VISUALIZATIONS {
     BANDAGE_IMAGE(gfa)
     ch_versions    = ch_versions.mix(BANDAGE_IMAGE.out.versions.first())
 
-    //TODO: params aligned bam/sam? then run
     if (params.aligned){
+        println("hello")
         def ch_convert = ch_bam.branch { meta, long_file ->
-            convert: long_file.endsWith('.sam')
-            non_convert: !long_file.endsWith('.bam')
+            convert: long_file.extension == 'sam'
+            non_convert: long_file.extension == 'bam'
         }.set{conversions}
         SAMTOOLS(conversions.convert)
-        ch_bam = conversions.non_convert.mix(conversions.convert)
+        ch_bam = conversions.non_convert.mix(SAMTOOLS.out.bam)
         TINYCOV(ch_bam)
     }
 
