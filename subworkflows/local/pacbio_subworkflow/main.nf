@@ -29,6 +29,7 @@ workflow PACBIO_SUBWORKFLOW {
     krakendb
 
     main:
+    def ch_gfa = Channel.empty()
     def ch_output = Channel.empty()
     def ch_versions = Channel.empty()
 
@@ -39,7 +40,7 @@ workflow PACBIO_SUBWORKFLOW {
     def bam_files = ch_input_initial.filter { meta, long1 ->
         meta.long == 'bam'
     }
-    //If the inputs are bam files, make them into fastq files, else, 
+    //If the inputs are bam  OR sam files, make them into fastq files, else, 
     GATK4_SAMTOFASTQ(bam_files)
 
     //If no conversions were done, take the normal ch_input
@@ -71,6 +72,7 @@ workflow PACBIO_SUBWORKFLOW {
     POST_FILTER_QA(CHOPPER.out.fastq)
 
     FLYE(CHOPPER.out.fastq, "--pacbio-hifi")
+    ch_gfa = ch_gfa.mix(FLYE.out.gfa)
     //TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
 
 
@@ -97,4 +99,6 @@ workflow PACBIO_SUBWORKFLOW {
     emit:
     output = ch_output
     versions = ch_versions                     // channel: [ versions.yml ]
+    bams = bam_files
+    gfa = ch_gfa
 }

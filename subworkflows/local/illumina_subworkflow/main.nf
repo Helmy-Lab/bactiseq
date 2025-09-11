@@ -18,7 +18,7 @@ workflow ILLUMINA_SUBWORKFLOW {
     main:
     ch_versions = Channel.empty()
     ch_output = Channel.empty()
-
+    def ch_gfa = Channel.empty()
     // def ch_input = ch_input_full.map{item -> [item[0], file(item[3])]}
     def ch_input = ch_input_full.map{meta, short1, short2, long_reads, assembly -> 
         if (short1 != 'short1NA'  && short2 != 'short2NA'){
@@ -63,6 +63,7 @@ workflow ILLUMINA_SUBWORKFLOW {
             [meta, illumina_reads, [],[]]
         }
         SPADES(ch_no_hybrid, [],[])
+        ch_gfa = ch_gfa.mix(SPADES.out.gfa)
         ch_assembled = (SPADES.out.scaffolds)
     } else if (params.hybrid_assembler == 'spades'){
         def ch_hybrid = BBMAP_BBDUK.out.reads.join(ch_long).map{meta, illumina, long_read ->
@@ -73,10 +74,12 @@ workflow ILLUMINA_SUBWORKFLOW {
             }
         }
         SPADES(ch_hybrid, [],[])
+        ch_gfa = ch_gfa.mix(SPADES.out.gfa)
         ch_assembled = (SPADES.out.scaffolds)
     }else if (params.hybrid_assembler == 'unicycler'){
         def ch_hybrid = BBMAP_BBDUK.out.reads.join(ch_long)
         UNICYCLER(ch_hybrid)
+        ch_gfa = ch_gfa.mix(UNICYCLER.out.gfa)
         ch_assembled = (UNICYCLER.out.scaffolds)
     }
 
@@ -104,4 +107,5 @@ workflow ILLUMINA_SUBWORKFLOW {
     emit:
     outupt = ch_output
     versions = ch_versions                     // channel: [ versions.yml ]
+    gfa = ch_gfa
 }

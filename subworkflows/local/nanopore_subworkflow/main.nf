@@ -21,6 +21,7 @@ workflow NANOPORE_SUBWORKFLOW {
     main:
     ch_versions = Channel.empty()
     ch_output = Channel.empty()
+    def ch_gfa = Channel.empty()
 
     def ch_input = ch_input_full.map{item -> [item[0], file(item[3])]}
 
@@ -46,8 +47,9 @@ workflow NANOPORE_SUBWORKFLOW {
 
     FLYE(CHOPPER.out.fastq, '--nano-raw')
     ch_versions = ch_versions.mix(FLYE.out.versions)
-
+    ch_gfa = ch_gfa.mix(FLYE.out.gfa)
     //TAXONOMY(CHOPPER.out.fastq, FLYE.out.fasta, gambitdb, krakendb)
+
 
     FLYE.out.fasta.branch {meta, value ->
         short_polish: meta.polish == 'short'
@@ -75,5 +77,6 @@ workflow NANOPORE_SUBWORKFLOW {
     
     emit:
     output = ch_output
-    versions = ch_versions                     // channel: [ versions.yml ]
+    versions = ch_versions                     // channel: [ versions.yml ]\
+    gfa = ch_gfa
 }

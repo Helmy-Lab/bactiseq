@@ -30,6 +30,11 @@ include { NEXTPOLISH} from '../modules/local/nextpolish/main'
 include {MEDAKA} from '../modules/local/medaka/main'
 include {FASTQC} from '../modules/nf-core/fastqc/main'
 include { SAMTOOLS_BGZIP } from '../modules/nf-core/samtools/bgzip/main'
+include {   TINYCOV                      } from '../modules/local/tinycov/main'
+include { SAMTOOLS                       } from '../modules/local/samtools/main'
+
+
+include { VISUALIZATIONS } from '../subworkflows/local/visualizations/main'
 /*
 
 
@@ -79,9 +84,20 @@ workflow BACTISEQ {
     // PIGZ_UNCOMPRESS(assembled)
     // NEXTPOLISH(PIGZ_UNCOMPRESS.out.file, test)
     // MEDAKA(PIGZ_UNCOMPRESS.out.file, test)
-    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
-    SAMPLESHEETFILTERING(list)
+    // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    // SAMPLESHEETFILTERING(list)
 
+    def test = Channel.from([
+        [
+            [id: 'sam'],
+            [file('./TestDatasetNfcore/aligned_output.sam')]
+        ],        
+        [
+            [id: 'bam'],
+            [file('./TestDatasetNfcore/aligned_output.bam')]
+        ]
+    ])
+    VISUALIZATIONS([], test)
     // ch_combined.view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
     //PARSE THE OUTPUT/SAMPLESHEET TO START THE PIPELINE
@@ -110,9 +126,9 @@ workflow BACTISEQ {
     ///----************** ILLUMINA **************--------------
     ////---------------------------------------------------------
 
-    ILLUMINA_SUBWORKFLOW(SAMPLESHEETFILTERING.out.illumina_reads, [],[])
-    ch_all_assembly = ch_all_assembly.mix(ILLUMINA_SUBWORKFLOW.out.outupt)
-    ch_all_assembly.view()
+    // ILLUMINA_SUBWORKFLOW(SAMPLESHEETFILTERING.out.illumina_reads, [],[])
+    // ch_all_assembly = ch_all_assembly.mix(ILLUMINA_SUBWORKFLOW.out.outupt)
+    // ch_all_assembly.view()
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
