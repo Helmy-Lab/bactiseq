@@ -105,7 +105,15 @@ workflow BACTISEQ {
             file('./TestDatasetNfcore/FLYE/Nanopore2.assembly_graph.gfa.gz')
         ]        
     ])
-    VISUALIZATIONS([],test_gfa, [])
+
+    def test_assembled = Channel.from([
+        [
+            [id: 'sam'],
+            file('./TestDatasetNfcore/FLYE/Nanopore2.assembly.fasta.gz')
+        ]        
+    ])
+    // VISUALIZATIONS([],test_gfa, [])
+    
     // ch_combined.view()
     // PACBIO_SUBWORKFLOW(longpac_longpolish,[],[])
     //PARSE THE OUTPUT/SAMPLESHEET TO START THE PIPELINE

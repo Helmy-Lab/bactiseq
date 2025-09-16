@@ -1,9 +1,10 @@
 include { BUSCO_BUSCO } from '../../../modules/nf-core/busco/busco/main'
 include { CHECKM2_PREDICT } from '../../../modules/nf-core/checkm2/predict/main'
+include { QUAST } from '../../../modules/nf-core/quast/main'
 workflow ASSEMBLY_QA {
 
     take:
-    ch_input // channel: [ val(meta), [ bam ] ]
+    ch_input // channel: [ val(meta), [ assembly fasta.gz ] ]
     checkm2_db
     busco_db
 
@@ -15,6 +16,7 @@ workflow ASSEMBLY_QA {
 
     CHECKM2_PREDICT(ch_input, checkm2_db)
 
+    QUAST(ch_input, [[], []], [[],[]])
     emit:
 
     versions = ch_versions                     // channel: [ versions.yml ]
