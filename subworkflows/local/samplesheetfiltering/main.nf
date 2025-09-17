@@ -77,12 +77,6 @@ workflow SAMPLESHEETFILTERING {
     def assembled = [] //Assembled genomes that are in fasta format
     def assembled_convert = [] //assembled genomes that arent fasta format
 
-    // def longpac_polishing_order = []
-    // def long_nano_polishing_order = []
-    // def long_bam_polishing_order = []
-    // def hybrid_polishing_order = []
-    // def short_polishing_order = []
-
     def longnano = []
 
     def longpac= []
@@ -216,15 +210,7 @@ workflow SAMPLESHEETFILTERING {
     emit:
     pacbio_reads = Channel.fromList(longpac)
     nano_reads = Channel.fromList(longnano)
-    bam_reads = Channel.fromList(longbam)
-    hybrid_reads = Channel.fromList(hybrid)
     illumina_reads = Channel.fromList(short_reads)
-
-    // pac_polish = Channel.fromList(longpac_polishing_order)
-    // nano_polish = Channel.fromList(long_nano_polishing_order)
-    // bam_polish = Channel.fromList(long_bam_polishing_order)
-    // hyrid_polish = Channel.fromList(hybrid_polishing_order)
-    // short_polish = Channel.fromList(short_polishing_order)
 
     assembled_con = Channel.fromList(assembled_convert)
     assembled_fin = Channel.fromList(assembled)
