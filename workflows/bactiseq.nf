@@ -84,34 +84,38 @@ workflow BACTISEQ {
     // PIGZ_UNCOMPRESS(assembled)
     // NEXTPOLISH(PIGZ_UNCOMPRESS.out.file, test)
     // MEDAKA(PIGZ_UNCOMPRESS.out.file, test)
-    // def list = samplesheetToList(params.input, file("assets/schema_input.json"))
+    def list = samplesheetToList(params.input, file("assets/schema_input.json"))
     // SAMPLESHEETFILTERING(list)
+    list.each{item ->
+        def list_string = item.join(',').split(',')
+        println(list_string[0])
+    }
 
-    def test = Channel.from([
-        [
-            [id: 'sam'],
-            file('./TestDatasetNfcore/aligned_output.sam')
-        ],        
-        [
-            [id: 'bam'],
-            file('./TestDatasetNfcore/aligned_output.bam')
-        ]
-    ])
+    // def test = Channel.from([
+    //     [
+    //         [id: 'sam'],
+    //         file('./TestDatasetNfcore/aligned_output.sam')
+    //     ],        
+    //     [
+    //         [id: 'bam'],
+    //         file('./TestDatasetNfcore/aligned_output.bam')
+    //     ]
+    // ])
 
     
-    def test_gfa = Channel.from([
-        [
-            [id: 'sam'],
-            file('./TestDatasetNfcore/FLYE/Nanopore2.assembly_graph.gfa.gz')
-        ]        
-    ])
+    // def test_gfa = Channel.from([
+    //     [
+    //         [id: 'sam'],
+    //         file('./TestDatasetNfcore/FLYE/Nanopore2.assembly_graph.gfa.gz')
+    //     ]        
+    // ])
 
-    def test_assembled = Channel.from([
-        [
-            [id: 'sam'],
-            file('./TestDatasetNfcore/FLYE/Nanopore2.assembly.fasta.gz')
-        ]        
-    ])
+    // def test_assembled = Channel.from([
+    //     [
+    //         [id: 'sam'],
+    //         file('./TestDatasetNfcore/FLYE/Nanopore2.assembly.fasta.gz')
+    //     ]        
+    // ])
     // VISUALIZATIONS([],test_gfa, [])
     
     // ch_combined.view()
