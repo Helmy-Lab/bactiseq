@@ -12,7 +12,6 @@ include {LONGREADS_QA as POST_FILTER_QA} from '../../../subworkflows/local/longr
 include {LONGREADS_QA                  } from '../../../subworkflows/local/longreads_qa/main'
 include {PACSHORTPOLISH             } from '../../../subworkflows/local/pacshortpolish/main'
 include {PACLONGPOLISH             } from '../../../subworkflows/local/paclongpolish/main'
-include {NOPOLISH             } from '../../../subworkflows/local/nopolish/main'
 
 include { FASTQC                  } from '../../../modules/nf-core/fastqc/main'
 
