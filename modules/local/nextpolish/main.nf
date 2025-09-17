@@ -18,7 +18,6 @@ process NEXTPOLISH {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def illumina_reads = short_reads ? ( meta.single_end ? "$short_reads" : "${short_reads[0]} ${short_reads[1]}" ) : ""
     """
