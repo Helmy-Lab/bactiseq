@@ -88,11 +88,18 @@ workflow PACBIO_SUBWORKFLOW {
         no_polish: meta.polish == 'NA'
     }.set { polish_result }
     
-    PACSHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
-    PACLONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
+    if (params.polish){
+        PACSHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
+        PACLONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
 
-    ch_output = ch_output.mix(PACSHORTPOLISH.out.polished)
-    ch_output = ch_output.mix(PACLONGPOLISH.out.polished)
+        ch_output = ch_output.mix(PACSHORTPOLISH.out.polished)
+        ch_output = ch_output.mix(PACLONGPOLISH.out.polished)
+    } else {
+        // If polishing is disabled, pass through the short and long polish branches directly
+        ch_output = ch_output.mix(polish_branch.short_polish)
+        ch_output = ch_output.mix(polish_branch.long_polish)
+    }
+    
     ch_output = ch_output.mix(polish_branch.no_polish)
 
     emit:
