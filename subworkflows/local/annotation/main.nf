@@ -13,7 +13,6 @@ workflow ANNOTATION {
     bakta_db
     amrdb
     carddb
-    checkm2db
     
     main:
     //Running genome annotation
