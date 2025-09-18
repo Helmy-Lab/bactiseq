@@ -47,7 +47,7 @@ workflow ILLUMINA_SUBWORKFLOW {
 
     
 
-    //SHORTREADQA(ch_input)
+    SHORTREADQA(ch_input)
 
     if (params.illumina_adapters == null){
         BBMAP_BBDUK(ch_input, [])
@@ -55,7 +55,7 @@ workflow ILLUMINA_SUBWORKFLOW {
         BBMAP_BBDUK(ch_input, params.illumina_adapters)
     }
 
-    //POST_FILTER_QA(BBMAP_BBDUK.out.reads)
+    POST_FILTER_QA(BBMAP_BBDUK.out.reads)
 
     def ch_assembled = Channel.empty()
     if (params.hybrid_assembler == null){
@@ -83,7 +83,7 @@ workflow ILLUMINA_SUBWORKFLOW {
         ch_assembled = (UNICYCLER.out.scaffolds)
     }
 
-    //TAXONOMY(ch_input, ch_assembled, gambitdb, krakendb)
+    TAXONOMY(ch_input, ch_assembled, gambitdb, krakendb)
 
     ch_assembled.branch {meta, value ->
         short_polish: meta.polish == 'short'
@@ -98,11 +98,21 @@ workflow ILLUMINA_SUBWORKFLOW {
         no_polish: meta.polish == 'NA'
     }.set { polish_result }
 
-    ILLUMINASHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
-    ILLUMINALONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
+    // Conditionally run polishing processes
+    if (params.polish) {
+        ILLUMINASHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
+        ILLUMINALONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
+        
+        // Mix outputs from polishing processes
+        ch_output = ch_output.mix(ILLUMINASHORTPOLISH.out.polished)
+        ch_output = ch_output.mix(ILLUMINALONGPOLISH.out.polished)
+    } else {
+        // If polishing is disabled, pass through the short and long polish branches directly
+        ch_output = ch_output.mix(polish_branch.short_polish)
+        ch_output = ch_output.mix(polish_branch.long_polish)
+    }
 
-    ch_output = ch_output.mix(ILLUMINASHORTPOLISH.out.polished)
-    ch_output = ch_output.mix(ILLUMINALONGPOLISH.out.polished)
+    // Always include the no_polish branch in output
     ch_output = ch_output.mix(polish_branch.no_polish)
     emit:
     outupt = ch_output
