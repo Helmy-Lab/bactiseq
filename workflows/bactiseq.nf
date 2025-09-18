@@ -79,13 +79,18 @@ workflow BACTISEQ {
     ////---------------------------------------------------------
     ///----************** PRE-ASSEMBLED **************--------------
     ////---------------------------------------------------------
-    ASSEMBLED_SUBWORKFLOW(SAMPLESHEETFILTERING.out.assembled_con, DATABASEDOWNLOAD.out.krakendb)
+    ASSEMBLED_SUBWORKFLOW(SAMPLESHEETFILTERING.out.assembled_con)
     ch_all_assembly = ch_all_assembly.mix(ASSEMBLED_SUBWORKFLOW.out.output)
     ch_all_assembly = ch_all_assembly.mix(SAMPLESHEETFILTERING.out.assembled_fin)
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
+    ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db, DATABASEDOWNLOAD.out.buscodb)
+    ANNOTATION(ch_all_assembly, DATABASEDOWNLOAD.out.baktadb, DATABASEDOWNLOAD.out.amrdb, DATABASEDOWNLOAD.out.carddb)
 
+    VISUALIZATIONS(ch_all_assembly,ch_gfa,PACBIO_SUBWORKFLOW.out.bams)
+
+    
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
