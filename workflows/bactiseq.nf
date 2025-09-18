@@ -89,6 +89,7 @@ workflow BACTISEQ {
     list.each{item ->
         def list_string = item.join(',').split(',')
         println(list_string[0])
+        println(list_string[0].toLowerCase().contains('pacbio'))
     }
 
     // def test = Channel.from([
