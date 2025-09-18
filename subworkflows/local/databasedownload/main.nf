@@ -103,6 +103,7 @@ workflow DATABASEDOWNLOAD {
         gambit_ch = Channel.fromPath("${params.db_path}/gambitdb")
     }
 
+    //Kraken2 database download based on pre-build databases publicly uploaded
     def kraken2_ch = Channel.empty()
     if (params.kraken2_db == null && downloadData.contains('kraken2')){
         WGETKRAKEN2DB(params.kraken2_link_db)
@@ -112,29 +113,7 @@ workflow DATABASEDOWNLOAD {
     }else if (params.kraken2_db == null && !downloadData.contains('kraken2')){
         kraken2_ch = Channel.fromPath("${params.db_path}/kraken2db")
     }
-    // bakta_ch.view()
-    // println(card_ch.out.stdout)
-// println "All subdirectories: ${allSubdirs}"
-//     new File(params.db_path).eachFileRecurse(groovy.io.FileType.FILES) {
-//         if (database_list.contains(it)){
-//             if (!it == 'baktdadb'){
-//             }
-//         }
-//     }
 
-    // card_ch.view()
-        // Extract the common base directory
-    // Extract the common base directory
-    // base_dir = card_ch
-    //     .flatMap { files -> files.collect { new File(it).parent } }  // Extract parent for each file
-    //     .unique()                                                   // Deduplicate
-    //     .view { "Base directory: $it" }
-    // parent_dir = card_ch.first()
-    //         .map { file -> 
-    //         file.toString().substring(0, file.toString().lastIndexOf("/")) 
-    //     }
-    //     .view { "Parent directory: $it" }
-    // bakta_ch.view()
     emit:
         baktadb = bakta_ch.first()
         amrdb = amr_ch.first()
