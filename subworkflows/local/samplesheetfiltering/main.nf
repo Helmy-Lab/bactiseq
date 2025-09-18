@@ -194,7 +194,6 @@ workflow SAMPLESHEETFILTERING {
             }
         //Assembled files put in
         }else if (assemble_file != 'assemblyNA'){
-            println("fifth else")
             if (!assemble_file.endsWith('.fasta') && !assemble_file.endsWith('.fa')){
                 assembled_convert.add(item)
             }else{
