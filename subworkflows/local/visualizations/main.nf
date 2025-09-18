@@ -13,7 +13,7 @@ workflow VISUALIZATIONS {
     main:
     ch_versions = Channel.empty()
 
-    // CGVIEW(ch_assembled)
+    CGVIEW(ch_assembled)
 
     GUNZIP_GFA(ch_gfa)
     GUNZIP_GFA
@@ -24,16 +24,15 @@ workflow VISUALIZATIONS {
     BANDAGE_IMAGE(gfa)
     ch_versions    = ch_versions.mix(BANDAGE_IMAGE.out.versions.first())
 
-    // if (params.aligned){
-    //     println("hello")
-    //     def ch_convert = ch_bam.branch { meta, long_file ->
-    //         convert: long_file.extension == 'sam'
-    //         non_convert: long_file.extension == 'bam'
-    //     }.set{conversions}
-    //     SAMTOOLS(conversions.convert)
-    //     ch_bam = conversions.non_convert.mix(SAMTOOLS.out.bam)
-    //     TINYCOV(ch_bam)
-    // }
+    if (params.aligned){
+        def ch_convert = ch_bam.branch { meta, long_file ->
+            convert: long_file.extension == 'sam'
+            non_convert: long_file.extension == 'bam'
+        }.set{conversions}
+        SAMTOOLS(conversions.convert)
+        def all_bam = conversions.non_convert.mix(SAMTOOLS.out.bam) //bam files.mix with converted sam files as ch_bam
+        TINYCOV(all_bam)
+    }
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
