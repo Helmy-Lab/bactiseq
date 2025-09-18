@@ -55,16 +55,6 @@
                     "fa_icon": "fas fa-book",
                     "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code"
-                },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
@@ -270,17 +260,57 @@
         },
         "checkm2_ver": {
             "type": "integer",
-            "default": 14897628
+            "default": 14897628,
+            "description": "",
+            "help_text": ""
         },
         "busco_db_type": {
             "type": "string",
-            "default": "eukaryota_odb10"
+            "default": "eukaryota_odb10",
+            "help_text": "busco database type. \n\nIF USER DID NOT DOWNLOAD IT THEMSELVES. EUKARYOTA_ODB10 is the default database downloaded by the pipeline, ELSE CHANGE THIS IF YOU DOWNLOADED IT YOURSELF"
         },
         "buscodb": {
-            "type": "string"
+            "type": "string",
+            "help_text": "busco database that was downloaded by the user, path to it"
         },
         "hybrid_assembler": {
-            "type": "string"
+            "type": "string",
+            "help_text": "if hybrid assembly is needed. Specify which one is being used. spades or unicycler, no capitalization"
+        },
+        "kraken2_db": {
+            "type": "string",
+            "help_text": "path to kraken2 database. could be custom built downloaded by the user themselves"
+        },
+        "gambit_db": {
+            "type": "string",
+            "help_text": "Path where gambit_DB was downloaded. I.e potentially custom downloaded"
+        },
+        "aligned": {
+            "type": "boolean",
+            "help_text": "Are the Given SAM/BAM files aligned to a reference sequence? You can check by looking at the first few lines within the file. a @SQ header would imply reads were aligned to a reference sequence. "
+        },
+        "illumina_adapters": {
+            "type": "string",
+            "help_text": "path to file for custom illumina adapter trimming via BBDUK\nhttps://archive.jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/bbduk-guide/#:~:text=*Usage%20Examples*-,Adapter%20trimming%3A,-bbduk.sh%20in\n\nabove is how adapter trimming is used via commands in the command. This paramer (illumina_adapters) would expect a .fa or .fasta of illumina adapters for bbduk to work."
+        },
+        "polish": {
+            "type": "boolean",
+            "default": true
+        },
+        "gambit_gbd": {
+            "type": "string",
+            "default": "https://storage.googleapis.com/jlumpe-gambit/public/databases/refseq-curated/1.0/gambit-refseq-curated-1.0.gdb",
+            "help_text": "https://github.com/jlumpe/gambit\n\n.gbd file of gambit database. Can be found on the gambit github. Automatically, defaults to downloading 1.0 version. If you want to change it, replace this parameter in nextflow.config with the link of the version you want"
+        },
+        "gambit_gs": {
+            "type": "string",
+            "default": "https://storage.googleapis.com/jlumpe-gambit/public/databases/refseq-curated/1.0/gambit-refseq-curated-1.0.gs",
+            "help_text": "https://github.com/jlumpe/gambit\n\ngambit database file. .gs file. Can be found on the github of gambit. automatically, defaults to downloading 1.0 .gs file"
+        },
+        "kraken2_link_db": {
+            "type": "string",
+            "default": "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08_GB_20250714.tar.gz",
+            "help_text": "https://benlangmead.github.io/aws-indexes/k2\n\nabove are different types of kraken2 databases that have been built and uploaded. DEFAULT IS  8GB kraken2 database. You can change this by going to the link above and copying the link of the download link and replacing it in nextflow.config"
         }
     }
 }
