@@ -65,18 +65,21 @@ workflow NANOPORE_SUBWORKFLOW {
     }.set { polish_result }
 
     if (params.polish){
-        PIGZ_UNCOMPRESS(polish_branch.short_polish)
+        PIGZ_UNCOMPRESS(polish_branch.short_polish) //don;t think medaka needs it to be a uncompressed fasta, but just incase.
         NANOSHORTPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.short_polish)
 
-        PIGZ_UNCOMPRESS(polish_branch.long_polish)
+        PIGZ_UNCOMPRESS(polish_branch.long_polish) //nextpolish needs it to be a normal fasta file
         ch_versions = ch_versions.mix(PIGZ_UNCOMPRESS.out.versions)
         NANOLONGPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.long_polish)
 
         ch_output = ch_output.mix(NANOSHORTPOLISH.out.polished)
         ch_output = ch_output.mix(NANOLONGPOLISH.out.polished)
     }else {
-        ch_output = ch_output.mix(polish_branch.no_polish)
+        // If polishing is disabled, pass through the short and long polish branches directly
+        ch_output = ch_output.mix(polish_branch.short_polish)
+        ch_output = ch_output.mix(polish_branch.long_polish)
     }
+    ch_output = ch_output.mix(polish_branch.no_polish)
     emit:
     output = ch_output
     versions = ch_versions                     // channel: [ versions.yml ]\
