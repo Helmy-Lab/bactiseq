@@ -1,2 +1,5 @@
 sample,short_fastq1,short_fastq2,long_fastq,assembly,polish,ONT_basecaller
-Sample1,,,TestDatasetNfcore/2045B-m1-082.porechop.fastq.gz,,long,
+pacbio1,,,TestDatasetNfcore/2045B-m1-082.porechop.fastq.gz,,long,
+pacbio2,,,TestDatasetNfcore/2045B-m1-082.porechop.fastq.gz,,long,
+nanopore,,,TestDatasetNfcore/2045B-m1-082.porechop.fastq.gz,,long,
+nanopore1,,,TestDatasetNfcore/2045B-m1-082.porechop.fastq.gz,,long,
