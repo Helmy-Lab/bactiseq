@@ -95,9 +95,7 @@ workflow DATABASEDOWNLOAD {
     //Download gambit database
     def gambit_ch = Channel.empty()
     if (params.gambit_db == null && downloadData.contains('gambitdb')){
-        WGET_GAMBITDB(
-        "https://storage.googleapis.com/jlumpe-gambit/public/databases/refseq-curated/1.0/gambit-refseq-curated-1.0.gdb",
-        "https://storage.googleapis.com/jlumpe-gambit/public/databases/refseq-curated/1.0/gambit-refseq-curated-1.0.gs" )
+        WGET_GAMBITDB(params.gambit_gbd,params.gambit_gs )
         gambit_ch = gambit_ch.concat(WGET_GAMBITDB.out.database_dir)
     }else if (params.gambit_db != null){
         gambit_ch = Channel.fromPath(params.gambit_db)
@@ -107,7 +105,7 @@ workflow DATABASEDOWNLOAD {
 
     def kraken2_ch = Channel.empty()
     if (params.kraken2_db == null && downloadData.contains('kraken2')){
-        WGETKRAKEN2DB('https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08_GB_20250714.tar.gz')
+        WGETKRAKEN2DB(params.kraken2_link_db)
         kraken2_ch = kraken2_ch.concat(WGETKRAKEN2DB.out.database_dir)
     }else if (params.kraken2_db != null){
         kraken2_ch = Channel.fromPath(params.kraken2_db)
