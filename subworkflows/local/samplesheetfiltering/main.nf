@@ -48,17 +48,17 @@ def parseBasecallModelVersion(String input) {
     return null
 }
 
-def check_long(file_name, header){
+def check_long(file_name, header, sample){
     /**
     Checks filename from long fastq column in samplesheet in string form
     returns: 
     */
-     if (header.contains('runid') || header.contains('basecall_model') || file_name.toLowerCase().contains('nanopore')){
+     if (header.contains('runid') || header.contains('basecall_model') || file_name.toLowerCase().contains('nanopore') || sample.toLowerCase().contains('nanopore')){
         //What type of polishing do we need to do?
         return 'nanopore'
-    } else if (header.contains('ccs') || header.contains('@m') || file_name.contains('hifi.') || file_name.toLowerCase().contains('pacbio')){
+    } else if (header.contains('ccs') || header.contains('@m') || file_name.contains('hifi.') || file_name.toLowerCase().contains('pacbio') || sample.toLowerCase().contains('pacbio')){
         return 'pacbio'
-    } else if (file_name.contains('bam') || file_name.contains('sam') || header.contains('@SQ')){
+    } else if (file_name.contains('bam') || file_name.contains('sam') || header.contains('@SQ') || sample.toLowerCase().contains('bam') || sample.toLowerCase().contains('sam')){
         return 'bam'
     }else{
         return 'none'
@@ -89,15 +89,13 @@ workflow SAMPLESHEETFILTERING {
     def short_reads = []
 
     samplesheet.each{item ->
-    
-        //Item is the row in the sample sheet
-        def sample = 0
 
         def list_string = item.join(',').split(',')
         // println(list_string)
         // println(list_string[1])
 
          //Grab filename for 
+        def sample = list_string[0]
         def file_short1 = file_name(list_string[3])
         def file_short2 = file_name(list_string[4])
         def file_long = file_name(list_string[5])
@@ -113,7 +111,7 @@ workflow SAMPLESHEETFILTERING {
         //Check the long read data, what type of read data is it? Nanopore, Pacbio, BAM?
         if (file_long != "longNA" && file_short1 == "short1NA" && file_short2 == "short2NA"){
             //Extract header from fastq file to check type of reads
-            if (check_long(file_long, header) == 'nanopore'){
+            if (check_long(file_long, header, sample) == 'nanopore'){
                 item[0]['long'] = 'nano'
                 //What basecaller was used (if not given)
                 if (base_caller == 'AUTO' && parseBasecallModelVersion(header) != null){
@@ -121,14 +119,14 @@ workflow SAMPLESHEETFILTERING {
                 }
                 longnano.add(item)
                 //What type of polishing do we need to do?
-            } else if (check_long(file_long, header) == 'pacbio'){
+            } else if (check_long(file_long, header, sample) == 'pacbio'){
                 item[0]['long'] = 'pac'
                 longpac.add(item)
-            } else if (check_long(file_long, header) == 'bam'){
+            } else if (check_long(file_long, header, sample) == 'bam'){
                 item[0]['long'] = 'bam'
                 longbam.add(item)
                 longpac.add(item)
-            } else if (check_long(file_long, header) == 'none'){
+            } else if (check_long(file_long, header, sample) == 'none'){
                 println(item)
                 throw new Exception("Long read file: Read type (Nanopore or Pacbio cannot be determined from filename or headers. Nanopore data: filename has nanopore within, header has runid or basecall_model inside) Pacbio data: Filename has hifi/Bam/Sam within, or header has ccs or @m in the line")
             }
@@ -142,17 +140,17 @@ workflow SAMPLESHEETFILTERING {
                item[0]['single_end'] = true
            }
 
-            if (polishInput == 'short' && check_long(file_long, header) == 'nanopore'){ //If we are polishing by short, we assemble long
+            if (polishInput == 'short' && check_long(file_long, header, sample) == 'nanopore'){ //If we are polishing by short, we assemble long
                 //BASECALLER MODE GET IT
                 if (base_caller == 'AUTO' && parseBasecallModelVersion(header) != null){
                     item[0]['basecaller'] = parseBasecallModelVersion(header) //Set meta data for basecaller mode
                 }
                 longnano.add(item)
 
-            }else if (polishInput == 'short' && check_long(file_long, header) == 'pacbio'){
+            }else if (polishInput == 'short' && check_long(file_long, header,sample) == 'pacbio'){
                 item[0]['long'] = 'pac'
                 longpac.add(item)
-            }else if (polishInput == 'short' && check_long(file_long, header) == 'bam'){
+            }else if (polishInput == 'short' && check_long(file_long, header,sample) == 'bam'){
                 item[0]['long'] = 'bam'
                 longbam.add(item)
                 longpac.add(item)
@@ -164,11 +162,11 @@ workflow SAMPLESHEETFILTERING {
         }else if (file_long != "longNA" && (file_short1 != "short1NA" || file_short2 != "short2NA") && params.hybrid_assembler != null){
 
             //What type of long read did we input? spades needs to know
-            if (check_long(file_long, header) == 'nanopore'){
+            if (check_long(file_long, header,sample) == 'nanopore'){
                 item[0]['long'] = 'nano'
-            }else if (check_long(file_long, header) == 'pacbio'){
+            }else if (check_long(file_long, header,sample) == 'pacbio'){
                 item[0]['long'] = 'pac'
-            }else if (check_long(file_long, header) == 'bam'){
+            }else if (check_long(file_long, header, sample) == 'bam'){
                 item[0]['long'] = 'bam'
             }
             //Are we single ended or paired end short reads? (illumina reads)
