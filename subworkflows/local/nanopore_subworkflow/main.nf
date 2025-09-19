@@ -65,8 +65,7 @@ workflow NANOPORE_SUBWORKFLOW {
     }.set { polish_result }
 
     if (params.polish){
-        PIGZ_UNCOMPRESS(polish_branch.short_polish) //don;t think medaka needs it to be a uncompressed fasta, but just incase.
-        NANOSHORTPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.short_polish)
+        NANOSHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
 
         PIGZ_UNCOMPRESS(polish_branch.long_polish) //nextpolish needs it to be a normal fasta file
         ch_versions = ch_versions.mix(PIGZ_UNCOMPRESS.out.versions)
