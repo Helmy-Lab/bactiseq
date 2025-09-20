@@ -110,6 +110,8 @@ workflow SAMPLESHEETFILTERING {
        
         //Check the long read data, what type of read data is it? Nanopore, Pacbio, BAM?
         if (file_long != "longNA" && file_short1 == "short1NA" && file_short2 == "short2NA"){
+            //we are single end
+            item[0]['single_end'] = true
             //Extract header from fastq file to check type of reads
             if (check_long(file_long, header, sample) == 'nanopore'){
                 item[0]['long'] = 'nano'
