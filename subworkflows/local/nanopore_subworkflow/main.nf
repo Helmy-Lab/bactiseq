@@ -48,7 +48,7 @@ workflow NANOPORE_SUBWORKFLOW {
     FLYE(CHOPPER.out.fastq, '--nano-raw')
     ch_versions = ch_versions.mix(FLYE.out.versions)
     ch_gfa = ch_gfa.mix(FLYE.out.gfa)
-    TAXONOMY(CHOPPER.out.fastq, FLYE.out.fasta, gambitdb, krakendb)
+    TAXONOMY(CHOPPER.out.fastq, FLYE.out.fasta, krakendb, gambitdb)
 
 
     FLYE.out.fasta.branch {meta, value ->

@@ -83,7 +83,7 @@ workflow ILLUMINA_SUBWORKFLOW {
         ch_assembled = (UNICYCLER.out.scaffolds)
     }
 
-    TAXONOMY(ch_input, ch_assembled, gambitdb, krakendb)
+    TAXONOMY(ch_input, ch_assembled, krakendb, gambitdb)
 
     ch_assembled.branch {meta, value ->
         short_polish: meta.polish == 'short'

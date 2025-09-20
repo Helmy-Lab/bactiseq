@@ -72,7 +72,7 @@ workflow PACBIO_SUBWORKFLOW {
 
     FLYE(CHOPPER.out.fastq, "--pacbio-hifi")
     ch_gfa = ch_gfa.mix(FLYE.out.gfa)
-    TAXONOMY(qc_reads, FLYE.out.fasta, gambitdb, krakendb)
+    TAXONOMY(qc_reads, FLYE.out.fasta, krakendb, gambitdb)
 
 
     FLYE.out.fasta.branch {meta, value ->
