@@ -84,10 +84,16 @@ workflow BACTISEQ {
     ch_all_assembly = ch_all_assembly.mix(SAMPLESHEETFILTERING.out.assembled_fin)
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
+    ch_all_assembly.branch { file ->
+        gz: file.extension == 'gz'
+        normal: true
+    }.set { branched }
+    
+    GUNZIP_FASTA(branched.gz)
 
-    GUNZIP_FASTA(ch_all_assembly)
-    ASSEMBLY_QA(GUNZIP_FASTA.out.gunzip, DATABASEDOWNLOAD.out.checkm2db, DATABASEDOWNLOAD.out.buscodb)
-    ANNOTATION(GUNZIP_FASTA.out.gunzip, DATABASEDOWNLOAD.out.baktadb, DATABASEDOWNLOAD.out.amrdb, DATABASEDOWNLOAD.out.carddb)
+    def fastas = branched.normal.mix(GUNZIP_FASTA.out.gunzip)
+    ASSEMBLY_QA(fastas, DATABASEDOWNLOAD.out.checkm2db, DATABASEDOWNLOAD.out.buscodb)
+    ANNOTATION(fastas, DATABASEDOWNLOAD.out.baktadb, DATABASEDOWNLOAD.out.amrdb, DATABASEDOWNLOAD.out.carddb)
 
     VISUALIZATIONS(ANNOTATION.out.embl,ch_gfa,PACBIO_SUBWORKFLOW.out.bams)
 
