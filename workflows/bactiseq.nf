@@ -88,7 +88,7 @@ workflow BACTISEQ {
     ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db, DATABASEDOWNLOAD.out.buscodb)
     ANNOTATION(ch_all_assembly, DATABASEDOWNLOAD.out.baktadb, DATABASEDOWNLOAD.out.amrdb, DATABASEDOWNLOAD.out.carddb)
 
-    VISUALIZATIONS(ch_all_assembly,ch_gfa,PACBIO_SUBWORKFLOW.out.bams)
+    VISUALIZATIONS(ANNOTATION.out.embl,ch_gfa,PACBIO_SUBWORKFLOW.out.bams)
 
     
     ch_versions = Channel.empty()

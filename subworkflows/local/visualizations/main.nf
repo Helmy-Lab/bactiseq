@@ -6,14 +6,14 @@ include { BANDAGE_IMAGE } from '../../../modules/nf-core/bandage/image/main'
 workflow VISUALIZATIONS {
 
     take:
-    ch_assembled
+    ch_embl
     ch_gfa
     ch_bam // channel: [ val(meta), [ bam ] ]
 
     main:
     ch_versions = Channel.empty()
 
-    CGVIEW(ch_assembled)
+    CGVIEW(ch_embl)
 
     GUNZIP_GFA(ch_gfa)
     GUNZIP_GFA

@@ -17,13 +17,15 @@ workflow ANNOTATION {
     main:
     //Running genome annotation
     ch_versions = Channel.empty()
-    
+    def ch_embl = Channel.empty()
+
     BAKTA_BAKTA(
     ch_input,
     bakta_db,
     [], // No proteins 
     []  // No prodigal-tf
     )
+    ch_embl = ch_embl.mix(BAKTA_BAKTA.embl)
     ch_versions = ch_versions.mix(BAKTA_BAKTA.out.versions)
     PROKKA(ch_input, 
     [],  //proteins file NONE
@@ -55,7 +57,7 @@ workflow ANNOTATION {
 
 
     emit:
-
+    embl = ch_embl
     versions = ch_versions
 
 }
