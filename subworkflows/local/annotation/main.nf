@@ -25,7 +25,7 @@ workflow ANNOTATION {
     [], // No proteins 
     []  // No prodigal-tf
     )
-    ch_embl = ch_embl.mix(BAKTA_BAKTA.embl)
+    ch_embl = ch_embl.mix(BAKTA_BAKTA.out.embl)
     ch_versions = ch_versions.mix(BAKTA_BAKTA.out.versions)
     PROKKA(ch_input, 
     [],  //proteins file NONE
