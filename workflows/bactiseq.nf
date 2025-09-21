@@ -22,7 +22,7 @@ include { ASSEMBLED_SUBWORKFLOW  } from '../subworkflows/local/assembled_subwork
 
 
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
-
+include { GUNZIP as GUNZIP_FASTA } from '../modules/nf-core/gunzip/main'
 
 include { ASSEMBLY_QA            } from '../subworkflows/local/assembly_qa/main.nf'
 include { ANNOTATION             } from '../subworkflows/local/annotation/main.nf'
@@ -85,8 +85,9 @@ workflow BACTISEQ {
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
 
-    ASSEMBLY_QA(ch_all_assembly, DATABASEDOWNLOAD.out.checkm2db, DATABASEDOWNLOAD.out.buscodb)
-    ANNOTATION(ch_all_assembly, DATABASEDOWNLOAD.out.baktadb, DATABASEDOWNLOAD.out.amrdb, DATABASEDOWNLOAD.out.carddb)
+    GUNZIP_FASTA(ch_all_assembly)
+    ASSEMBLY_QA(GUNZIP_FASTA.out.gunzip, DATABASEDOWNLOAD.out.checkm2db, DATABASEDOWNLOAD.out.buscodb)
+    ANNOTATION(GUNZIP_FASTA.out.gunzip, DATABASEDOWNLOAD.out.baktadb, DATABASEDOWNLOAD.out.amrdb, DATABASEDOWNLOAD.out.carddb)
 
     VISUALIZATIONS(ANNOTATION.out.embl,ch_gfa,PACBIO_SUBWORKFLOW.out.bams)
 
