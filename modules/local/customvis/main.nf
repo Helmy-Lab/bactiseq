@@ -4,6 +4,8 @@ process CUSTOMVIS {
     conda "${moduleDir}/environment.yml"
     container 'docker.io/sli254/custom-thesis-vis:v1.0'
 
+    input:
+    tuple val(meta), path(file)
 
     output:
     path "*.png", emit: images

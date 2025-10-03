@@ -20,7 +20,7 @@ include { NANOPORE_SUBWORKFLOW   }  from '../subworkflows/local/nanopore_subwork
 include { ILLUMINA_SUBWORKFLOW   } from '../subworkflows/local/illumina_subworkflow/main'
 include { ASSEMBLED_SUBWORKFLOW  } from '../subworkflows/local/assembled_subworkflow/main'
 
-
+include { CUSTOMVIS              } from '../modules/local/customvis/main'
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 include { GUNZIP as GUNZIP_FASTA } from '../modules/nf-core/gunzip/main'
 
@@ -97,7 +97,12 @@ workflow BACTISEQ {
 
     VISUALIZATIONS(ANNOTATION.out.embl,ch_gfa,PACBIO_SUBWORKFLOW.out.bams)
 
-    
+    ///-----------------------------------------------------------------
+    ///        RUN CUSTOM VISUALIZATION ONLY AFTER ALL ANNOTATIONS ARE DONE 
+    ///                     uses .collect to get all outputs
+    ////-----------------------------------------------------------------
+    ch_all_embl = ANNOTATION.out.embl.collect()
+    CUSTOMVIS(ch_all_embl)
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
