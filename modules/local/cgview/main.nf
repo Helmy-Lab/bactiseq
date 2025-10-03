@@ -19,9 +19,10 @@ process CGVIEW {
         path "versions.yml"             , emit: versions
 
     script:
+    def args = task.ext.args ?: ''
     """
     # convert to cgview-type xml file
-    perl /usr/bin/cgview_xml_builder.pl -sequence $sequence -output ${sequence}.xml 
+    perl /usr/bin/cgview_xml_builder.pl -sequence $sequence $args -output ${sequence}.xml 
     # input to cgview
     java -jar /usr/bin/cgview.jar -i ${sequence}.xml -o map_${sequence}.svg -f svg
 
