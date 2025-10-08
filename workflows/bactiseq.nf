@@ -48,37 +48,37 @@ workflow BACTISEQ {
     SAMPLESHEETFILTERING(list)
 
 
-    ////---------------------------------------------------------
-    ///----**************PACBIO WORKFLOW*************--------------
-    ////---------------------------------------------------------
+    // ////---------------------------------------------------------
+    // ///----**************PACBIO WORKFLOW*************--------------
+    // ////---------------------------------------------------------
     PACBIO_SUBWORKFLOW(SAMPLESHEETFILTERING.out.pacbio_reads, DATABASEDOWNLOAD.out.gambitdb,DATABASEDOWNLOAD.out.krakendb)
     ch_all_assembly = ch_all_assembly.mix(PACBIO_SUBWORKFLOW.out.output)
     ch_gfa = ch_gfa.mix(PACBIO_SUBWORKFLOW.out.gfa)
-    ////++++++++++++++++++++++++++++++++++++
-    ////++++++++++++++++++++++++++++++++++++
+    // ////++++++++++++++++++++++++++++++++++++
+    // ////++++++++++++++++++++++++++++++++++++
 
-    ////---------------------------------------------------------
-    ///----************** NANOPORE *************--------------
-    ////---------------------------------------------------------
+    // ////---------------------------------------------------------
+    // ///----************** NANOPORE *************--------------
+    // ////---------------------------------------------------------
     NANOPORE_SUBWORKFLOW(SAMPLESHEETFILTERING.out.nano_reads, DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb)
     ch_all_assembly = ch_all_assembly.mix(NANOPORE_SUBWORKFLOW.out.output)
     ch_gfa = ch_gfa.mix(NANOPORE_SUBWORKFLOW.out.gfa)
-    ////++++++++++++++++++++++++++++++++++++
-    ////++++++++++++++++++++++++++++++++++++
+    // ////++++++++++++++++++++++++++++++++++++
+    // ////++++++++++++++++++++++++++++++++++++
 
 
-    ////---------------------------------------------------------
-    ///----************** ILLUMINA **************--------------
-    ////---------------------------------------------------------
+    // ////---------------------------------------------------------
+    // ///----************** ILLUMINA **************--------------
+    // ////---------------------------------------------------------
     ILLUMINA_SUBWORKFLOW(SAMPLESHEETFILTERING.out.illumina_reads, DATABASEDOWNLOAD.out.gambitdb,DATABASEDOWNLOAD.out.krakendb)
     ch_all_assembly = ch_all_assembly.mix(ILLUMINA_SUBWORKFLOW.out.outupt)
     ch_gfa = ch_gfa.mix(ILLUMINA_SUBWORKFLOW.out.gfa)
-    ////++++++++++++++++++++++++++++++++++++
-    ////++++++++++++++++++++++++++++++++++++
+    // ////++++++++++++++++++++++++++++++++++++
+    // ////++++++++++++++++++++++++++++++++++++
 
-    ////---------------------------------------------------------
-    ///----************** PRE-ASSEMBLED **************--------------
-    ////---------------------------------------------------------
+    // ////---------------------------------------------------------
+    // ///----************** PRE-ASSEMBLED **************--------------
+    // ////---------------------------------------------------------
     ASSEMBLED_SUBWORKFLOW(SAMPLESHEETFILTERING.out.assembled_con)
     ch_all_assembly = ch_all_assembly.mix(ASSEMBLED_SUBWORKFLOW.out.output)
     ch_all_assembly = ch_all_assembly.mix(SAMPLESHEETFILTERING.out.assembled_fin)
@@ -101,8 +101,10 @@ workflow BACTISEQ {
     ///        RUN CUSTOM VISUALIZATION ONLY AFTER ALL ANNOTATIONS ARE DONE 
     ///                     uses .collect to get all outputs
     ////-----------------------------------------------------------------
-    ch_all_embl = ANNOTATION.out.embl.collect()
-    CUSTOMVIS(ch_all_embl)
+    def ch_all_embl = ANNOTATION.out.embl.collect()
+    def ch_out = Channel.fromPath(params.outdir)
+    ch_all_embl = ch_all_embl.concat(ch_out) //add path to end of output after all annotations done
+    CUSTOMVIS(ch_all_embl.last()) //get the path to the output dir
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 

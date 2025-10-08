@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import pandas as pd
 import re
@@ -235,7 +236,7 @@ def plasmid_recon(plasmid_folder):
                 # name = p.parents[2].name
 
                 sample_name.append(name)
-                data = pd.read_csv(path + '\\' + filename, sep='\t')
+                data = pd.read_csv(path + '/' + filename, sep='\t')
                 chromosome_data = data[data['molecule_type'] == 'chromosome']
                 contigs_per_chromosome.append(len(chromosome_data['contig_id'].unique()))
                 chromosome_contig_lengths.append(list(chromosome_data['size']))
@@ -251,7 +252,7 @@ def plasmid_recon(plasmid_folder):
                     total_count += len(record.seq)
                 total_length.append(total_count)
             if 'mobtyper_results' in filename:
-                plasmid_df = pd.read_csv(path + '\\' + filename, sep='\t')
+                plasmid_df = pd.read_csv(path + '/' + filename, sep='\t')
                 plasmid_df['extracted_name'] = plasmid_df['sample_id'].str.split(':').str[1]
                 plasmid_lengths.append(tuple(data['size']))
 
@@ -373,7 +374,7 @@ def mlst_compare(MLST_folder):
         for path, folders, files in os.walk(MLST_folder):
             for filename in files:
                 if '.tsv' in filename:
-                    data = pd.read_csv(path + '\\' + filename, sep='\t', header = None)
+                    data = pd.read_csv(path + '/' + filename, sep='\t', header = None)
 
                     entry = str(data.iloc[0, 1]) + "_ST" + str(data.iloc[0, 2])  # First row, columns 1 and 2
                     if entry in mlst_count:

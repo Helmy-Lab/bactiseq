@@ -2,10 +2,11 @@
 process CUSTOMVIS {
     label 'process_single'
     conda "${moduleDir}/environment.yml"
-    container 'docker.io/sli254/custom-thesis-vis:v1.0'
+    container 'docker.io/sli254/custom-thesis-vis:1.5'
 
     input:
-    tuple val(meta), path(file)
+    path in_dir
+    // tuple val(meta), path(file)
 
     output:
     path "*.png", emit: images
@@ -17,7 +18,7 @@ process CUSTOMVIS {
 
     script:
     """
-    python data_extract.py $params.outdir
+    data_extract.py "${in_dir}"
     """
 
     stub:

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import seaborn as sns
 import matplotlib.pyplot as plt
 from collections import Counter
@@ -263,7 +264,7 @@ class showData():
         :return: none
         """
 
-        mask = np.zeros_like(df, dtype=np.bool)
+        mask = np.zeros_like(df, dtype=bool)
         mask[np.triu_indices_from(mask, k=1)] = True  # Exclude the diagonal
         # Create a masked version of the dataframe
         masked_df = df.where(~mask)  # Replace masked values with NaN
