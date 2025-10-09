@@ -119,7 +119,7 @@ workflow BACTISEQ {
     softwareVersionsToYAML(ch_versions).collectFile(
         storeDir: "${params.outdir}/pipeline_info",
         name: 'software_versions.yml',
-        soft: true,
+        sort: true,
         newline: true)
 
     ch_multiqc_files = Channel.empty()
