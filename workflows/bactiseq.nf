@@ -120,7 +120,7 @@ workflow BACTISEQ {
         storeDir: "${params.outdir}/pipeline_info",
         name: 'software_versions.yml',
         sort: true,
-        newline: true)
+        newLine: true)
 
     ch_multiqc_files = Channel.empty()
 
