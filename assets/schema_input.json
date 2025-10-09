@@ -51,7 +51,6 @@
         "properties": {
           "short_fastq1": { "not": { "const": "short1NA" } },
           "long_fastq": { "not": { "const": "longNA" } },
-          "polish": {"not": {"const": "NA"}},
           "assembly": { "const": "assemblyNA" }
         },
         "required": ["sample", "short_fastq1", "long_fastq"]

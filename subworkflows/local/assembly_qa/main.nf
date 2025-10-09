@@ -13,11 +13,12 @@ workflow ASSEMBLY_QA {
     ch_versions = Channel.empty()
 
     BUSCO_BUSCO(ch_input, 'genome', params.busco_db_type, busco_db, [], true)
-
+    ch_versions = ch_versions.mix(BUSCO_BUSCO.out.versions)
     CHECKM2_PREDICT(ch_input, checkm2_db)
+    ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions)
 
     QUAST(ch_input, [[], []], [[],[]])
+    ch_versions = ch_versions.mix(QUAST.out.versions)
     emit:
-
     versions = ch_versions                     // channel: [ versions.yml ]
 }

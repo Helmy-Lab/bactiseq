@@ -12,7 +12,9 @@ workflow ILLUMINALONGPOLISH {
     ch_output = Channel.empty()
 
     MINIMAP2_ALIGN(ch_polish, assembly, false, [], true, false)
+    ch_versions = ch_versions.mix(MINIMAP2_ALIGN.out.versions)
     RACON(assembly,  MINIMAP2_ALIGN.out.paf, ch_polish)
+    ch_versions = ch_versions.mix(RACON.out.versions)
     ch_output = ch_output.mix(RACON.out.polished)
 
     emit:

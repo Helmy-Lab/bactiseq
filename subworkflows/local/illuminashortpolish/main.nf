@@ -12,10 +12,12 @@ workflow ILLUMINASHORTPOLISH {
     ch_versions = Channel.empty()
 
     MINIMAP2_ALIGN(ch_polish, assembly, true, 'bai', false, false)
+    ch_versions = ch_versions.mix(MINIMAP2_ALIGN.out.versions)
     align_ch = MINIMAP2_ALIGN.out.bam
         .combine(MINIMAP2_ALIGN.out.index)
         .map { meta, bam, meta2, index -> [meta, bam, index] }
     PILON( assembly, align_ch, "bam")
+    ch_versions = ch_versions.mix(PILON.out.versions)
     ch_output = ch_output.mix(PILON.out.improved_assembly)
 
     emit:

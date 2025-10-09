@@ -41,7 +41,7 @@ workflow PACBIO_SUBWORKFLOW {
     }
     //If the inputs are bam  OR sam files, make them into fastq files, else, 
     GATK4_SAMTOFASTQ(bam_files)
-
+    ch_versions = ch_versions.mix(GATK4_SAMTOFASTQ.out.versions)
     //If no conversions were done, take the normal ch_input
     def ch_input = GATK4_SAMTOFASTQ.out.fastq.concat(ch_input_initial.toList()).first().flatMap()
 
@@ -59,7 +59,8 @@ workflow PACBIO_SUBWORKFLOW {
     }
 
     LONGREADS_QA(ch_input)
-    
+    ch_versions = ch_versions.mix(LONGREADS_QA.out.versions)
+
     HIFIADAPTERFILT(ch_input)
     ch_versions.mix(HIFIADAPTERFILT.out.versions)
 
@@ -67,12 +68,15 @@ workflow PACBIO_SUBWORKFLOW {
         .filter {meta, filt -> filt.size() > 0 && filt.countFastq() > 0}
         .set{qc_reads}
     CHOPPER(HIFIADAPTERFILT.out.filt, [])
-
+    ch_versions = ch_versions.mix(CHOPPER.out.versions)
     POST_FILTER_QA(CHOPPER.out.fastq)
 
     FLYE(CHOPPER.out.fastq, "--pacbio-hifi")
+    ch_versions = ch_versions.mix(FLYE.out.versions)
     ch_gfa = ch_gfa.mix(FLYE.out.gfa)
+
     TAXONOMY(qc_reads, FLYE.out.fasta, krakendb, gambitdb)
+    ch_versions = ch_versions.mix(TAXONOMY.out.versions)
 
 
     FLYE.out.fasta.branch {meta, value ->
@@ -94,6 +98,10 @@ workflow PACBIO_SUBWORKFLOW {
 
         ch_output = ch_output.mix(PACSHORTPOLISH.out.polished)
         ch_output = ch_output.mix(PACLONGPOLISH.out.polished)
+
+
+        ch_versions = ch_versions.mix(PACSHORTPOLISH.out.versions)
+        ch_versions = ch_versions.mix(PACLONGPOLISH.out.versions)
     } else {
         // If polishing is disabled, pass through the short and long polish branches directly
         ch_output = ch_output.mix(polish_branch.short_polish)

@@ -14,8 +14,10 @@ workflow VISUALIZATIONS {
     ch_versions = Channel.empty()
 
     CGVIEW(ch_embl)
+    ch_versions = ch_versions.mix(CGVIEW.out.versions)
 
     GUNZIP_GFA(ch_gfa)
+    ch_versions = ch_versions.mix(GUNZIP_GFA.out.versions)
     GUNZIP_GFA
         .out
         .gunzip
@@ -30,8 +32,10 @@ workflow VISUALIZATIONS {
             non_convert: long_file.extension == 'bam'
         }.set{conversions}
         SAMTOOLS(conversions.convert)
+        ch_versions = ch_versions.mix(SAMTOOLS.out.versions)
         def all_bam = conversions.non_convert.mix(SAMTOOLS.out.bam) //bam files.mix with converted sam files as ch_bam
         TINYCOV(all_bam)
+        ch_versions = ch_versions.mix(TINYCOV.out.versions)
     }
 
     emit:

@@ -48,7 +48,7 @@ workflow ILLUMINA_SUBWORKFLOW {
     
 
     SHORTREADQA(ch_input)
-
+    ch_versions = ch_versions.mix(SHORTREADQA.out.versions)
     if (params.illumina_adapters == null){
         BBMAP_BBDUK(ch_input, [])
     }else {
@@ -65,6 +65,7 @@ workflow ILLUMINA_SUBWORKFLOW {
         SPADES(ch_no_hybrid, [],[])
         ch_gfa = ch_gfa.mix(SPADES.out.gfa)
         ch_assembled = (SPADES.out.scaffolds)
+        ch_versions = ch_versions.mix(SPADES.out.versions)
     } else if (params.hybrid_assembler == 'spades'){
         def ch_hybrid = BBMAP_BBDUK.out.reads.join(ch_long).map{meta, illumina, long_read ->
             if (meta.long == 'pac'){
@@ -76,21 +77,22 @@ workflow ILLUMINA_SUBWORKFLOW {
         SPADES(ch_hybrid, [],[])
         ch_gfa = ch_gfa.mix(SPADES.out.gfa)
         ch_assembled = (SPADES.out.scaffolds)
+        ch_versions = ch_versions.mix(SPADES.out.versions)
     }else if (params.hybrid_assembler == 'unicycler'){
         def ch_hybrid = BBMAP_BBDUK.out.reads.join(ch_long)
         UNICYCLER(ch_hybrid)
         ch_gfa = ch_gfa.mix(UNICYCLER.out.gfa)
         ch_assembled = (UNICYCLER.out.scaffolds)
+        ch_versions = ch_versions.mix(UNICYCLER.out.versions)
     }
 
     TAXONOMY(ch_input, ch_assembled, krakendb, gambitdb)
-
+    ch_versions = ch_versions.mix(TAXONOMY.out.versions)
     ch_assembled.branch {meta, value ->
         short_polish: meta.polish == 'short'
         long_polish: meta.polish == 'long'
         no_polish: meta.polish == 'NA'
     }.set { polish_branch }
-
     // Also branch ch_polish the same way
     ch_polish_final.branch { meta, data ->
         short_polish: meta.polish == 'short'
@@ -106,6 +108,8 @@ workflow ILLUMINA_SUBWORKFLOW {
         // Mix outputs from polishing processes
         ch_output = ch_output.mix(ILLUMINASHORTPOLISH.out.polished)
         ch_output = ch_output.mix(ILLUMINALONGPOLISH.out.polished)
+        ch_versions = ch_versions.mix(ILLUMINASHORTPOLISH.out.versions)
+        ch_versions = ch_versions.mix(ILLUMINALONGPOLISH.out.versions)
     } else {
         // If polishing is disabled, pass through the short and long polish branches directly
         ch_output = ch_output.mix(polish_branch.short_polish)
