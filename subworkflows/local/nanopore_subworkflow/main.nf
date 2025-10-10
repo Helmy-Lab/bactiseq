@@ -41,6 +41,11 @@ workflow NANOPORE_SUBWORKFLOW {
     PORECHOP_PORECHOP(ch_input)
     ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
     CHOPPER(PORECHOP_PORECHOP.out.reads, [])
+    def reads_nano = CHOPPER.out.fastq.map {
+        meta, fastq -> 
+        meta.single_end = false
+        [meta, fastq]
+    }
     ch_versions = ch_versions.mix(CHOPPER.out.versions)
 
     POST_FILTER_QA(CHOPPER.out.fastq)
@@ -48,7 +53,7 @@ workflow NANOPORE_SUBWORKFLOW {
     FLYE(CHOPPER.out.fastq, '--nano-raw')
     ch_versions = ch_versions.mix(FLYE.out.versions)
     ch_gfa = ch_gfa.mix(FLYE.out.gfa)
-    TAXONOMY(CHOPPER.out.fastq, FLYE.out.fasta, krakendb, gambitdb)
+    TAXONOMY(reads_nano, FLYE.out.fasta, krakendb, gambitdb)
 
 
     FLYE.out.fasta.branch {meta, value ->
