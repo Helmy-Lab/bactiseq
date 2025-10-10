@@ -43,7 +43,7 @@ workflow NANOPORE_SUBWORKFLOW {
     CHOPPER(PORECHOP_PORECHOP.out.reads, [])
     def reads_nano = CHOPPER.out.fastq.map {
         meta, fastq -> 
-        meta.single_end = false
+        meta.single_end = true
         [meta, fastq]
     }
     reads_nano.view()
