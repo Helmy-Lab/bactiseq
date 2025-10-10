@@ -46,6 +46,7 @@ workflow NANOPORE_SUBWORKFLOW {
         meta.single_end = false
         [meta, fastq]
     }
+    reads_nano.view()
     ch_versions = ch_versions.mix(CHOPPER.out.versions)
 
     POST_FILTER_QA(CHOPPER.out.fastq)
