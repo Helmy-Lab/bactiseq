@@ -41,7 +41,7 @@ workflow NANOPORE_SUBWORKFLOW {
     PORECHOP_PORECHOP(ch_input)
     ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
     CHOPPER(PORECHOP_PORECHOP.out.reads, [])
-    def reads_nano = CHOPPER.out.fastq.map {
+    def reads_nano = CHOPPER.out.fastq.map { //If we are building by nanopore, they are only ever single end
         meta, fastq -> 
         meta.single_end = true
         [meta, fastq]
