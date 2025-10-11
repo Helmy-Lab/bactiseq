@@ -1,5 +1,6 @@
 process NEXTPOLISH {
     tag "$meta.id"
+    errorStrategy 'retry'
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
