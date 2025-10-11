@@ -3,6 +3,7 @@ include {LONGREADS_QA as POST_FILTER_QA     } from '../../../subworkflows/local/
 include { PORECHOP_PORECHOP                 } from '../../../modules/nf-core/porechop/porechop/main'
 include { CHOPPER                           } from '../../../modules/nf-core/chopper/main'
 include { PIGZ_UNCOMPRESS } from '../../../modules/nf-core/pigz/uncompress/main'
+include { PIGZ_UNCOMPRESS as PIGZ_SHORT } from '../../../modules/nf-core/pigz/uncompress/main'
 
 include { TAXONOMY                     } from '../../../subworkflows/local/taxonomy/main.nf'
 include { ASSEMBLY_QA                  } from '../../../subworkflows/local/assembly_qa/main'
@@ -71,10 +72,10 @@ workflow NANOPORE_SUBWORKFLOW {
     }.set { polish_result }
 
     if (params.polish){
-        
+        PIGZ_SHORT(polish_branch.short_polish)
+        NANOSHORTPOLISH(PIGZ_SHORT.out.file, polish_result.short_polish)
 
         PIGZ_UNCOMPRESS(polish_branch.long_polish) //nextpolish needs it to be a normal fasta file
-        NANOSHORTPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.short_polish)
         ch_versions = ch_versions.mix(PIGZ_UNCOMPRESS.out.versions)
         NANOLONGPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.long_polish)
 
