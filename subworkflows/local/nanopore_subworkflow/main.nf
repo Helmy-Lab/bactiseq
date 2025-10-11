@@ -71,9 +71,10 @@ workflow NANOPORE_SUBWORKFLOW {
     }.set { polish_result }
 
     if (params.polish){
-        NANOSHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
+        
 
         PIGZ_UNCOMPRESS(polish_branch.long_polish) //nextpolish needs it to be a normal fasta file
+        NANOSHORTPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.short_polish)
         ch_versions = ch_versions.mix(PIGZ_UNCOMPRESS.out.versions)
         NANOLONGPOLISH(PIGZ_UNCOMPRESS.out.file, polish_result.long_polish)
 
