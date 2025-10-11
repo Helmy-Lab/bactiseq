@@ -28,7 +28,7 @@ process CGVIEW {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        cgview: \$( java -jar cgview.jar --version 2>&1 | sed 's/cgview //g' )
+        cgview: \$( java -jar /usr/bin/cgview.jar --version 2>&1 | sed 's/cgview //g' )
     END_VERSIONS
     """
     stub:
