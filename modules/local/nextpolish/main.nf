@@ -16,7 +16,7 @@ process NEXTPOLISH {
     output:
     tuple val(meta), path("*.fasta"), emit: fasta
     tuple val(meta), path("*.fasta.stat"), emit: stats
-    path "*.e"                           , emit: logs
+    path "nextpolish_workdir/*.e"                           , emit: logs, optional: true
     path "versions.yml"           , emit: versions
 
     when:
