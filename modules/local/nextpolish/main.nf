@@ -4,6 +4,10 @@ process NEXTPOLISH {
 
     conda "${moduleDir}/environment.yml"
     container 'docker.io/sli254/nextpolish-custom:v1.4.1'
+    publishDir "${params.outdir}/error_logs", 
+        pattern: './nextpolish_workdir/*.e',
+        mode: 'copy',
+        enabled: task.exitStatus != 0
 
     input:
     tuple val(meta), path(assembly)
