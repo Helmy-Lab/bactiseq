@@ -61,7 +61,7 @@ def process_sample_directories(target_dir):
     for item in os.listdir(target_dir):
         # Check for sample names in output dir
         sample_dir_path = os.path.join(target_dir, item)
-        if os.path.isdir(sample_dir_path) and not item.startswith('pipeline_info') and not item.startswith('report'): #Found a sample directory
+        if os.path.isdir(sample_dir_path) and not item.startswith('pipeline_info') and not item.startswith('report') and not item.startswith('customVisualizations'): #Found a sample directory
             print(f"Processing directory: {item}")
             print(sample_dir_path)
             Annotated_assembly_compare_reference(sample_dir_path + '/Annotation/' + 'Bakta')
