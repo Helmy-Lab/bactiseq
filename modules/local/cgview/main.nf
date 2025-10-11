@@ -3,10 +3,7 @@ process CGVIEW {
     tag "$meta.id"
     label 'process_single'
     publishDir "results/cgview"
-    // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
     conda "${moduleDir}/environment.yml"
-    // container 'docker://pstothard/cgview:2.0.3'
-
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'docker://pstothard/cgview:2.0.3':
         'docker.io/pstothard/cgview:2.0.3' }"
