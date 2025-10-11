@@ -4,7 +4,7 @@ process NEXTPOLISH {
 
     conda "${moduleDir}/environment.yml"
     container 'docker.io/sli254/nextpolish-custom:v1.4.1'
-    publishDir "${params.outdir}/nextpolish_logs", 
+    publishDir "${params.outdir}/${meta.id}/nextpolish_logs", 
         pattern: '**/*.e',
         mode: 'copy'
 
