@@ -23,6 +23,7 @@ process NEXTPOLISH {
     task.ext.when == null || task.ext.when
 
     script:
+    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def illumina_reads = short_reads ? ( meta.single_end ? "$short_reads" : "${short_reads[0]} ${short_reads[1]}" ) : ""
     """
@@ -36,6 +37,7 @@ process NEXTPOLISH {
 
     echo -e "task = best\ngenome = ${assembly}\nmultithread_jobs = ${task.cpus}\nworkdir = ./nextpolish_workdir\nsgs_fofn = sgs.fofn" > run.cfg
     
+    echo -e "${args}" >> run.cfg
     nextPolish run.cfg
 
     # Copy all fasta and fasta.stat files from nextpolish_workdir to current directory
