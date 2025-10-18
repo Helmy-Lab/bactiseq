@@ -88,22 +88,26 @@ workflow ILLUMINA_SUBWORKFLOW {
 
     TAXONOMY(ch_input, ch_assembled, krakendb, gambitdb)
     ch_versions = ch_versions.mix(TAXONOMY.out.versions)
-    ch_assembled.branch {meta, value ->
+ // Join assemblies with polish data by metadata (position 0)
+    def ch_assembled_polish_joined = ch_assembled.join(ch_polish_final, by: 0)
+    
+    // Now branch the joined data
+    ch_assembled_polish_joined.branch { meta, assembly, polish_data ->
         short_polish: meta.polish == 'short'
         long_polish: meta.polish == 'long'
         no_polish: meta.polish == 'NA'
-    }.set { polish_branch }
-    // Also branch ch_polish the same way
-    ch_polish_final.branch { meta, data ->
-        short_polish: meta.polish == 'short'
-        long_polish: meta.polish == 'long'
-        no_polish: meta.polish == 'NA'
-    }.set { polish_result }
+    }.set { polish_branches }
 
     // Conditionally run polishing processes
     if (params.polish) {
-        ILLUMINASHORTPOLISH(polish_branch.short_polish, polish_result.short_polish)
-        ILLUMINALONGPOLISH(polish_branch.long_polish, polish_result.long_polish)
+        ILLUMINASHORTPOLISH(
+            polish_branches.short_polish.map { meta, assembly, polish_data -> [meta, assembly] },
+            polish_branches.short_polish.map { meta, assembly, polish_data -> [meta, polish_data] }
+        )
+        ILLUMINALONGPOLISH(
+            polish_branches.long_polish.map { meta, assembly, polish_data -> [meta, assembly] },
+            polish_branches.long_polish.map { meta, assembly, polish_data -> [meta, polish_data] }
+        )
         
         // Mix outputs from polishing processes
         ch_output = ch_output.mix(ILLUMINASHORTPOLISH.out.polished)
@@ -111,13 +115,14 @@ workflow ILLUMINA_SUBWORKFLOW {
         ch_versions = ch_versions.mix(ILLUMINASHORTPOLISH.out.versions)
         ch_versions = ch_versions.mix(ILLUMINALONGPOLISH.out.versions)
     } else {
-        // If polishing is disabled, pass through the short and long polish branches directly
-        ch_output = ch_output.mix(polish_branch.short_polish)
-        ch_output = ch_output.mix(polish_branch.long_polish)
+        // If polishing is disabled, pass through the assembly data directly
+        ch_output = ch_output.mix(polish_branches.short_polish.map { meta, assembly, polish_data -> [meta, assembly] })
+        ch_output = ch_output.mix(polish_branches.long_polish.map { meta, assembly, polish_data -> [meta, assembly] })
     }
 
-    // Always include the no_polish branch in output
-    ch_output = ch_output.mix(polish_branch.no_polish)
+    // Always include the no_polish branch in output (just the assembly)
+    ch_output = ch_output.mix(polish_branches.no_polish.map { meta, assembly, polish_data -> [meta, assembly] })
+
     emit:
     outupt = ch_output
     versions = ch_versions                     // channel: [ versions.yml ]
