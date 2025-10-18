@@ -13,8 +13,8 @@ workflow PACSHORTPOLISH {
 
     MINIMAP2_ALIGN(ch_polish, assembly, true, 'bai', false, false)
     align_ch = MINIMAP2_ALIGN.out.bam
-        .combine(MINIMAP2_ALIGN.out.index)
-        .map { meta, bam, meta2, index -> [meta, bam, index] }
+        .join(MINIMAP2_ALIGN.out.index)
+        .map { meta, bam, index -> [meta, bam, index] }
     PILON( assembly, align_ch, "bam")
     ch_output = ch_output.mix(PILON.out.improved_assembly)
 
