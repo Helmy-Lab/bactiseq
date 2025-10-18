@@ -79,7 +79,7 @@ workflow ILLUMINA_SUBWORKFLOW {
         SPADES(ch_hybrid, [],[])
         ch_gfa = ch_gfa.mix(SPADES.out.gfa)
         ch_assembled = (SPADES.out.scaffolds)
-        ch_assembled_polish_joined = ch_assembled.join(ch_polish_final, by: 0)
+        ch_assembled_polish_joined = SPADES.out.scaffolds.join(ch_polish_final, by: 0)
         ch_versions = ch_versions.mix(SPADES.out.versions)
     }else if (params.hybrid_assembler == 'unicycler'){
         def ch_hybrid = BBMAP_BBDUK.out.reads.join(ch_long)
