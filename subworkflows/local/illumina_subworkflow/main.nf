@@ -90,7 +90,8 @@ workflow ILLUMINA_SUBWORKFLOW {
     ch_versions = ch_versions.mix(TAXONOMY.out.versions)
  // Join assemblies with polish data by metadata (position 0)
     def ch_assembled_polish_joined = ch_assembled.join(ch_polish_final, by: 0)
-    
+    ch_polish_final.view()
+    ch_assembled_polish_joined.view()
     // Now branch the joined data
     ch_assembled_polish_joined.branch { meta, assembly, polish_data ->
         short_polish: meta.polish == 'short'
