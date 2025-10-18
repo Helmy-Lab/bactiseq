@@ -16,6 +16,7 @@ workflow ILLUMINASHORTPOLISH {
     align_ch = MINIMAP2_ALIGN.out.bam
         .join(MINIMAP2_ALIGN.out.index)
         .map { meta, bam, index -> [meta, bam, index] }
+    align_ch.view()
     PILON( assembly, align_ch, "bam")
     ch_versions = ch_versions.mix(PILON.out.versions)
     ch_output = ch_output.mix(PILON.out.improved_assembly)
