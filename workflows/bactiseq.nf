@@ -111,6 +111,7 @@ workflow BACTISEQ {
     ///                     uses .collect to get all outputs
     ////-----------------------------------------------------------------
     def ch_all_embl = ANNOTATION.out.embl.collect()
+    ch_all_embl.view()
     def ch_out = Channel.fromPath(params.outdir)
     ch_all_embl = ch_all_embl.concat(ch_out) //add path to end of output after all annotations done
     CUSTOMVIS(ch_all_embl.last()) //get the path to the output dir
