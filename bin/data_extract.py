@@ -41,7 +41,7 @@ def parse_number(e):
     except ValueError:
         # Return the original string if it cannot be converted to float
         return e
-def process_sample_directories(target_dir, samplesheet_dir):
+def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulence, vir_mlst, dir_seqkit):
     amrcomp = []
     annocomp = []
     insertData = []
@@ -49,15 +49,36 @@ def process_sample_directories(target_dir, samplesheet_dir):
     assemblyData = []
     seqkitdata = []
 
+    #-----iterate through all files with Bakta  info
+    for filename in os.listdir(dir_bakta):
+        Annotated_assembly_compare_reference(dir_bakta, filename)
 
-    # Check if the specified directory exists
-    if not os.path.exists(target_dir):
-        print(f"The directory {target_dir} does not exist.")
-        return
+    #------Iterate through all files with plasmid info
+    for filename in os.listdir(dir_mob):
+        plasmid_recon(dir_mob, filename)
+    
+    #------iterate through all files from AMRfinderplus and RGI
+    txt_files = os.listdir(dir_rgi)
+    tsv_files = os.listdir(dir_amr)
 
+    # Create sets of basenames
+    txt_basenames = {Path(f).stem for f in txt_files if f.endswith('.txt')}
+    tsv_basenames = {Path(f).stem for f in tsv_files if f.endswith('.tsv')}
 
-    # Iterate through all items in the specified directory
+    # Find common basenames
+    common_basenames = txt_basenames.intersection(tsv_basenames)
 
+    # Create pairs, as in match the AMRfinder plus files with the RGI file
+    file_pairs = []
+    for basename in common_basenames:
+        txt_file = basename + '.txt'  #RGI file
+        tsv_file = basename + '.tsv'  #AMRFinderPLus file
+        file_pairs.append((basename, txt_file, tsv_file))
+    for sample_name, rgi, amr in file_pairs:    
+        amrcomp = AMR_compare(dir_rgi, dir_amr, amr, rgi, sample_name)
+
+    for filename in os.listdir(dir_mlst):
+        
     for item in os.listdir(target_dir):
         # Check for sample names in output dir
         sample_dir_path = os.path.join(target_dir, item)
@@ -179,19 +200,19 @@ def sampleSheetSize(sampleSheet_dir_path, samplesheetdata):
                       float_format="{:0.2f}".format))
 
 #-------------- COMPARE TOOLS ------------#
-def AMR_compare(sample_dir_path, sample_name, comp):
+def AMR_compare(dir_rgi, dir_amr, amr_filename, rgi_filename, sample_name):
     """
     Compiles the amrfinderplus and RGI amr gene annotations for a pandas dataframe
-    :param sample_dir_path: specfic directory to a sample
-    :param sample_name:
-    :param comp:
+    :param dir_rgi: directory containing ALL rgi analysis files
+    :param dir_amr: directory containing ALL AMRfinderplus files
+    :param amr_filename: the specific file we are using amrfinderplus file
+    :param rgi_filename: the specific file we are using amrfinderplus file
+    :param sample_name: the specific sample we are analyzing
     :return:
     """
-    CARD_path = os.path.join(sample_dir_path, 'Annotation', 'RGI')
-    amrf = os.path.join(sample_dir_path, 'Annotation', 'AmrfinderPlus')
 
-    text_CARD = os.path.join(CARD_path, sample_name + '.txt')
-    text_amrplus = os.path.join(amrf, sample_name + '.tsv')
+    text_CARD = os.path.join(dir_rgi, rgi_filename)
+    text_amrplus = os.path.join(dir_amr, amr_filename)
     new = []
     cardgenes = []
     amrgenes = []
@@ -221,43 +242,45 @@ def seqkitstats(sample_dir, sample_name, data):
 
     data.append(sample)
     return data
-def plasmid_recon(plasmid_folder):
+def plasmid_recon(mob_dir, filename):
     """
     Gets plamid data if available for each sample
         Prepares data for visualization of plasmid data
-    :param plasmid_folder: folder for the specific samples plasmid data (mobsuite)
+    :param mob_dir: folder for the specific samples plasmid data (mobsuite)
+    :param filename: FIlename with the output analysis
     :return: Doesn't return anything, just edits lists
     """
-    for path, folders, files in os.walk(plasmid_folder):
-        for filename in files:
-            if 'contig_report.txt' in filename:
+    if 'contig_report.txt' in filename:
 
-                name = path.replace(target_directory, "").split('/')[0]
-                # name = p.parents[2].name
+        name = Path(filename).stem
+        # name = p.parents[2].name
 
-                sample_name.append(name)
-                data = pd.read_csv(path + '/' + filename, sep='\t')
-                chromosome_data = data[data['molecule_type'] == 'chromosome']
-                contigs_per_chromosome.append(len(chromosome_data['contig_id'].unique()))
-                chromosome_contig_lengths.append(list(chromosome_data['size']))
-                print(chromosome_data)
-                data = data[data['primary_cluster_id'] != '-']
-                plasmid_set.append(data['primary_cluster_id']) #set of plasmids per genome
-                plasmid_name.append(tuple(data['primary_cluster_id'])) #append a tuple of data comprising of all the plasmids found in a single genome
-                contig_name.append(tuple(data['contig_id']))
-            if 'chromosome.fasta' in filename:
-                total_count = 0
-                for record in SeqIO.parse(path + '//' + filename, "fasta"):
-                    # Add the length of the sequence to the total count
-                    total_count += len(record.seq)
-                total_length.append(total_count)
-            if 'mobtyper_results' in filename:
-                plasmid_df = pd.read_csv(path + '/' + filename, sep='\t')
-                plasmid_df['extracted_name'] = plasmid_df['sample_id'].str.split(':').str[1]
-                plasmid_lengths.append(tuple(data['size']))
+        sample_name.append(name)
+        data = pd.read_csv(mob_dir + '/' + filename, sep='\t')
+        chromosome_data = data[data['molecule_type'] == 'chromosome']
+        contigs_per_chromosome.append(len(chromosome_data['contig_id'].unique()))
+        chromosome_contig_lengths.append(list(chromosome_data['size']))
+        print(chromosome_data)
+        data = data[data['primary_cluster_id'] != '-']
+        plasmid_set.append(data['primary_cluster_id']) #set of plasmids per genome
+        plasmid_name.append(tuple(data['primary_cluster_id'])) #append a tuple of data comprising of all the plasmids found in a single genome
+        contig_name.append(tuple(data['contig_id']))
+    if 'chromosome.fasta' in filename:
+        total_count = 0
+        for record in SeqIO.parse(path + '//' + filename, "fasta"):
+            # Add the length of the sequence to the total count
+            total_count += len(record.seq)
+        total_length.append(total_count)
+    if 'mobtyper_results' in filename:
+        plasmid_df = pd.read_csv(path + '/' + filename, sep='\t')
+        plasmid_df['extracted_name'] = plasmid_df['sample_id'].str.split(':').str[1]
+        plasmid_lengths.append(tuple(data['size']))
 
 
-def Annotated_assembly_compare_reference(annotated_folder):
+def Annotated_assembly_compare_reference(directory, filename):
+    """
+    Takes in every annotated file, one at a time
+    """
     def find_common_products_among_all(gene_sets):
         """
         Find common genes (names or produict, depending on what you change below) between samples
@@ -294,40 +317,37 @@ def Annotated_assembly_compare_reference(annotated_folder):
             unique_products = products_current_set - common_products
             # print(f"Differences for gene set {index + 1}: {unique_products}")
         return len(common_products)
+
     remade_file_path = 'Remade_annotation_file.tsv'
+    if '.tsv' in filename and 'hypothetical' not in filename:
+        name = Path(filename).stem
 
-    for path, folders, files in os.walk(annotated_folder):
-        for filename in files:
+        sample_names.append(name)
+        with open(os.path.join(directory, filename), 'r') as file:
+            lines = file.readlines()[5:]  # Skip the first 5 lines
 
-            if '.tsv' in filename and 'hypothetical' not in filename:
-                name = path.replace(target_directory, "").split('/')[0] #get sample name, take the full path, remove the direccotry output, then split and take the first folder name
+        # Write the remaining lines back to the remade file
+        with open(remade_file_path, 'w') as file:
+            file.writelines(lines)
 
-                sample_names.append(name)
-                with open(os.path.join(path, filename), 'r') as file:
-                    lines = file.readlines()[5:]  # Skip the first 5 lines
+        # Create the DataFrame using the processed data
+        df = pd.read_csv(remade_file_path, sep='\t')
 
-                # Write the remaining lines back to the remade file
-                with open(remade_file_path, 'w') as file:
-                    file.writelines(lines)
+        # Filter the DataFrame to remove rows with NaN in 'Gene' or 'Product'
+        # and rows where 'Product' contains 'hypothetical'
+        total_genes.append(len(df))
+        filtered_df = df
+        filtered_df1 = df.dropna(subset=['Gene'])  # Remove NaNs a separate filter
 
-                # Create the DataFrame using the processed data
-                df = pd.read_csv(remade_file_path, sep='\t')
-
-                # Filter the DataFrame to remove rows with NaN in 'Gene' or 'Product'
-                # and rows where 'Product' contains 'hypothetical'
-                total_genes.append(len(df))
-                filtered_df = df
-                filtered_df1 = df.dropna(subset=['Gene'])  # Remove NaNs a separate filter
-
-                filtered_df = filtered_df[~filtered_df['Product'].str.contains('hypothetical', case=False, na=False)] #filter out hypothetical proteins
-                # Append the filtered DataFrame to gene_sets
-                gene_sets.append(filtered_df[['Gene', 'Product']])
-                contig_names.append(filtered_df[['#Sequence Id', 'Product']])
-                removed_Nan_gene_names.append(filtered_df1[['Gene', 'Product']])
+        filtered_df = filtered_df[~filtered_df['Product'].str.contains('hypothetical', case=False, na=False)] #filter out hypothetical proteins
+        # Append the filtered DataFrame to gene_sets
+        gene_sets.append(filtered_df[['Gene', 'Product']])
+        contig_names.append(filtered_df[['#Sequence Id', 'Product']])
+        removed_Nan_gene_names.append(filtered_df1[['Gene', 'Product']])
 
 
-    Number_common_genes = find_common_products_among_all(gene_sets)
-    num_common.append([Number_common_genes] * len(sample_names),)
+Number_common_genes = find_common_products_among_all(gene_sets)
+num_common.append([Number_common_genes] * len(sample_names),)
 def compute_common_genes_heatmap(gene_sets, genome_names):
     # Initialize an empty matrix for the number of common genes
     n = len(gene_sets)
@@ -408,10 +428,13 @@ if __name__ == "__main__":
     mlst_count = {}
     # #
     datavis = showData()
-    # target_directory = "C:/Users/syl218/Desktop/Aaron_white_ecoli/Annotated_assemblies"
-    target_directory = "C:/Users/syl218/h_somni/resultsBatch2"
-    # target_directory = "C:/Users/syl218/h_somni/resultsMultiTest"
-    target_directory = "C:/Users/syl218/h_somni/ResultsBATCH1AND2"
-    target_directory = sys.argv[1]
-    process_sample_directories(target_directory)
+
+    dir_bakta = sys.argv[1]
+    dir_rgi = sys.argv[2]
+    dir_amr = sys.argv[3]
+    dir_mob = sys.argv[4]
+    dir_virulence = sys.argv[5]
+    dir_mlst = sys.argv[6]
+    dir_seqkit = sys.argv[7]
+    process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulence, vir_mlst, dir_seqkit)
 
