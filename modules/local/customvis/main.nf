@@ -24,13 +24,6 @@ process CUSTOMVIS {
 
     script:
     """
-    # Create organized mobsuite directory for this specific sample
-    mkdir -p mobsuite/${meta.id}
-    
-    # Copy all 3 mobsuite files for this sample to the organized location
-    for file in ${mob_files}; do
-        cp "\$file" "mobsuite/${meta.id}/"
-    done
     echo bakta
     ls -la bakta/
     echo rgi
