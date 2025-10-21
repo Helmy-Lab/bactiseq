@@ -17,8 +17,8 @@ workflow SHORTREADQA {
             return [meta, reads[0]]
         } else {
             // Paired-end: return both files individually with appropriate metadata
-            def file1 = [id: "${meta.id}", single_end: true, original_id: meta.id]
-            def file2 = [id: "${meta.id}", single_end: true, original_id: meta.id]
+            def file1 = [id: "${meta.id}", single_end: true]
+            def file2 = [id: "${meta.id}", single_end: true]
             return [
                 [file1, reads[0]],
                 [file2, reads[1]]
@@ -36,6 +36,7 @@ workflow SHORTREADQA {
         ch_fastq_files
     )
     ch_stats = ch_stats.mix(SEQKIT_STATS.out.stats)
+    ch_stats.view()
     ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions)
 
     emit:
