@@ -122,10 +122,12 @@ workflow BACTISEQ {
         meta, file ->
         file
     }.collect()
+    ch_all_bakta.view()
     def ch_all_rgi = ANNOTATION.out.rgi.map{
         meta, file ->
         file
     }.collect()
+    ch_all_rgi.view()
     def ch_all_amr = ANNOTATION.out.amr.map{
         meta, file ->
         file
@@ -134,14 +136,17 @@ workflow BACTISEQ {
         meta, file ->
         file
     }.collect()
+    ch_all_amr.view()
     def ch_all_virulence = ANNOTATION.out.virulence.map{
         meta, file ->
         file
     }.collect()
+    ch_all_virulence.view()
     def ch_all_mlst = ANNOTATION.out.mlst.map{
         meta, file ->
         file
     }.collect()
+    ch_all_mlst.view()
 
     CUSTOMVIS(ch_all_bakta, ch_all_rgi, ch_all_amr, ch_all_mob, ch_all_virulence, ch_all_mlst, ch_seqkit) 
     
