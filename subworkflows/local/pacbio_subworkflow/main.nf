@@ -28,6 +28,7 @@ workflow PACBIO_SUBWORKFLOW {
     krakendb
 
     main:
+    def ch_seqkit = Channel.empty()
     def ch_gfa = Channel.empty()
     def ch_output = Channel.empty()
     def ch_versions = Channel.empty()
@@ -59,6 +60,7 @@ workflow PACBIO_SUBWORKFLOW {
     }
 
     LONGREADS_QA(ch_input)
+    ch_seqkit = ch_seqkit.mix(LONGREADS_QA.out.stats)
     ch_versions = ch_versions.mix(LONGREADS_QA.out.versions)
 
     HIFIADAPTERFILT(ch_input)
@@ -115,4 +117,5 @@ workflow PACBIO_SUBWORKFLOW {
     versions = ch_versions                     // channel: [ versions.yml ]
     bams = bam_files
     gfa = ch_gfa
+    seqkit = ch_seqkit
 }

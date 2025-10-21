@@ -20,6 +20,7 @@ workflow NANOPORE_SUBWORKFLOW {
     krakendb
 
     main:
+    def ch_seqkit = Channel.empty()
     ch_versions = Channel.empty()
     ch_output = Channel.empty()
     def ch_gfa = Channel.empty()
@@ -38,6 +39,7 @@ workflow NANOPORE_SUBWORKFLOW {
     }
 
     LONGREADS_QA(ch_input)
+    ch_seqkit = ch_seqkit.mix(LONGREADS_QA.out.stats)
     ch_versions = ch_versions.mix(LONGREADS_QA.out.versions)
     PORECHOP_PORECHOP(ch_input)
     ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
@@ -92,4 +94,5 @@ workflow NANOPORE_SUBWORKFLOW {
     output = ch_output
     versions = ch_versions                     // channel: [ versions.yml ]\
     gfa = ch_gfa
+    seqkit = ch_seqkit
 }

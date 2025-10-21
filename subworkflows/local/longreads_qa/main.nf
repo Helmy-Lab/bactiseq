@@ -10,7 +10,7 @@ workflow LONGREADS_QA {
 
     main:
     ch_versions = Channel.empty()
-
+    def ch_stats = Channel.empty()
     NANOPLOT(
         ch_input
     )
@@ -24,9 +24,11 @@ workflow LONGREADS_QA {
     SEQKIT_STATS(
         ch_input
     )
+    ch_stats = ch_stats.mix(SEQKIT_STATS.out.stats)
     ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions)
 
 
     emit:
+    stats = ch_stats
     versions = ch_versions                     // channel: [ versions.yml ]
 }

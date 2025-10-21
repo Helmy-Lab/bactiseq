@@ -8,7 +8,7 @@ workflow SHORTREADQA {
 
     main:
     ch_versions = Channel.empty()
-
+    def ch_stats = Channel.empty()
 
     //HANDLE IF SINGLE OR PAIRED END READS
     def ch_fastq_files = ch_input.flatMap { meta, reads ->
@@ -35,9 +35,10 @@ workflow SHORTREADQA {
     SEQKIT_STATS(
         ch_fastq_files
     )
+    ch_stats = ch_stats.mix(SEQKIT_STATS.out.stats)
     ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions)
 
     emit:
-
+    seqkit = ch_stats
     versions = ch_versions                     // channel: [ versions.yml ]
 }

@@ -42,6 +42,10 @@ workflow BACTISEQ {
     def ch_all_assembly = Channel.empty()
     def ch_gfa = Channel.empty()
 
+    //For custom vis we need to collect these
+    def ch_seqkit = Channel.empty()
+
+
     DATABASEDOWNLOAD()
 
     //PARSE THE OUTPUT/SAMPLESHEET TO START THE PIPELINE
@@ -110,14 +114,36 @@ workflow BACTISEQ {
     ///        RUN CUSTOM VISUALIZATION ONLY AFTER ALL ANNOTATIONS ARE DONE 
     ///                     uses .collect to get all outputs
     ////-----------------------------------------------------------------
-    def ch_all_embl = ANNOTATION.out.embl.map{
+    ch_seqkit = ch_seqkit.mix(PACBIO_SUBWORKFLOW.out.seqkit)
+    .mix(NANOPORE_SUBWORKFLOW.out.seqkit)
+    .mix(ILLUMINA_SUBWORKFLOW.out.seqkit)
+    .collect()
+    def ch_all_bakta = ANNOTATION.out.bakta.map{
         meta, file ->
         file
     }.collect()
-    ch_all_embl.view()
-    def ch_out = Channel.fromPath(params.outdir)
-    //ch_all_embl = ch_all_embl.concat(ch_out) //add path to end of output after all annotations done
-    CUSTOMVIS(ch_all_embl) //get the path to the output dir
+    def ch_all_rgi = ANNOTATION.out.rgi.map{
+        meta, file ->
+        file
+    }.collect()
+    def ch_all_amr = ANNOTATION.out.amr.map{
+        meta, file ->
+        file
+    }.collect()
+    def ch_all_mob = ANNOTATION.out.mobsuite.map{
+        meta, file ->
+        file
+    }.collect()
+    def ch_all_virulence = ANNOTATION.out.virulence.map{
+        meta, file ->
+        file
+    }.collect()
+    def ch_all_mlst = ANNOTATION.out.mlst.map{
+        meta, file ->
+        file
+    }.collect()
+
+    CUSTOMVIS(ch_all_bakta, ch_all_rgi, ch_all_amr, ch_all_mob, ch_all_virulence, ch_all_mlst, ch_seqkit) 
     
 
     softwareVersionsToYAML(ch_versions).collectFile(

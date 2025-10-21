@@ -19,6 +19,7 @@ workflow ILLUMINA_SUBWORKFLOW {
     ch_versions = Channel.empty()
     ch_output = Channel.empty()
     def ch_gfa = Channel.empty()
+    def ch_seqkit = Channel.empty()
     // def ch_input = ch_input_full.map{item -> [item[0], file(item[3])]}
     def ch_input = ch_input_full.map{meta, short1, short2, long_reads, assembly -> 
         if (short1 != 'short1NA'  && short2 != 'short2NA'){
@@ -48,6 +49,7 @@ workflow ILLUMINA_SUBWORKFLOW {
     
 
     SHORTREADQA(ch_input)
+    ch_seqkit = ch_seqkit.mix(SHORTREADQA.out.seqkit)
     ch_versions = ch_versions.mix(SHORTREADQA.out.versions)
     if (params.illumina_adapters == null){
         BBMAP_BBDUK(ch_input, [])
@@ -132,5 +134,6 @@ workflow ILLUMINA_SUBWORKFLOW {
     emit:
     outupt = ch_output
     versions = ch_versions                     // channel: [ versions.yml ]
+    seqkit = ch_seqkit
     gfa = ch_gfa
 }

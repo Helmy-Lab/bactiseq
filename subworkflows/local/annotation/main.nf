@@ -17,6 +17,7 @@ workflow ANNOTATION {
     main:
     //Running genome annotation
     ch_versions = Channel.empty()
+    def ch_embl = Channel.empty()
     //For the custom visualization
     def ch_mob = Channel.empty()
     def ch_bakta = Channel.empty()
@@ -31,6 +32,7 @@ workflow ANNOTATION {
     [], // No proteins 
     []  // No prodigal-tf
     )
+    ch_embl = ch_embl.mix(BAKTA_BAKTA.out.embl)
     ch_bakta = ch_bakta.mix(BAKTA_BAKTA.out.tsv)
     ch_versions = ch_versions.mix(BAKTA_BAKTA.out.versions)
     PROKKA(ch_input, 
@@ -69,6 +71,7 @@ workflow ANNOTATION {
 
 
     emit:
+    embl = ch_embl
     mobsuite = ch_mob
     bakta = ch_bakta
     rgi = ch_rgi

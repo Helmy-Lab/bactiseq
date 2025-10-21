@@ -11,6 +11,7 @@ process CUSTOMVIS {
     path "mobsuite/*", stageAs: "mobsuite/*"
     path "virulence/*", stageAs: "virulence/*"
     path "mlst/*", stageAs: "mlst/*"
+    path "seqkit/*", stageAs: "seqkit/*"
     // tuple val(meta), path(file)
 
     output:
@@ -23,12 +24,20 @@ process CUSTOMVIS {
 
     script:
     """
+    echo bakta
     ls -la bakta/
+    echo rgi
     ls -la rgi/
+    echo amr
     ls -la amr/
+    echo mobsuite
     ls -la mobsuite/
+    echo virulence
     ls -la virulence/
+    echo mlst
     ls -la mlst/
+    echo seqkit
+    ls -la seqkit/
     """
 
     stub:

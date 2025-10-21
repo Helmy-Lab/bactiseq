@@ -41,7 +41,7 @@ def parse_number(e):
     except ValueError:
         # Return the original string if it cannot be converted to float
         return e
-def process_sample_directories(target_dir):
+def process_sample_directories(target_dir, samplesheet_dir):
     amrcomp = []
     annocomp = []
     insertData = []
