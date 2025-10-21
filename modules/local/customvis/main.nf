@@ -18,7 +18,8 @@ process CUSTOMVIS {
 
     script:
     """
-    data_extract.py "${in_dir}"
+    echo "${in_dir}"
+    // data_extract.py "${in_dir}"
     """
 
     stub:
