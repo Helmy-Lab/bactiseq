@@ -16,13 +16,8 @@ workflow SHORTREADQA {
             // Single-end: just return the single file
             return [meta, reads[0]]
         } else {
-            // Paired-end: return both files individually with appropriate metadata
-            def file1 = [id: "${meta.id}", single_end: true]
-            def file2 = [id: "${meta.id}", single_end: true]
-            return [
-                [file1, reads[0]],
-                [file2, reads[1]]
-            ]
+            // Paired-end: return both files togetehr
+            return [meta, reads[0], reads[1]]
         }
     }
 
