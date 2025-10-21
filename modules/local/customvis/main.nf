@@ -5,7 +5,12 @@ process CUSTOMVIS {
     container 'docker.io/sli254/custom-thesis-vis:1.5'
 
     input:
-    path "embl_files/*", stageAs: "embl_files/*"
+    path "bakta/*", stageAs: "bakta/*"
+    path "rgi/*", stageAs: "rgi/*"
+    path "amr/*", stageAs: "amr/*"
+    path "mobsuite/*", stageAs: "mobsuite/*"
+    path "virulence/*", stageAs: "virulence/*"
+    path "mlst/*", stageAs: "mlst/*"
     // tuple val(meta), path(file)
 
     output:
@@ -18,7 +23,12 @@ process CUSTOMVIS {
 
     script:
     """
-    ls -la embl_files/
+    ls -la bakta/
+    ls -la rgi/
+    ls -la amr/
+    ls -la mobsuite/
+    ls -la virulence/
+    ls -la mlst/
     """
 
     stub:

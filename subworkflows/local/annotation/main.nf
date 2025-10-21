@@ -17,7 +17,13 @@ workflow ANNOTATION {
     main:
     //Running genome annotation
     ch_versions = Channel.empty()
-    def ch_embl = Channel.empty()
+    //For the custom visualization
+    def ch_mob = Channel.empty()
+    def ch_bakta = Channel.empty()
+    def ch_rgi = Channel.empty()
+    def ch_amr = Channel.empty()
+    def ch_mlst = Channel.empty()
+    def ch_virulence = Channel.empty()
 
     BAKTA_BAKTA(
     ch_input,
@@ -25,7 +31,7 @@ workflow ANNOTATION {
     [], // No proteins 
     []  // No prodigal-tf
     )
-    ch_embl = ch_embl.mix(BAKTA_BAKTA.out.embl)
+    ch_bakta = ch_bakta.mix(BAKTA_BAKTA.out.tsv)
     ch_versions = ch_versions.mix(BAKTA_BAKTA.out.versions)
     PROKKA(ch_input, 
     [],  //proteins file NONE
@@ -38,7 +44,10 @@ workflow ANNOTATION {
     carddb, 
     [] //wildcard database NONE
     )
+    ch_rgi = ch_rgi.mix(RGI_MAIN.out.tsv)
     AMRFINDERPLUS_RUN(ch_input, amrdb)
+    ch_amr = ch_amr.mix(AMRFINDERPLUS_RUN.out.report)
+
     ch_versions = ch_versions.mix(AMRFINDERPLUS_RUN.out.versions)
     ch_versions = ch_versions.mix(RGI_MAIN.out.versions)
 
@@ -46,18 +55,26 @@ workflow ANNOTATION {
     ABRICATE_RUN(ch_input, 
     []
     )
+    ch_virulence = ch_virulence.mix(ABRICATE_RUN.out.report)
     ch_versions = ch_versions.mix(ABRICATE_RUN.out.versions)
     //Detecting plasmids
     MOBSUITE_RECON(ch_input)
+    ch_mob = ch_mob.mix(MOBSUITE_RECON.out.contig_report)
     ch_versions = ch_versions.mix(MOBSUITE_RECON.out.versions)
 
     //MLST detection
     MLST(ch_input)
+    ch_mlst = ch_mlst.mix(MLST.out.tsv)
     ch_versions = ch_versions.mix(MLST.out.versions)
 
 
     emit:
-    embl = ch_embl
+    mobsuite = ch_mob
+    bakta = ch_bakta
+    rgi = ch_rgi
+    amr = ch_amr
+    mlst = ch_mlst
+    virulence = ch_virulence
     versions = ch_versions
 
 }
