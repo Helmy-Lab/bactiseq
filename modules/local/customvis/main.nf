@@ -5,7 +5,7 @@ process CUSTOMVIS {
     container 'docker.io/sli254/custom-thesis-vis:1.5'
 
     input:
-    path in_dir
+    path "embl_files/*", stageAs: "embl_files/*"
     // tuple val(meta), path(file)
 
     output:
@@ -18,8 +18,8 @@ process CUSTOMVIS {
 
     script:
     """
-    echo "${in_dir}"
-    // data_extract.py "${in_dir}"
+    ls -la embl_files/
+    echo "File count: $(find embl_files/ -name '*.embl' | wc -l)"
     """
 
     stub:
