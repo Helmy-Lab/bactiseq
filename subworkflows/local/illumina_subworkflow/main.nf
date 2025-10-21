@@ -77,7 +77,6 @@ workflow ILLUMINA_SUBWORKFLOW {
                 [meta, illumina, [], long_read]
             }
         }
-        ch_hybrid.view()
         SPADES(ch_hybrid, [],[])
         ch_gfa = ch_gfa.mix(SPADES.out.gfa)
         ch_assembled = (SPADES.out.scaffolds)
@@ -107,7 +106,6 @@ workflow ILLUMINA_SUBWORKFLOW {
 
     // Conditionally run polishing processes
     if (params.polish) {
-        polish_branches.short_polish.view()
         ILLUMINASHORTPOLISH(
             polish_branches.short_polish.map { meta, assembly, polish_data -> [meta, assembly] },
             polish_branches.short_polish.map { meta, assembly, polish_data -> [meta, polish_data] }
