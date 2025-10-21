@@ -12,7 +12,7 @@ process MOBSUITE_RECON {
 
     output:
     tuple val(meta), path("results/chromosome.fasta")    , emit: chromosome
-    tuple val(meta), path("results/contig_report.txt")   , emit: contig_report
+    tuple val(meta), path("results/*contig_report.txt")   , emit: contig_report
     tuple val(meta), path("results/plasmid_*.fasta")     , emit: plasmids        , optional: true
     tuple val(meta), path("results/mobtyper_results.txt"), emit: mobtyper_results, optional: true
     path "versions.yml"                                  , emit: versions

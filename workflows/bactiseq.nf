@@ -132,11 +132,12 @@ workflow BACTISEQ {
         meta, file ->
         file
     }.collect()
+    ch_all_amr.view()
     def ch_all_mob = ANNOTATION.out.mobsuite.map{
         meta, file ->
         file
     }.collect()
-    ch_all_amr.view()
+    ch_all_mob.view()
     def ch_all_virulence = ANNOTATION.out.virulence.map{
         meta, file ->
         file
