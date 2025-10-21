@@ -19,7 +19,6 @@ process CUSTOMVIS {
     script:
     """
     ls -la embl_files/
-    echo "File count: $(find embl_files/ -name '*.embl' | wc -l)"
     """
 
     stub:
