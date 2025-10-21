@@ -8,7 +8,7 @@ process CUSTOMVIS {
     path "bakta/*", stageAs: "bakta/*"
     path "rgi/*", stageAs: "rgi/*"
     path "amr/*", stageAs: "amr/*"
-    tuple val(meta), path(mob_files)  // mob_files is a LIST of the 3 files for this sample
+    tuple val(meta), path(mob_files)  // One sample at a time
     //path "mobsuite/*", stageAs: "mobsuite/*"
     path "virulence/*", stageAs: "virulence/*"
     path "mlst/*", stageAs: "mlst/*"

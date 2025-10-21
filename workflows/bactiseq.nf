@@ -28,6 +28,7 @@ include { GUNZIP as GUNZIP_FASTA } from '../modules/nf-core/gunzip/main'
 include { ASSEMBLY_QA            } from '../subworkflows/local/assembly_qa/main.nf'
 include { ANNOTATION             } from '../subworkflows/local/annotation/main.nf'
 include { VISUALIZATIONS         } from '../subworkflows/local/visualizations/main'
+include {ORGANIZE_MOBSUITE       } from '../modules/local/organizemobsuite/main.nf'
 /*
 
 
@@ -137,7 +138,11 @@ workflow BACTISEQ {
         file
     }.collect()
     ch_all_amr.view()
-    def ch_all_mob = ANNOTATION.out.mobsuite.collect().groupTuple()
+    def ch_all_mob = ANNOTATION.out.mobsuite
+        .groupTuple()
+        .map { meta, files -> [meta, files] } 
+    ORGANIZE_MOBSUITE(ch_all_mob)
+    def ch_all_organized_mob = ORGANIZE_MOBSUITE.out.organized.collect()
     ch_all_mob.view()
     def ch_all_virulence = ANNOTATION.out.virulence.map{
         meta, file ->
@@ -150,7 +155,7 @@ workflow BACTISEQ {
     }.collect()
     ch_all_mlst.view()
 
-    CUSTOMVIS(ch_all_bakta, ch_all_rgi, ch_all_amr, ch_all_mob, ch_all_virulence, ch_all_mlst, ch_all_seqkit) 
+    CUSTOMVIS(ch_all_bakta, ch_all_rgi, ch_all_amr, ch_all_organized_mob, ch_all_virulence, ch_all_mlst, ch_all_seqkit) 
     
 
     softwareVersionsToYAML(ch_versions).collectFile(

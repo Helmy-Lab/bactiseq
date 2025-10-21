@@ -1,0 +1,12 @@
+name: organize-mobsuite
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - bash
+  - coreutils
+
+authors:
+  - "@sylvia"
+maintainers:
+  - "@sylvia"
