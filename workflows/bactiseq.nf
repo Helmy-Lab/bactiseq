@@ -118,6 +118,10 @@ workflow BACTISEQ {
     .mix(NANOPORE_SUBWORKFLOW.out.seqkit)
     .mix(ILLUMINA_SUBWORKFLOW.out.seqkit)
     .collect()
+    def ch_all_seqkit = ch_seqkit.map{
+        meta, file ->
+        file
+    }.collect()
     def ch_all_bakta = ANNOTATION.out.bakta.map{
         meta, file ->
         file
@@ -149,7 +153,7 @@ workflow BACTISEQ {
     }.collect()
     ch_all_mlst.view()
 
-    CUSTOMVIS(ch_all_bakta, ch_all_rgi, ch_all_amr, ch_all_mob, ch_all_virulence, ch_all_mlst, ch_seqkit) 
+    CUSTOMVIS(ch_all_bakta, ch_all_rgi, ch_all_amr, ch_all_mob, ch_all_virulence, ch_all_mlst, ch_all_seqkit) 
     
 
     softwareVersionsToYAML(ch_versions).collectFile(
