@@ -8,8 +8,7 @@ process CUSTOMVIS {
     path "bakta/*", stageAs: "bakta/*"
     path "rgi/*", stageAs: "rgi/*"
     path "amr/*", stageAs: "amr/*"
-    tuple val(meta), path(mob_files)  // One sample at a time
-    //path "mobsuite/*", stageAs: "mobsuite/*"
+    path "mobsuite/*", stageAs: "mobsuite/*"
     path "virulence/*", stageAs: "virulence/*"
     path "mlst/*", stageAs: "mlst/*"
     path "seqkit/*", stageAs: "seqkit/*"
