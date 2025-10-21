@@ -8,7 +8,8 @@ process CUSTOMVIS {
     path "bakta/*", stageAs: "bakta/*"
     path "rgi/*", stageAs: "rgi/*"
     path "amr/*", stageAs: "amr/*"
-    path "mobsuite/*", stageAs: "mobsuite/*"
+    tuple val(meta), path(mob_files)  // mob_files is a LIST of the 3 files for this sample
+    //path "mobsuite/*", stageAs: "mobsuite/*"
     path "virulence/*", stageAs: "virulence/*"
     path "mlst/*", stageAs: "mlst/*"
     path "seqkit/*", stageAs: "seqkit/*"
@@ -24,6 +25,13 @@ process CUSTOMVIS {
 
     script:
     """
+    # Create organized mobsuite directory for this specific sample
+    mkdir -p mobsuite/${meta.id}
+    
+    # Copy all 3 mobsuite files for this sample to the organized location
+    for file in ${mob_files}; do
+        cp "\$file" "mobsuite/${meta.id}/"
+    done
     echo bakta
     ls -la bakta/
     echo rgi

@@ -61,7 +61,7 @@ workflow ANNOTATION {
     ch_versions = ch_versions.mix(ABRICATE_RUN.out.versions)
     //Detecting plasmids
     MOBSUITE_RECON(ch_input)
-    ch_mob = ch_mob.mix(MOBSUITE_RECON.out.contig_report)
+    ch_mob = ch_mob.mix(MOBSUITE_RECON.out.contig_report, MOBSUITE_RECON.out.chromosome, MOBSUITE_RECON.out.mobtyper_results)
     ch_versions = ch_versions.mix(MOBSUITE_RECON.out.versions)
 
     //MLST detection
