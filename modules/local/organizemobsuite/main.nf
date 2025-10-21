@@ -1,7 +1,7 @@
 process ORGANIZE_MOBSUITE {
     label 'process_low'
     conda "${moduleDir}/environment.yml"
-    container 'docker.io/sli254/custom-thesis-vis:1.5'  // Your existing container
+    container 'docker.io/alpine:3.19'  // Your existing container
 
     input:
     tuple val(meta), path(files)
