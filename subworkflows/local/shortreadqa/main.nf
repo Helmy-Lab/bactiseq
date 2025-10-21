@@ -17,7 +17,7 @@ workflow SHORTREADQA {
             return [meta, reads[0]]
         } else {
             // Paired-end: return both files togetehr
-            return [meta, reads[0], reads[1]]
+            return [meta, [reads[0], reads[1]]]
         }
     }
 
