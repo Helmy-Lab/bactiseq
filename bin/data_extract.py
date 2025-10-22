@@ -339,8 +339,8 @@ def Annotated_assembly_compare_reference(directory, filename):
         removed_Nan_gene_names.append(filtered_df1[['Gene', 'Product']])
 
 
-Number_common_genes = find_common_products_among_all(gene_sets)
-num_common.append([Number_common_genes] * len(sample_names),)
+    Number_common_genes = find_common_products_among_all(gene_sets)
+    num_common.append([Number_common_genes] * len(sample_names),)
 def compute_common_genes_heatmap(gene_sets, genome_names):
     # Initialize an empty matrix for the number of common genes
     n = len(gene_sets)
