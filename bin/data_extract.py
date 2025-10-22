@@ -78,7 +78,7 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
 
     mlst_compare(dir_mlst)
 
-    for filename in os.listdir(dir_virulence)
+    for filename in os.listdir(dir_virulence):
         virulence_calculation(dir_virulence, filename)
     for filename in os.listdir(dir_seqkit):
         seqkitdata = seqkitstats(dir_seqkit, filename, seqkitdata)
