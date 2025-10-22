@@ -41,7 +41,7 @@ def parse_number(e):
     except ValueError:
         # Return the original string if it cannot be converted to float
         return e
-def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulence, vir_mlst, dir_seqkit):
+def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulence, dir_mlst, dir_seqkit):
     amrcomp = []
     annocomp = []
     insertData = []
