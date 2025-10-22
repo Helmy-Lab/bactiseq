@@ -121,24 +121,23 @@ workflow BACTISEQ {
     ////-----------------------------------------------------------------
     ch_seqkit = ch_seqkit.mix(PACBIO_SUBWORKFLOW.out.seqkit)
         .mix(NANOPORE_SUBWORKFLOW.out.seqkit)
-        .mix(ILLUMINA_SUBWORKFLOW.out.seqkit)
-        .flatten()                    
+        .mix(ILLUMINA_SUBWORKFLOW.out.seqkit)                  
         .map{ meta, file -> file }    
         .collect()                    
 
     def ch_all_seqkit = ch_seqkit 
     ch_all_seqkit.view()
-    def ch_all_bakta = ANNOTATION.out.bakta.flatten().map{
+    def ch_all_bakta = ANNOTATION.out.bakta.map{
         meta, file ->
         file
     }.collect()
     ch_all_bakta.view()
-    def ch_all_rgi = ANNOTATION.out.rgi.flatten().map{
+    def ch_all_rgi = ANNOTATION.out.rgi.map{
         meta, file ->
         file
     }.collect()
     ch_all_rgi.view()
-    def ch_all_amr = ANNOTATION.out.amr.flatten().map{
+    def ch_all_amr = ANNOTATION.out.amr.map{
         meta, file ->
         file
     }.collect()
@@ -146,12 +145,12 @@ workflow BACTISEQ {
     ORGANIZE_MOBSUITE(ch_all_mob)
     def ch_all_organized_mob = ORGANIZE_MOBSUITE.out.organized.collect()
     ch_all_mob.view()
-    def ch_all_virulence = ANNOTATION.out.virulence.flatten().map{
+    def ch_all_virulence = ANNOTATION.out.virulence.map{
         meta, file ->
         file
     }.collect()
     ch_all_virulence.view()
-    def ch_all_mlst = ANNOTATION.out.mlst.flatten().map{
+    def ch_all_mlst = ANNOTATION.out.mlst.map{
         meta, file ->
         file
     }.collect()
