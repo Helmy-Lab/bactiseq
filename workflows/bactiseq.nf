@@ -106,6 +106,10 @@ workflow BACTISEQ {
     ASSEMBLY_QA(fastas, DATABASEDOWNLOAD.out.checkm2db, DATABASEDOWNLOAD.out.buscodb)
     ch_versions = ch_versions.mix(ASSEMBLY_QA.out.versions)
     ANNOTATION(fastas, DATABASEDOWNLOAD.out.baktadb, DATABASEDOWNLOAD.out.amrdb, DATABASEDOWNLOAD.out.carddb)
+    def ch_all_mob = ANNOTATION.out.mobsuite
+        .groupTuple()
+        .map { meta, files -> [meta, files] } 
+    
     ch_versions = ch_versions.mix(ANNOTATION.out.versions)
 
     VISUALIZATIONS(ANNOTATION.out.embl,ch_gfa,PACBIO_SUBWORKFLOW.out.bams)
@@ -119,37 +123,34 @@ workflow BACTISEQ {
     .mix(NANOPORE_SUBWORKFLOW.out.seqkit)
     .mix(ILLUMINA_SUBWORKFLOW.out.seqkit)
     .collect()
-    def ch_all_seqkit = ch_seqkit.map{
+    def ch_all_seqkit = ch_seqkit.flatten().map{
         meta, file ->
         file
     }.collect()
-    def ch_all_bakta = ANNOTATION.out.bakta.map{
+    def ch_all_bakta = ANNOTATION.out.bakta.flatten().map{
         meta, file ->
         file
     }.collect()
     ch_all_bakta.view()
-    def ch_all_rgi = ANNOTATION.out.rgi.map{
+    def ch_all_rgi = ANNOTATION.out.rgi.flatten().map{
         meta, file ->
         file
     }.collect()
     ch_all_rgi.view()
-    def ch_all_amr = ANNOTATION.out.amr.map{
+    def ch_all_amr = ANNOTATION.out.amr.flatten().map{
         meta, file ->
         file
     }.collect()
     ch_all_amr.view()
-    def ch_all_mob = ANNOTATION.out.mobsuite
-        .groupTuple()
-        .map { meta, files -> [meta, files] } 
     ORGANIZE_MOBSUITE(ch_all_mob)
     def ch_all_organized_mob = ORGANIZE_MOBSUITE.out.organized.collect()
     ch_all_mob.view()
-    def ch_all_virulence = ANNOTATION.out.virulence.map{
+    def ch_all_virulence = ANNOTATION.out.virulence.flatten().map{
         meta, file ->
         file
     }.collect()
     ch_all_virulence.view()
-    def ch_all_mlst = ANNOTATION.out.mlst.map{
+    def ch_all_mlst = ANNOTATION.out.mlst.flatten().map{
         meta, file ->
         file
     }.collect()
