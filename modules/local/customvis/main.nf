@@ -24,6 +24,7 @@ process CUSTOMVIS {
 
     script:
     """
+    data_extract.py bakta/ rgi/ amr/ mobsuite_collected/ virulence/ mlst/ seqkit/
     echo bakta
     ls -la bakta/
     echo rgi
