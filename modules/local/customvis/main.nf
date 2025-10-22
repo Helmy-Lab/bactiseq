@@ -8,7 +8,7 @@ process CUSTOMVIS {
     path "bakta/*", stageAs: "bakta/*"
     path "rgi/*", stageAs: "rgi/*"
     path "amr/*", stageAs: "amr/*"
-    path "mobsuite/*", stageAs: "mobsuite/*"
+    path "mobsuite_collected/*"
     path "virulence/*", stageAs: "virulence/*"
     path "mlst/*", stageAs: "mlst/*"
     path "seqkit/*", stageAs: "seqkit/*"

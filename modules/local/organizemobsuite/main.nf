@@ -1,13 +1,14 @@
 process ORGANIZE_MOBSUITE {
     label 'process_low'
     conda "${moduleDir}/environment.yml"
-    container 'docker.io/alpine:3.19'  // Your existing container
+    container 'docker.io/ubuntu:22.04'
 
     input:
     tuple val(meta), path(files)
     
     output:
     path "mobsuite/${meta.id}/*", emit: organized
+    path "mobsuite/${meta.id}", emit: directory
     
     script:
     """

@@ -143,7 +143,7 @@ workflow BACTISEQ {
     }.collect()
     ch_all_amr.view()
     ORGANIZE_MOBSUITE(ch_all_mob)
-    def ch_all_organized_mob = ORGANIZE_MOBSUITE.out.organized.collect()
+    def ch_all_organized_mob = ORGANIZE_MOBSUITE.out.directory.collect()
     ch_all_mob.view()
     def ch_all_virulence = ANNOTATION.out.virulence.map{
         meta, file ->
