@@ -53,9 +53,8 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
     for filename in os.listdir(dir_bakta):
         Annotated_assembly_compare_reference(dir_bakta, filename)
 
-    #------Iterate through all files with plasmid info
-    for filename in os.listdir(dir_mob):
-        plasmid_recon(dir_mob, filename)
+    #------Iterate through all DIRECTORIES with plasmid info
+    plasmid_recon(dir_mob)
     
     #------iterate through all files from AMRfinderplus and RGI
     txt_files = os.listdir(dir_rgi)
@@ -77,21 +76,12 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
     for sample_name, rgi, amr in file_pairs:    
         amrcomp = AMR_compare(dir_rgi, dir_amr, amr, rgi, sample_name)
 
-    for filename in os.listdir(dir_mlst):
-        
-    for item in os.listdir(target_dir):
-        # Check for sample names in output dir
-        sample_dir_path = os.path.join(target_dir, item)
-        if os.path.isdir(sample_dir_path) and not item.startswith('pipeline_info') and not item.startswith('report') and not item.startswith('customVisualizations'): #Found a sample directory
-            print(f"Processing directory: {item}")
-            print(sample_dir_path)
-            Annotated_assembly_compare_reference(sample_dir_path + '/Annotation/' + 'Bakta')
-            plasmid_recon(sample_dir_path + '/' + 'Annotation' + '/' + 'Mobsuite' + '/results')
-            amrcomp = AMR_compare(sample_dir_path, item, amrcomp)
-            mlst_compare(sample_dir_path + '/Annotation/MLST')
-            virulence_calculation(sample_dir_path, item) #process the virulence gene output
+    mlst_compare(dir_mlst)
 
-            seqkitdata =  seqkitstats(sample_dir_path, item, seqkitdata)
+    for filename in os.listdir(dir_virulence)
+        virulence_calculation(dir_virulence, filename)
+    for filename in os.listdir(dir_seqkit):
+        seqkitdata = seqkitstats(dir_seqkit, filename, seqkitdata)
 
     #####################------------------------------------#####################
     #####################      P L A S M I D S               #####################
@@ -154,23 +144,20 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
 
 
 
-def virulence_calculation(sample_dir_path, sample_name):
-    samples.append(str(sample_name))
+def virulence_calculation(dir_virulence, filename):
+    name = Path(filename).stem
+    samples.append(str(name))
 
-    # Check for 'virulence' directory inside the 'sample' directory
-    virulence_dir_path = os.path.join(sample_dir_path, 'Annotation', 'AbricateVFDB')
-    if os.path.isdir(virulence_dir_path):
-        # Open the text file in the 'abricate' directory
-        text_file_path = os.path.join(virulence_dir_path, str(sample_name) + '.txt')
-        if os.path.isfile(text_file_path):
-            data = pd.read_csv(text_file_path, sep='\t')
+    text_file_path = os.path.join(dir_virulence, filename)
+    if os.path.isfile(text_file_path):
+        data = pd.read_csv(text_file_path, sep='\t')
 
-            virulence_genes[str(sample_name)] = []
-            for i in data['GENE']:
-                virulence_genes[str(sample_name)].append(i)
-            virulence_genes[str(sample_name)].sort()
-        else:
-            print(f"No text file found in {virulence_dir_path}")
+        virulence_genes[str(name)] = []
+        for i in data['GENE']:
+            virulence_genes[str(name)].append(i)
+        virulence_genes[str(name)].sort()
+    else:
+        print(f"No text file found in {dir_virulence}")
 
 def sampleSheetSize(sampleSheet_dir_path, samplesheetdata):
     '''
@@ -235,14 +222,14 @@ def AMR_compare(dir_rgi, dir_amr, amr_filename, rgi_filename, sample_name):
     comp.append(new)
     # print(comp)
     return comp
-def seqkitstats(sample_dir, sample_name, data):
-    text_porechop = open(os.path.join(sample_dir, 'readQA', 'seqkit_stats', sample_name+ '.tsv'))
+def seqkitstats(dir_seqkit, filename, data):
+    text_porechop = open(filename)
     df = pd.read_csv(text_porechop, sep='\t')
-    sample = df[['file','num_seqs', 'sum_len', 'min_len', 'avg_len', 'max_len', 'Q1', 'Q2', 'Q3', 'sum_gap', 'N50', 'Q20(%)', 'Q30(%)','AvgQual', 'GC(%)']].values[:1][0]
-
-    data.append(sample)
+    sample = df[['file','num_seqs', 'sum_len', 'min_len', 'avg_len', 'max_len', 'Q1', 'Q2', 'Q3', 'sum_gap', 'N50', 'Q20(%)', 'Q30(%)','AvgQual', 'GC(%)']].values
+    for i in sample:
+        data.append(i)
     return data
-def plasmid_recon(mob_dir, filename):
+def plasmid_recon(mob_dir):
     """
     Gets plamid data if available for each sample
         Prepares data for visualization of plasmid data
@@ -250,31 +237,37 @@ def plasmid_recon(mob_dir, filename):
     :param filename: FIlename with the output analysis
     :return: Doesn't return anything, just edits lists
     """
-    if 'contig_report.txt' in filename:
+    for root, dirs, files in os.walk(mob_dir):
+        print(f"\nCurrent directory: {root}")
+        print(f"Subdirectories: {dirs}")
+        for filename in files:
+            file_path = os.path.join(root, filename)
+            print(f"  File: {file}")
+            if 'contig_report.txt' in filename:
 
-        name = Path(filename).stem
-        # name = p.parents[2].name
+                name = root
+                # name = p.parents[2].name
 
-        sample_name.append(name)
-        data = pd.read_csv(mob_dir + '/' + filename, sep='\t')
-        chromosome_data = data[data['molecule_type'] == 'chromosome']
-        contigs_per_chromosome.append(len(chromosome_data['contig_id'].unique()))
-        chromosome_contig_lengths.append(list(chromosome_data['size']))
-        print(chromosome_data)
-        data = data[data['primary_cluster_id'] != '-']
-        plasmid_set.append(data['primary_cluster_id']) #set of plasmids per genome
-        plasmid_name.append(tuple(data['primary_cluster_id'])) #append a tuple of data comprising of all the plasmids found in a single genome
-        contig_name.append(tuple(data['contig_id']))
-    if 'chromosome.fasta' in filename:
-        total_count = 0
-        for record in SeqIO.parse(path + '//' + filename, "fasta"):
-            # Add the length of the sequence to the total count
-            total_count += len(record.seq)
-        total_length.append(total_count)
-    if 'mobtyper_results' in filename:
-        plasmid_df = pd.read_csv(path + '/' + filename, sep='\t')
-        plasmid_df['extracted_name'] = plasmid_df['sample_id'].str.split(':').str[1]
-        plasmid_lengths.append(tuple(data['size']))
+                sample_name.append(name)
+                data = pd.read_csv(file_path, sep='\t')
+                chromosome_data = data[data['molecule_type'] == 'chromosome']
+                contigs_per_chromosome.append(len(chromosome_data['contig_id'].unique()))
+                chromosome_contig_lengths.append(list(chromosome_data['size']))
+                print(chromosome_data)
+                data = data[data['primary_cluster_id'] != '-']
+                plasmid_set.append(data['primary_cluster_id']) #set of plasmids per genome
+                plasmid_name.append(tuple(data['primary_cluster_id'])) #append a tuple of data comprising of all the plasmids found in a single genome
+                contig_name.append(tuple(data['contig_id']))
+            if 'chromosome.fasta' in filename:
+                total_count = 0
+                for record in SeqIO.parse(file_path, "fasta"):
+                    # Add the length of the sequence to the total count
+                    total_count += len(record.seq)
+                total_length.append(total_count)
+            if 'mobtyper_results' in filename:
+                plasmid_df = pd.read_csv(file_path, sep='\t')
+                plasmid_df['extracted_name'] = plasmid_df['sample_id'].str.split(':').str[1]
+                plasmid_lengths.append(tuple(data['size']))
 
 
 def Annotated_assembly_compare_reference(directory, filename):
@@ -387,20 +380,18 @@ def compute_common_genes_heatmap(gene_sets, genome_names):
 def mlst_compare(MLST_folder):
     """
     Counts MLST types for each sample given the specific samples MLST directory
-    :param MLST_folder: path to the specific sample's MLST folder
+    :param MLST_folder: folder with all files
     :return:
     """
-    if os.path.exists(MLST_folder):
-        for path, folders, files in os.walk(MLST_folder):
-            for filename in files:
-                if '.tsv' in filename:
-                    data = pd.read_csv(path + '/' + filename, sep='\t', header = None)
+    for filename in os.listdir(MLST_folder):
+        if '.tsv' in filename:
+            data = pd.read_csv(MLST_folder + '/' + filename, sep='\t', header = None)
 
-                    entry = str(data.iloc[0, 1]) + "_ST" + str(data.iloc[0, 2])  # First row, columns 1 and 2
-                    if entry in mlst_count:
-                        mlst_count[entry] += 1
-                    else:
-                        mlst_count[entry] = 1
+            entry = str(data.iloc[0, 1]) + "_ST" + str(data.iloc[0, 2])  # First row, columns 1 and 2
+            if entry in mlst_count:
+                mlst_count[entry] += 1
+            else:
+                mlst_count[entry] = 1
 
 
 
