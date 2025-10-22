@@ -120,13 +120,14 @@ workflow BACTISEQ {
     ///                     uses .collect to get all outputs
     ////-----------------------------------------------------------------
     ch_seqkit = ch_seqkit.mix(PACBIO_SUBWORKFLOW.out.seqkit)
-    .mix(NANOPORE_SUBWORKFLOW.out.seqkit)
-    .mix(ILLUMINA_SUBWORKFLOW.out.seqkit)
-    .collect()
-    def ch_all_seqkit = ch_seqkit.flatten().map{
-        meta, file ->
-        file
-    }.collect()
+        .mix(NANOPORE_SUBWORKFLOW.out.seqkit)
+        .mix(ILLUMINA_SUBWORKFLOW.out.seqkit)
+        .flatten()                    
+        .map{ meta, file -> file }    
+        .collect()                    
+
+    def ch_all_seqkit = ch_seqkit 
+    ch_all_seqkit.view()
     def ch_all_bakta = ANNOTATION.out.bakta.flatten().map{
         meta, file ->
         file
