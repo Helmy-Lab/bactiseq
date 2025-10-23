@@ -223,7 +223,7 @@ def AMR_compare(dir_rgi, dir_amr, amr_filename, rgi_filename, sample_name, comp)
     # print(comp)
     return comp
 def seqkitstats(dir_seqkit, filename, data):
-    text_porechop = open(filename)
+    text_porechop = open(os.path.join(dir_seqkit,filename))
     df = pd.read_csv(text_porechop, sep='\t')
     sample = df[['file','num_seqs', 'sum_len', 'min_len', 'avg_len', 'max_len', 'Q1', 'Q2', 'Q3', 'sum_gap', 'N50', 'Q20(%)', 'Q30(%)','AvgQual', 'GC(%)']].values
     for i in sample:
