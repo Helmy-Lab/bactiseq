@@ -9,7 +9,7 @@ import pandas as pd
 from matplotlib.table import Table
 import matplotlib.colors as mcolors
 import matplotlib.patches as mpatches
-
+from matplotlib.colors import ListedColormap
 import plotly.graph_objects as go
 
 
@@ -165,7 +165,7 @@ class showData():
             :return:
             """
             plt.figure(figsize=(20, 20))
-            sns.heatmap(matrix, cmap=['white', 'black'], cbar=False,
+            sns.heatmap(matrix, cmap = ListedColormap(['white', 'black']), cbar=False,
                         linewidths=0.5, linecolor='gray')
             plt.title(f'Presence-Absence: {title} AMR genes')
             plt.xlabel('Genes')

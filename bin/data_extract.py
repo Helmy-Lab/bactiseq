@@ -86,7 +86,7 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
     #####################------------------------------------#####################
     #####################      P L A S M I D S               #####################
     #####################------------------------------------#####################
-    outdata = {'sampleID': sample_name,
+    outdata = {'sampleID': sample_name_plasmid,
                'contigID': contig_name,
                'plasmid_names': plasmid_name,
                'total_chromosome_length': total_length,
@@ -254,8 +254,8 @@ def plasmid_recon(mob_dir):
             if 'contig_report.txt' in filename:
                 name = item
                 # name = p.parents[2].name
-
-                sample_name.append(name)
+                print("current plasmid directory: " + str(item))
+                sample_name_plasmid.append(name)
                 data = pd.read_csv(file_path, sep='\t')
                 chromosome_data = data[data['molecule_type'] == 'chromosome']
                 contigs_per_chromosome.append(len(chromosome_data['contig_id'].unique()))
@@ -407,7 +407,7 @@ if __name__ == "__main__":
     plasmid_set = []
     plasmid_name = []
     contig_name = []
-    sample_name = []
+    sample_name_plasmid = []
     total_length = []
     contigs_per_chromosome = []
     chromosome_contig_lengths = []
