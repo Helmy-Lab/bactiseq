@@ -74,7 +74,7 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
         tsv_file = basename + '.tsv'  #AMRFinderPLus file
         file_pairs.append((basename, txt_file, tsv_file))
     for sample_name, rgi, amr in file_pairs:    
-        amrcomp = AMR_compare(dir_rgi, dir_amr, amr, rgi, sample_name)
+        amrcomp = AMR_compare(dir_rgi, dir_amr, amr, rgi, sample_name, amrcomp)
 
     mlst_compare(dir_mlst)
 
@@ -187,7 +187,7 @@ def sampleSheetSize(sampleSheet_dir_path, samplesheetdata):
                       float_format="{:0.2f}".format))
 
 #-------------- COMPARE TOOLS ------------#
-def AMR_compare(dir_rgi, dir_amr, amr_filename, rgi_filename, sample_name):
+def AMR_compare(dir_rgi, dir_amr, amr_filename, rgi_filename, sample_name, comp):
     """
     Compiles the amrfinderplus and RGI amr gene annotations for a pandas dataframe
     :param dir_rgi: directory containing ALL rgi analysis files
