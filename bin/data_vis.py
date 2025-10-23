@@ -166,7 +166,7 @@ class showData():
             """
             plt.figure(figsize=(20, 20))
             sns.heatmap(matrix, cmap = ListedColormap(['white', 'black']), cbar=False,
-                        linewidths=0.5, linecolor='gray')
+                        linewidths=0.5, linecolor='gray',vmin=0, vmax=1)
             plt.title(f'Presence-Absence: {title} AMR genes')
             plt.xlabel('Genes')
             plt.ylabel('Samples')
