@@ -96,7 +96,8 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
                }
     outdf = pd.DataFrame(outdata)
     print(outdf)
-    datavis.show_chromosome_and_plasmid_lengths(outdf)
+    if (not outdf.empty):
+        datavis.show_chromosome_and_plasmid_lengths(outdf)
 
 
     #####################------------------------------------#####################
@@ -241,6 +242,8 @@ def plasmid_recon(mob_dir):
     for item in os.listdir(mob_dir):
         sample_path = os.path.join(mob_dir, item)
         for filename in os.listdir(sample_path):
+            if (os.listdir(sample_path) <= 1):
+                continue
             file_path = os.path.join(sample_path, filename)
             if 'contig_report.txt' in filename:
                 name = item
