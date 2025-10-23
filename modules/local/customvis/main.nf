@@ -32,7 +32,7 @@ process CUSTOMVIS {
     echo amr
     ls -la amr/
     echo mobsuite
-    ls -la mobsuite/
+    ls -la mobsuite_collected/
     echo virulence
     ls -la virulence/
     echo mlst
