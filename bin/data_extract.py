@@ -138,12 +138,13 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
     #####################             VIRULENCE               #####################
     #####################------------------------------------#####################
     virulenceData = pd.DataFrame(list(zip(virulence_genes.keys(), virulence_genes.values())))
-    virulenceData.columns = ['Sample name', 'Sorted Virulence genes']
-    virulenceData['Numeric order'] = virulenceData['Sample name'].apply(extract_number)
+    if (not virulenceData.empty):
+        virulenceData.columns = ['Sample name', 'Sorted Virulence genes']
+        virulenceData['Numeric order'] = virulenceData['Sample name'].apply(extract_number)
 
-    virulenceData_sorted = virulenceData.sort_values(by='Numeric order').drop(columns='Numeric order')
+        virulenceData_sorted = virulenceData.sort_values(by='Numeric order').drop(columns='Numeric order')
 
-    datavis.showVirulence(virulenceData_sorted)
+        datavis.showVirulence(virulenceData_sorted)
 
 
 
