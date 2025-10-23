@@ -32,10 +32,10 @@ class showData():
 
         sns.heatmap(
             binary_matrix,
-            cmap=['white', 'black'],  # 0=white, 1=black
+            cmap= ListedColormap(['white', 'black']),  # 0=white, 1=black
             cbar=False,  # Remove color bar
             linewidths=0.5,
-            linecolor='gray'
+            linecolor='gray',vmin=0, vmax=1
         )
         
         # Save as CSV
