@@ -112,7 +112,8 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
     #####################      AMR (AMRFINDERPLUS OR RGI)    #####################
     #####################------------------------------------#####################
     amrcompdata = pd.DataFrame(amrcomp, columns = ['Sample', 'Number CARD amr genes', 'CARD genes', 'Number AMRplus genes', 'AMR Genes'])
-    datavis.amrcompare(amrcompdata)
+    if (not amrcomp.empty):
+        datavis.amrcompare(amrcompdata)
 
     #####################------------------------------------#####################
     #####################      GENOME ANNOTATION  COMPARE    #####################
