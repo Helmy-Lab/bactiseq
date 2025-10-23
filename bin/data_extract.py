@@ -427,5 +427,5 @@ if __name__ == "__main__":
     dir_virulence = sys.argv[5]
     dir_mlst = sys.argv[6]
     dir_seqkit = sys.argv[7]
-    process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulence, vir_mlst, dir_seqkit)
+    process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulence, dir_mlst, dir_seqkit)
 
