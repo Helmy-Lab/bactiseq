@@ -95,6 +95,7 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
                'chromosome_contig_lengths': chromosome_contig_lengths
                }
     outdf = pd.DataFrame(outdata)
+    print(outdf)
     datavis.show_chromosome_and_plasmid_lengths(outdf)
 
 
@@ -237,15 +238,12 @@ def plasmid_recon(mob_dir):
     :param filename: FIlename with the output analysis
     :return: Doesn't return anything, just edits lists
     """
-    for root, dirs, files in os.walk(mob_dir):
-        print(f"\nCurrent directory: {root}")
-        print(f"Subdirectories: {dirs}")
-        for filename in files:
-            file_path = os.path.join(root, filename)
-            print(f"  File: {file}")
+    for item in os.listdir(mob_dir):
+        sample_path = os.path.join(mob_dir, item)
+        for filename in os.listdir(sample_path):
+            file_path = os.path.join(sample_path, filename)
             if 'contig_report.txt' in filename:
-
-                name = root
+                name = item
                 # name = p.parents[2].name
 
                 sample_name.append(name)
