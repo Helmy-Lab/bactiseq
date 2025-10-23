@@ -97,7 +97,11 @@ def process_sample_directories(dir_bakta, dir_rgi, dir_amr, dir_mob, dir_virulen
     outdf = pd.DataFrame(outdata)
     print(outdf)
     if (not outdf.empty): #if no plasmid data
+        print("IM NOT PLASMID EMPTY")
         datavis.show_chromosome_and_plasmid_lengths(outdf)
+    else:
+        print("IM PLASMID EMPTY")
+        print(outdf)
 
 
     #####################------------------------------------#####################
