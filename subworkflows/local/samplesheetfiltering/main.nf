@@ -58,7 +58,7 @@ def check_long(file_name, header, sample){
         return 'nanopore'
     } else if (header.contains('ccs') || header.contains('@m') || file_name.contains('hifi.') || file_name.toLowerCase().contains('pacbio') || sample.toLowerCase().contains('pacbio')){
         return 'pacbio'
-    } else if (file_name.contains('.bam') || file_name.contains('.sam') || header.contains('@SQ') || sample.toLowerCase().contains('bam') || sample.toLowerCase().contains('sam')){
+    } else if (file_name.contains('.bam') || file_name.contains('.sam') || sample.toLowerCase().contains('bam') || sample.toLowerCase().contains('sam')){
         return 'bam'
     }else{
         return 'none'
