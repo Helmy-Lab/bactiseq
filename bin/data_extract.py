@@ -248,7 +248,7 @@ def plasmid_recon(mob_dir):
     for item in os.listdir(mob_dir):
         sample_path = os.path.join(mob_dir, item)
         for filename in os.listdir(sample_path):
-            if (len(os.listdir(sample_path)) <= 1): #if only contigreport was found, there is no plasmid data
+            if (len(os.listdir(sample_path)) < 3): #if theres no plasmid data AT ALL
                 continue
             file_path = os.path.join(sample_path, filename)
             if 'contig_report.txt' in filename:
@@ -262,9 +262,14 @@ def plasmid_recon(mob_dir):
                 chromosome_contig_lengths.append(list(chromosome_data['size']))
                 print(chromosome_data)
                 data = data[data['primary_cluster_id'] != '-']
-                plasmid_set.append(data['primary_cluster_id']) #set of plasmids per genome
-                plasmid_name.append(tuple(data['primary_cluster_id'])) #append a tuple of data comprising of all the plasmids found in a single genome
-                contig_name.append(tuple(data['contig_id']))
+                if not data.empty:
+                    plasmid_set.append(data['primary_cluster_id'])
+                    plasmid_name.append(tuple(data['primary_cluster_id']))
+                    contig_name.append(tuple(data['contig_id']))
+                else:
+                    plasmid_set.append([])
+                    plasmid_name.append(())
+                    contig_name.append(())
             if 'chromosome.fasta' in filename:
                 total_count = 0
                 for record in SeqIO.parse(file_path, "fasta"):
