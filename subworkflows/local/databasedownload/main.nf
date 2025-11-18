@@ -65,7 +65,7 @@ workflow DATABASEDOWNLOAD {
     }else if (params.bakta_db != null){
         bakta_ch = Channel.fromPath(params.bakta_db)
     }else if (params.bakta_db == null && !downloadData.contains("baktadb")){
-        bakta_ch = Channel.fromPath(params.db_path + '/baktadb/db-light')
+        bakta_ch = Channel.fromPath(params.db_path + '/baktadb/db-full')
     }
 
     //DOWNLOAD CHECKM2 database
@@ -105,12 +105,12 @@ workflow DATABASEDOWNLOAD {
 
     //Kraken2 database download based on pre-build databases publicly uploaded
     def kraken2_ch = Channel.empty()
-    if (params.kraken2_db == null && downloadData.contains('kraken2')){
+    if (params.kraken2_db == null && downloadData.contains('kraken2db')){
         WGETKRAKEN2DB(params.kraken2_link_db)
         kraken2_ch = kraken2_ch.concat(WGETKRAKEN2DB.out.database_dir)
     }else if (params.kraken2_db != null){
         kraken2_ch = Channel.fromPath(params.kraken2_db)
-    }else if (params.kraken2_db == null && !downloadData.contains('kraken2')){
+    }else if (params.kraken2_db == null && !downloadData.contains('kraken2db')){
         kraken2_ch = Channel.fromPath("${params.db_path}/kraken2db")
     }
 
