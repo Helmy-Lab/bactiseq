@@ -36,7 +36,7 @@ workflow PACBIO_SUBWORKFLOW {
     def ch_input_initial = ch_input_full.map{item -> [item[0], file(item[3])]}
 
 
-    //Make channel if bam files are given
+    //Make channel if bam/sam files are given
     def bam_files = ch_input_initial.filter { meta, long1 ->
         meta.long == 'bam'
     }
