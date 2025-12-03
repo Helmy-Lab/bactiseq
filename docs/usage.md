@@ -44,14 +44,16 @@ However, there is a strict requirement for certain inputs and certain types of v
 ## **Input Data Types & Requirements**
 
 ### **Table 1: Input Combinations**
+
 | Type | Description | Required Fields | Disallowed Fields |
 |------|-------------|-----------------|-------------------|
-| **Hybrid Assembly** | Short + long reads for hybrid assembly | `sample`, `short_fastq1`, `long_fastq` | `assembly` (must be `"assemblyNA"`) |
-| **Illumina-only** | Paired-end short read assembly | `sample`, `short_fastq1`, `short_fastq2` | `assembly` (must be `"assemblyNA"`), `long_fastq` (must be `"longNA"`) |
-| **Long-read-only** | Long read assembly (Nanopore/PacBio) | `sample`, `long_fastq` | `assembly` (must be `"assemblyNA"`), `short_fastq1`, `short_fastq2` (must be `"short1NA"`/`"short2NA"`) |
-| **Pre-assembled** | Already assembled genome | `sample`, `assembly` | `short_fastq1`, `short_fastq2`, `long_fastq` (must be `NA` values) |
+| Hybrid Assembly | Short + long reads for hybrid assembly | `sample`, `short_fastq1`, `long_fastq` | `assembly` (must be `"assemblyNA"`) |
+| Illumina-only | Paired-end short read assembly | `sample`, `short_fastq1`, `short_fastq2` | `assembly` (must be `"assemblyNA"`), `long_fastq` (must be `"longNA"`) |
+| Long-read-only | Long read assembly (Nanopore/PacBio) | `sample`, `long_fastq` | `assembly` (must be `"assemblyNA"`), `short_fastq1`, `short_fastq2` (must be `"short1NA"`/`"short2NA"`) |
+| Pre-assembled | Already assembled genome | `sample`, `assembly` | `short_fastq1`, `short_fastq2`, `long_fastq` (must be `NA` values) |
 
 ### **Table 3: Valid File Extensions**
+
 | Field | Required Extensions | Example Files |
 |-------|---------------------|---------------|
 | `short_fastq1`, `short_fastq2` | `.fastq.gz`, `.fq.gz` | `sample_R1.fastq.gz`, `reads.fq.gz` |
@@ -60,6 +62,7 @@ However, there is a strict requirement for certain inputs and certain types of v
 
 
 ### **Table 5: Example Valid Configurations**
+
 | Type | Sample Row Example |
 |------|-------------------|
 | **Hybrid** | `sample01,reads_R1.fq.gz,reads_R2.fq.gz,ont.fq.gz,,short,` |
