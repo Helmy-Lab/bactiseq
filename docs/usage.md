@@ -231,10 +231,11 @@ A pipeline might not always support every possible argument or option of a parti
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
 
-#Below are the possible modules within BactiSeq that allow additional parameters.
+##Below are the possible modules within BactiSeq that allow additional parameters.
+
 | Process | Description | Resource for Options |
 |---------|-------------|----------------------|
-| Fastqc | Quality assessment of reads | [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) |
+| **Fastqc** | Quality assessment of reads | [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) |
 | **Seqkit_stats** | Quality assessment of reads | [https://bioinf.shenwei.me/seqkit/usage/#stats](https://bioinf.shenwei.me/seqkit/usage/#stats) |
 | **Nanoplot** | Quality assessment of reads | [https://github.com/wdecoster/NanoPlot](https://github.com/wdecoster/NanoPlot) |
 | **HiFiAdapterFilt** | Adapter removal on PacBio HiFi reads | [https://github.com/sheinasim-USDA/HiFiAdapterFilt](https://github.com/sheinasim-USDA/HiFiAdapterFilt) |
