@@ -24,7 +24,7 @@ nav_sort: case_insensitive
 # Aux links for the upper right navigation
 aux_links:
   "View on GitHub":
-    - "//github.com/yourusername/your-repo"
+    - "//github.com/Sylvial-00/bactiseq"
 
 # Table settings for Just-the-Docs
 table:
