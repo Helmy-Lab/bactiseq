@@ -7,7 +7,7 @@ nav_order: 2
 
 <link rel="stylesheet" href="custom.css">
 
-BactiDeq: Usage
+BactiSeq: Usage
 
 ## Introduction
 
