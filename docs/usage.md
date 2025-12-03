@@ -1,3 +1,10 @@
+---
+layout: default
+title: BactiSeq Usage
+nav_order: 2
+---
+
+
 <link rel="stylesheet" href="custom.css">
 
 BactiDeq: Usage
