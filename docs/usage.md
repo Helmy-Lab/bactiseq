@@ -234,7 +234,7 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 #Below are the possible modules within BactiSeq that allow additional parameters.
 | Process | Description | Resource for Options |
 |---------|-------------|----------------------|
-| **Fastqc** | Quality assessment of reads | [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) |
+| Fastqc | Quality assessment of reads | [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) |
 | **Seqkit_stats** | Quality assessment of reads | [https://bioinf.shenwei.me/seqkit/usage/#stats](https://bioinf.shenwei.me/seqkit/usage/#stats) |
 | **Nanoplot** | Quality assessment of reads | [https://github.com/wdecoster/NanoPlot](https://github.com/wdecoster/NanoPlot) |
 | **HiFiAdapterFilt** | Adapter removal on PacBio HiFi reads | [https://github.com/sheinasim-USDA/HiFiAdapterFilt](https://github.com/sheinasim-USDA/HiFiAdapterFilt) |
