@@ -1,54 +1,86 @@
-# nf-core/bactiseq: Usage
-
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/bactiseq/usage](https://nf-co.re/bactiseq/usage)
-
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
+BactiDeq: Usage
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+BactiDeq is a Nextflow-based bioinformatics pipeline for bacterial whole-genome sequencing analysis. It provides end-to-end processing from raw sequencing reads to annotated variants and quality reports, following best practices for reproducibility and scalability.
+**Basic Command**
+```bash
+nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/shifter/apptainer/charliecloud/wave --input samplesheet.csv --outdir /path/to/output/directory/
+```
+  The profile used depends on the avilable environments available to your device.
+
+| Argument | Description | Example |
+|----------|-------------|---------|
+| `--input` | Path to the input samplesheet (CSV/TSV) | `samplesheet.csv` |
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 7 columns, and a header row as shown in the examples below.
 
 ```bash
 --input '[path to samplesheet file]'
 ```
 
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
-
 ### Full samplesheet
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. As well as attempt to auto-detect whether they long reads are Nanopore, or PacBio long reads or pre-assembled genome files. 
+However, there is a strict requirement for certain inputs and certain types of valid file extensions. Examples below of the rules for input
+### **Quick Reference: One-line Rules**
+1. **Hybrid:** `short_fastq1 + long_fastq`, no assembly
+2. **Illumina:** `short_fastq1 + short_fastq2`, no long, no assembly  
+3. **Long-read:** `long_fastq` only, no short, no assembly
+4. **Pre-assembled:** `assembly` only, no reads
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
 
+## **Input Data Types & Requirements**
+
+### **Table 1: Input Combinations**
+| Type | Description | Required Fields | Disallowed Fields |
+|------|-------------|-----------------|-------------------|
+| **Hybrid Assembly** | Short + long reads for hybrid assembly | `sample`, `short_fastq1`, `long_fastq` | `assembly` (must be `"assemblyNA"`) |
+| **Illumina-only** | Paired-end short read assembly | `sample`, `short_fastq1`, `short_fastq2` | `assembly` (must be `"assemblyNA"`), `long_fastq` (must be `"longNA"`) |
+| **Long-read-only** | Long read assembly (Nanopore/PacBio) | `sample`, `long_fastq` | `assembly` (must be `"assemblyNA"`), `short_fastq1`, `short_fastq2` (must be `"short1NA"`/`"short2NA"`) |
+| **Pre-assembled** | Already assembled genome | `sample`, `assembly` | `short_fastq1`, `short_fastq2`, `long_fastq` (must be `NA` values) |
+
+### **Table 3: Valid File Extensions**
+| Field | Required Extensions | Example Files |
+|-------|---------------------|---------------|
+| `short_fastq1`, `short_fastq2` | `.fastq.gz`, `.fq.gz` | `sample_R1.fastq.gz`, `reads.fq.gz` |
+| `long_fastq` | `.fastq.gz`, `.fq.gz` | `ont_reads.fastq.gz` |
+| `assembly` | `.fasta`, `.fa`, `.fna`, `.gbk`, `.gb`, `.gbff`, `.genbank`, `.embl`, `.gff`, `.gff3` | `genome.fasta`, `annotation.gff`, `assembly.gbff` |
+
+
+### **Table 5: Example Valid Configurations**
+| Type | Sample Row Example |
+|------|-------------------|
+| **Hybrid** | `sample01,reads_R1.fq.gz,reads_R2.fq.gz,ont.fq.gz,,short,` |
+| **Illumina-only** | `sample02,ill_R1.fastq.gz,ill_R2.fastq.gz,,,,` |
+| **Long-read-only** | `sample03,short1NA,short2NA,pacbio.fq.gz,,long,` |
+| **Pre-assembled** | `sample04,short1NA,short2NA,longNA,genome.fasta,,` |
+
+###Example of a csv file
 ```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+sample,short_fastq1,short_fastq2,long_fastq,assembly,polish,ONT_basecaller
+pacbio1,,,./testPac/OS0131AD_EA076372_bc2074.hifi.fq.gz,,long,                             #Pacbio reads where long reads are used again to polish
+pacbio37,,,./testPac/SRR33769408.fastq.gz,,,                                               #Pacbio reads where there is no polishing
+NANOPORE08720179,/project/kessel/syl218/NanoIllumina/SAMN08720179/SRR29751147_1.fastq.gz,/project/kessel/syl218/NanoIllumina/SAMN08720179/SRR29751147_2.fastq.gz,,,short,      #Nanopore and illumina reads where illumina reads were used to polish
+NANOPORE08720180,/project/kessel/syl218/NanoIllumina/SAMN08720180/SRR29751252_1.fastq.gz,/project/kessel/syl218/NanoIllumina/SAMN08720180/SRR29751252_2.fastq.gz,,,,           #Nanopore and illumina reads, no polishing
+Nanopore2,,,testDatasetNfcore/evalData/nanopore/nanoporeSRR10074455.fastq.gz,,long,        #Nanopore reads where the same reads are used to polish
+Illumina087201792,/project/NanoIllumina/SAMN08720179/SRR29751147_1.fastq.gz,/project/NanoIllumina/SAMN08720179/SRR29751147_2.fastq.gz,,,,
+Illumina087201802,/project/NanoIllumina/SAMN08720180/SRR29751252_1.fastq.gz,/project/NanoIllumina/SAMN08720180/SRR29751252_2.fastq.gz,,,,
 ```
+> [!WARNING]
+> If no basecaller mode is decalred, medaka for polishing, will default to the model r1041_e82_400bps_sup_v5.2.0.
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| Column | Description |
+| ------ | ----------- |
+| `sample` | Sample identifier (no spaces allowed). |
+| `short_fastq1` | Path to gzipped R1 Illumina reads (`*.fastq.gz`). |
+| `short_fastq2` | Path to gzipped R2 Illumina reads (`*.fastq.gz`). |
+| `long_fastq` | Path to gzipped long reads (`*.fastq.gz`). |
+| `assembly` | Path to pre-assembled genome file (multiple formats supported).  |
+| `polish` | Polishing method: `"short"`, `"long"`, or `"NA/Empty"`. |
+| `ONT_basecaller` | Nanopore basecaller metadata (optional). Default for the tool Medaka is r1041_e82_400bps_sup_v5.2.0|
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -57,7 +89,7 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/bactiseq --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/shifter/apptainer/charliecloud/wave --input samplesheet.csv --outdir /path/to/output/directory/
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -81,7 +113,7 @@ Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run nf-core/bactiseq -profile docker -params-file params.yaml
+nextflow run main.nf -profile docker -params-file params.yaml
 ```
 
 with:
@@ -100,7 +132,7 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
-nextflow pull nf-core/bactiseq
+nextflow pull Sylvial-00/bactiseq
 ```
 
 ### Reproducibility
@@ -186,6 +218,37 @@ To use a different container from the default container or conda environment spe
 A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
+
+#Below are the possible modules within BactiSeq that allow additional parameters.
+| Process | Description | Resource for Options |
+|---------|-------------|----------------------|
+| **Fastqc** | Quality assessment of reads | [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) |
+| **Seqkit_stats** | Quality assessment of reads | [https://bioinf.shenwei.me/seqkit/usage/#stats](https://bioinf.shenwei.me/seqkit/usage/#stats) |
+| **Nanoplot** | Quality assessment of reads | [https://github.com/wdecoster/NanoPlot](https://github.com/wdecoster/NanoPlot) |
+| **HiFiAdapterFilt** | Adapter removal on PacBio HiFi reads | [https://github.com/sheinasim-USDA/HiFiAdapterFilt](https://github.com/sheinasim-USDA/HiFiAdapterFilt) |
+| **Porechop** | Adapter removal on Nanopore reads | [https://github.com/rrwick/Porechop](https://github.com/rrwick/Porechop) |
+| **Chopper** | Quality control on Long reads | [https://github.com/wdecoster/chopper](https://github.com/wdecoster/chopper) |
+| **bbduk** | Quality control on Illumina reads | [https://github.com/bbushnell/BBTools](https://github.com/bbushnell/BBTools) |
+| **Flye** | Long reads assembler | [https://github.com/mikolmogorov/Flye](https://github.com/mikolmogorov/Flye) |
+| **Unicycler** | Short/Hybrid read assembler | [https://github.com/rrwick/Unicycler](https://github.com/rrwick/Unicycler) |
+| **Spades** | Short/Hybrid read assembler | [https://github.com/ablab/spades](https://github.com/ablab/spades) |
+| **Kraken2** | Taxonomic identification of assembly | [https://github.com/DerrickWood/kraken2/wiki/Manual](https://github.com/DerrickWood/kraken2/wiki/Manual) |
+| **Gambit** | Taxonomic identification of reads | [https://github.com/gambit/gambit](https://github.com/gambit/gambit) |
+| **Pilon** | Polisher using short reads | [https://github.com/broadinstitute/pilon/wiki](https://github.com/broadinstitute/pilon/wiki) |
+| **Racon** | Polisher using long reads | [https://github.com/isovic/racon](https://github.com/isovic/racon) |
+| **Nextpolish** | Polisher with short reads | [https://nextpolish.readthedocs.io/en/latest/QSTART.html](https://nextpolish.readthedocs.io/en/latest/QSTART.html) |
+| **Medaka** | Polisher with long reads | [https://github.com/nanoporetech/medaka](https://github.com/nanoporetech/medaka) |
+| **CheckM2** | Assembly quality assessment | [https://github.com/chklovski/CheckM2](https://github.com/chklovski/CheckM2) |
+| **BUSCO** | Assembly quality assessment | [https://github.com/metashot/busco](https://github.com/metashot/busco) |
+| **Quast** | Assembly quality assessment | [https://github.com/ablab/quast](https://github.com/ablab/quast) |
+| **Bakta** | Genome annotation | [https://github.com/oschwengers/bakta](https://github.com/oschwengers/bakta) |
+| **Prokka** | Genome annotation | [https://github.com/tseemann/prokka](https://github.com/tseemann/prokka) |
+| **RGI** | AMR gene identification | [https://github.com/arpcard/rgi/blob/master/docs/rgi_help.rst](https://github.com/arpcard/rgi/blob/master/docs/rgi_help.rst) |
+| **Abricate** | Virulence gene identification | [https://github.com/tseemann/abricate](https://github.com/tseemann/abricate) |
+| **Mobsuite** | Plasmid identification | [https://github.com/phac-nml/mob-suite](https://github.com/phac-nml/mob-suite) |
+| **AMRFinderplus** | AMR gene identification | [https://github.com/ncbi/amr/wiki](https://github.com/ncbi/amr/wiki) |
+| **MLST** | MLST identification | [https://github.com/tseemann/mlst](https://github.com/tseemann/mlst) |
+
 
 ### nf-core/configs
 
