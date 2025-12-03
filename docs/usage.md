@@ -47,10 +47,10 @@ However, there is a strict requirement for certain inputs and certain types of v
 
 | Type | Description | Required Fields | Disallowed Fields |
 |------|-------------|-----------------|-------------------|
-| Hybrid Assembly | Short + long reads for hybrid assembly | `sample`, `short_fastq1`, `long_fastq` | `assembly` (must be `"assemblyNA"`) |
-| Illumina-only | Paired-end short read assembly | `sample`, `short_fastq1`, `short_fastq2` | `assembly` (must be `"assemblyNA"`), `long_fastq` (must be `"longNA"`) |
-| Long-read-only | Long read assembly (Nanopore/PacBio) | `sample`, `long_fastq` | `assembly` (must be `"assemblyNA"`), `short_fastq1`, `short_fastq2` (must be `"short1NA"`/`"short2NA"`) |
-| Pre-assembled | Already assembled genome | `sample`, `assembly` | `short_fastq1`, `short_fastq2`, `long_fastq` (must be `NA` values) |
+| **Hybrid Assembly** | Short + long reads for hybrid assembly | `sample`, `short_fastq1`, `long_fastq` | `assembly` (must be `"assemblyNA"`) |
+| **Illumina-only** | Paired-end short read assembly | `sample`, `short_fastq1`, `short_fastq2` | `assembly` (must be `"assemblyNA"`), `long_fastq` (must be `"longNA"`) |
+| **Long-read-only** | Long read assembly (Nanopore/PacBio) | `sample`, `long_fastq` | `assembly` (must be `"assemblyNA"`), `short_fastq1`, `short_fastq2` (must be `"short1NA"`/`"short2NA"`) |
+| **Pre-assembled** | Already assembled genome | `sample`, `assembly` | `short_fastq1`, `short_fastq2`, `long_fastq` (must be `NA` values) |
 
 ### **Table 3: Valid File Extensions**
 
