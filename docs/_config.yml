@@ -1,5 +1,5 @@
-title: BactiSeq
-description: Bacterial whole genome seqeunce pipeline
+title: CytoGateR
+description: A Comprehensive Flow Cytometry Analysis Platform
 remote_theme: just-the-docs/just-the-docs
 
 # Enable search
@@ -9,7 +9,7 @@ search_enabled: true
 color_scheme: light
 
 # Footer
-footer_content: "BactiSeq - Flexible, portable, repducible bacterial whole genome sequence pipeline"
+footer_content: "CytoGateR - An Interactive Flow Cytometry Analysis Platform"
 
 # Plugins (GitHub Pages supports these automatically)
 plugins:
@@ -19,50 +19,40 @@ plugins:
 # Navigation
 nav_sort: case_insensitive
 
-
-# ===== ADD THESE TABLE-RELATED SETTINGS =====
-# Aux links for the upper right navigation
-aux_links:
-  "View on GitHub":
-    - "//github.com/Sylvial-00/bactiseq"
-
-# Table settings for Just-the-Docs
-table:
-  # Enable table wrapping with horizontal scroll on mobile
-  wrap: true
-  
-  # Add zebra striping to tables
-  zebra: true
-  
-  # Enable table sorting (requires JavaScript)
-  sort: true
-
-# Callouts styling (optional but nice)
-callouts:
-  warning:
-    title: Warning
-    color: red
-  note:
-    title: Note
-    color: blue
-  tip:
-    title: Tip
-    color: green
-# Enable GitHub Flavored Markdown callouts
+# Add these for better markdown support
 kramdown:
   input: GFM
-  syntax_highlighter_opts:
-    block:
-      line_numbers: false
+  hard_wrap: false
+  auto_ids: true
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
 
-# Optional: Customize callout colors
+# Callouts configuration
 callouts:
   warning:
     title: Warning
     color: red
   note:
-    title: Note
+    title: Note  
     color: blue
   tip:
     title: Tip
     color: green
+  important:
+    title: Important
+    color: yellow
+
+# Optional: Include custom CSS
+head_custom: |
+  <style>
+    .warning {
+      border-left: 4px solid #d33;
+      padding: 0.5rem 1rem;
+      margin: 1rem 0;
+      background-color: rgba(211, 51, 51, 0.05);
+    }
+    .warning-title {
+      font-weight: bold;
+      color: #d33;
+    }
+  </style>
