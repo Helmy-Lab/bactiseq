@@ -30,7 +30,7 @@ Before running the BactiSeq pipeline, ensure you have the following installed:
 
 ### **1. Install Nextflow**
 [Nextflow's official download and setup page](https://www.nextflow.io/docs/latest/install.html)
-### **2. Install Container engine (recommended)**
+### **2. Install a Container engine (recommended)**
 [Nextflow's Docker installation guide](https://www.nextflow.io/docs/latest/developer-env.html#:~:text=Select%20Install.-,Docker,that%20allows%20you%20to%20create%2C%20deploy%2C%20and%20manage%20applications%20within%20containers.,-Windows) <br />
 [Singularity Official Documentation](https://docs.sylabs.io/guides/3.0/user-guide/installation.html#:~:text=Edit%20on%20GitHub-,Installation,versions%20of%20Singularity%20please%20see%20earlier%20versions%20of%20the%20docs.)
 
