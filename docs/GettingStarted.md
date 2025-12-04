@@ -29,14 +29,13 @@ Before running the BactiSeq pipeline, ensure you have the following installed:
 ## **Installation**
 
 ### **1. Install Nextflow**
-[https://www.nextflow.io/docs/latest/install.html](Nextflow's official download and setup page)
-
+[Nextflow's official download and setup page](https://www.nextflow.io/docs/latest/install.html)
 ### **2. Conatiner engine (recommended)**
-[https://www.nextflow.io/docs/latest/developer-env.html#:~:text=Select%20Install.-,Docker,that%20allows%20you%20to%20create%2C%20deploy%2C%20and%20manage%20applications%20within%20containers.,-Windows](Nextflow's Docker installation guide)
-[https://docs.sylabs.io/guides/3.0/user-guide/installation.html#:~:text=Edit%20on%20GitHub-,Installation,versions%20of%20Singularity%20please%20see%20earlier%20versions%20of%20the%20docs.),-Overview](Singularity Official Documentation)
+[Nextflow's Docker installation guide](https://www.nextflow.io/docs/latest/developer-env.html#:~:text=Select%20Install.-,Docker,that%20allows%20you%20to%20create%2C%20deploy%2C%20and%20manage%20applications%20within%20containers.,-Windows)
+[Singularity Official Documentation](https://docs.sylabs.io/guides/3.0/user-guide/installation.html#:~:text=Edit%20on%20GitHub-,Installation,versions%20of%20Singularity%20please%20see%20earlier%20versions%20of%20the%20docs.),-Overview)
 
 ### **3. Git**
-[https://github.com/git-guides/install-git](Official Git Documentation)
+[Official Git Documentation](https://github.com/git-guides/install-git)
 
 
 ## **Running the Pipeline**
