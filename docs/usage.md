@@ -81,8 +81,8 @@ Nanopore2,,,testDatasetNfcore/evalData/nanopore/nanoporeSRR10074455.fastq.gz,,lo
 Illumina087201792,/project/NanoIllumina/SAMN08720179/SRR29751147_1.fastq.gz,/project/NanoIllumina/SAMN08720179/SRR29751147_2.fastq.gz,,,,
 Illumina087201802,/project/NanoIllumina/SAMN08720180/SRR29751252_1.fastq.gz,/project/NanoIllumina/SAMN08720180/SRR29751252_2.fastq.gz,,,,
 ```
-> [!WARNING]
-> If no basecaller mode is decalred, medaka for polishing, will default to the model r1041_e82_400bps_sup_v5.2.0.
+{: .warning }
+> If no basecaller mode is declared, medaka for polishing will default to the model r1041_e82_400bps_sup_v5.2.0.
 
 > [!TIP]
 > To ensure the long read data gets properly identified as either Nanopore or Pacbio. Bactiseq checks for certain file extensions, words within filenames, header data within the reads, and sample names. To ensure the data gets identified correctly - Putting Pacbio in the filename of reads/samplename or nanopore in read file or samplename is suggested.
