@@ -86,6 +86,7 @@ Illumina087201802,/project/NanoIllumina/SAMN08720180/SRR29751252_1.fastq.gz,/pro
 
 > [!TIP]
 > To ensure the long read data gets properly identified as either Nanopore or Pacbio. Bactiseq checks for certain file extensions, words within filenames, header data within the reads, and sample names. To ensure the data gets identified correctly - Putting Pacbio in the filename of reads/samplename or nanopore in read file or samplename is suggested.
+
 | Column | Description |
 | ------ | ----------- |
 | `sample` | Sample identifier (no spaces allowed). |
