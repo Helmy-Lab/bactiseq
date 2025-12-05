@@ -1,5 +1,5 @@
-title: CytoGateR
-description: A Comprehensive Flow Cytometry Analysis Platform
+title: BactiSeq
+description: Whole bacterial genome analysis pipeline
 remote_theme: just-the-docs/just-the-docs
 
 # Enable search
@@ -9,7 +9,7 @@ search_enabled: true
 color_scheme: light
 
 # Footer
-footer_content: "CytoGateR - An Interactive Flow Cytometry Analysis Platform"
+footer_content: "Flexible, portable and reproducible whole bacterial genome analysis pipeline"
 
 # Plugins (GitHub Pages supports these automatically)
 plugins:
