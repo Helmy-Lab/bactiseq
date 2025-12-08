@@ -1,5 +1,11 @@
 # Bactiseq Output
 
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ## Introduction
 
 This document describes the output produced by the pipeline. Output includes csv, html, and pngs/svgs/jpeg files.
@@ -69,6 +75,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | | 5. Busco database | | 5.8.3 (eukaryota_odb10) |
 | | 6. Kraken2 database | | 8gb standard Kraken2 database |
 | | 7. Gambit database | | 1.0 |
+
+### Output directory organization
+
 
 ### Visual outputs of the pipeline
 
