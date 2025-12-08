@@ -208,6 +208,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
+- `plato`
+  - A generic configuration profile to be used within PLATO at the University of Sasktchewan. Allows proper binding of the temporary directory 
 
 ### `-resume`
 
@@ -219,7 +221,23 @@ You can also supply a run name to resume a specific run: `-resume [run-name]`. U
 
 Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
 
-## Custom configuration
+### Custom tool/module configuration
+Nextflow pipelines allow users to customize the parameters used by specific tools/modules through the configuration folder.
+*** steps to customize ***
+1. Navigate to the pipeline directory and edit the file: pipeline_directory/conf/modules.config, the pipeline directory is where you pulled the pipeline into.
+2. Locate or add the module configuration section
+3. Insert custom arguments in the `ext.args` parameter
+### Example Configuration:
+```nextflow
+withName: CGVIEW {
+ ext.args = '-feature_labels T '
+ publishDir = [
+     path: { "${params.outdir}/${meta.id}/visualizations/cgview" },
+     mode: params.publish_dir_mode,
+     saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+ ]
+}
+```
 
 ### Resource requests
 
@@ -269,6 +287,9 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 | **Mobsuite** | Plasmid identification | [https://github.com/phac-nml/mob-suite](https://github.com/phac-nml/mob-suite) |
 | **AMRFinderplus** | AMR gene identification | [https://github.com/ncbi/amr/wiki](https://github.com/ncbi/amr/wiki) |
 | **MLST** | MLST identification | [https://github.com/tseemann/mlst](https://github.com/tseemann/mlst) |
+
+### Custom module parameters
+Nextflow pipelines allows users to edit the 
 
 
 ### nf-core/configs
