@@ -19,6 +19,7 @@ nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/sh
   The profile used depends on the avilable environments available to your device.
 
 **Pipeline arguments**
+
 | Argument | Description | Example |
 |----------|-------------|---------|
 | `--input` | Path to the input samplesheet (CSV/TSV) | `samplesheet.csv` |
