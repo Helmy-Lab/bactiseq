@@ -86,10 +86,11 @@ Nanopore2,,,nanoporeSRR10074455.fastq.gz,,long,        #Nanopore reads where the
 Illumina087201792,SRR29751147_1.fastq.gz,SRR29751147_2.fastq.gz,,,,
 Illumina087201802,SRR29751252_1.fastq.gz,SRR29751252_2.fastq.gz,,,,
 ```
-{: .warning }
-> If no basecaller mode is declared, medaka for polishing will default to the model r1041_e82_400bps_sup_v5.2.0.
+<div class="alert alert-warning" role="alert" style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin: 20px 0;">
+⚠️ **WARNING:** If no basecaller mode is declared, medaka for polishing will default to the model r1041_e82_400bps_sup_v5.2.0.
+</div>
 
-> [!TIP]
+> **********TIP**********
 > To ensure the long read data gets properly identified as either Nanopore or Pacbio. Bactiseq checks for certain file extensions, words within filenames, header data within the reads, and sample names. To ensure the data gets identified correctly - Putting Pacbio in the filename of reads/samplename or nanopore in read file or samplename is suggested.
 
 | Column | Description |
@@ -127,7 +128,6 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-> [!WARNING]
 > Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
 
 The above pipeline run specified with a params file in yaml format:
