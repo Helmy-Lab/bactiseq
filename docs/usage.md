@@ -16,7 +16,7 @@ BactiDeq is a Nextflow-based bioinformatics pipeline for bacterial whole-genome 
 ```bash
 nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/shifter/apptainer/charliecloud/wave --input samplesheet.csv --outdir /path/to/output/directory/
 ```
-<img width="1804" height="421" alt="image" src="../images/CLI_run_nextflow.png" />
+<img width="1804" height="421" alt="image" src="https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/CLI_run_nextflow.png" />
 
   The profile used depends on the avilable environments available to your device.
 
@@ -93,7 +93,7 @@ Illumina087201802,SRR29751252_1.fastq.gz,SRR29751252_2.fastq.gz,,,,
 
 > ⚠️ **WARNING:** If no basecaller mode is declared, medaka for polishing will default to the model `r1041_e82_400bps_sup_v5.2.0`.
 
-> 💡 **TIP:** To ensure the long read data gets properly identified as either Nanopore or Pacbio. Bactiseq checks for certain file extensions, words within filenames, header data within the reads, and sample names. To ensure the data gets identified correctly - Putting Pacbio in the filename of reads/samplename or nanopore in read file or samplename is suggested.
+> 💡 **TIP:** To ensure the long read data gets properly identified as either Nanopore or Pacbio. Bactiseq checks for certain file extensions, words within filenames, header data within the reads, and sample names. To ensure the data gets identified correctly - Putting Pacbio in the filename of reads/samplename or Nanopore in read file or samplename is suggested.
 
 | Column | Description |
 | ------ | ----------- |
