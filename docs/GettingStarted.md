@@ -62,6 +62,7 @@ nextflow run -c nextflow.config --input samplesheet.csv
 ```bash
 nextflow run https://github.com/sylvial-00/bactiseq --input samplesheet.csv
 ```
+
 ## **Updating the pipeline**
 ```bash
 # Navigate to your pipeline directory
@@ -76,3 +77,5 @@ git pull origin develop  # or other branch name
 # Then run with updates
 nextflow run main.nf --profile docker --input samplesheet.csv
 ```
+
+
