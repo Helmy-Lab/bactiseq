@@ -16,6 +16,8 @@ BactiDeq is a Nextflow-based bioinformatics pipeline for bacterial whole-genome 
 ```bash
 nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/shifter/apptainer/charliecloud/wave --input samplesheet.csv --outdir /path/to/output/directory/
 ```
+<img width="1804" height="421" alt="image" src="../images/CLI_run_nextflow.png" />
+
   The profile used depends on the avilable environments available to your device.
 
 **Pipeline arguments**
