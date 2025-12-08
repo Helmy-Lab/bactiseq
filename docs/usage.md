@@ -77,6 +77,7 @@ However, there is a strict requirement for certain inputs and certain types of v
 | **Pre-assembled** | `sample04,short1NA,short2NA,longNA,genome.fasta,,` |
 
 ###Example of a csv file
+
 ```csv title="samplesheet.csv"
 sample,short_fastq1,short_fastq2,long_fastq,assembly,polish,ONT_basecaller
 pacbio1,,,./testPac/OS0131AD_EA076372_bc2074.hifi.fq.gz,,long,  #Pacbio reads where long reads are used again to polish
