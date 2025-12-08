@@ -77,7 +77,46 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | | 7. Gambit database | | 1.0 |
 
 ### Output directory organization
+Upon successful completion of the pipeline, the resutls will be stored, per sample, within the output directory set by --outputdir
+**Output directory structure for one sample (polish enabled and performed)**
 
+```
+NANOPORE08720179/
+├── Annotation/
+│   ├── AbricateVFDB/          # *.txt
+│   ├── AmrfinderPlus/         # *.tsv
+│   ├── Bakta/                 # *.embl, *.faa
+│   ├── MLST/                  # *.tsv
+│   ├── Mobsuite/              # *.fasta, *.txt
+│   ├── Prokka/                # *.faa, *.gbk
+│   └── RGI/                   # *.json, *.txt
+├── Assembly/
+│   └── FLYE/                  # *.fasta.gz, *.gfa.gz
+├── AssemblyQA/
+│   ├── Busco/                 # *.json, *.txt
+│   ├── Checkm2/               # *.tsv
+│   └── quast/                 # *.html, *.pdf
+├── filteredreadQA/
+│   ├── fastqc/                # *.html, *.zip
+│   ├── nanoplot/              # *.html, *.png
+│   └── seqkit/                # *.tsv
+├── polished/
+│   └── nextpolish/            # *.fasta, *.stat
+├── readQA/
+│   ├── fastqc/                # *.html, *.zip
+│   ├── nanoplot/              # *.html, *.png
+│   └── seqkit_stats/          # *.tsv
+├── readQC/
+│   ├── chopper/               # *.fastq.gz
+│   └── porechop/              # *.fastq.gz, *.log
+├── taxonomy/
+│   ├── gambit/                # *.csv
+│   └── kraken2/               # *.txt, *.fastq.gz
+└── visualizations/
+    ├── bandage/               # *.png, *.svg
+    ├── cgview/                # *.svg
+    └── tinycov/               # *.png
+```
 
 ### Visual outputs of the pipeline
 
