@@ -221,24 +221,6 @@ You can also supply a run name to resume a specific run: `-resume [run-name]`. U
 
 Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
 
-### Custom tool/module configuration
-Nextflow pipelines allow users to customize the parameters used by specific tools/modules through the configuration folder.
-*** steps to customize ***
-1. Navigate to the pipeline directory and edit the file: pipeline_directory/conf/modules.config, the pipeline directory is where you pulled the pipeline into.
-2. Locate or add the module configuration section
-3. Insert custom arguments in the `ext.args` parameter
-### Example Configuration:
-```nextflow
-withName: CGVIEW {
- ext.args = '-feature_labels T '
- publishDir = [
-     path: { "${params.outdir}/${meta.id}/visualizations/cgview" },
-     mode: params.publish_dir_mode,
-     saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
- ]
-}
-```
-
 ### Resource requests
 
 Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
@@ -247,13 +229,13 @@ To change the resource requests, please see the [max resources](https://nf-co.re
 
 ### Custom Containers
 
-In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
+In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. Often Nextflow pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
 
 To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
 ### Custom Tool Arguments
 
-A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
+A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, Nextflow pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
 
@@ -288,8 +270,23 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 | **AMRFinderplus** | AMR gene identification | [https://github.com/ncbi/amr/wiki](https://github.com/ncbi/amr/wiki) |
 | **MLST** | MLST identification | [https://github.com/tseemann/mlst](https://github.com/tseemann/mlst) |
 
-### Custom module parameters
-Nextflow pipelines allows users to edit the 
+### Custom tool/module configuration
+Nextflow pipelines allow users to customize the parameters used by specific tools/modules through the configuration folder.
+*** steps to customize ***
+1. Navigate to the pipeline directory and edit the file: pipeline_directory/conf/modules.config, the pipeline directory is where you pulled the pipeline into.
+2. Locate or add the module configuration section
+3. Insert custom arguments in the `ext.args` parameter
+### Example Configuration:
+```nextflow
+withName: CGVIEW {
+ ext.args = '-feature_labels T '
+ publishDir = [
+     path: { "${params.outdir}/${meta.id}/visualizations/cgview" },
+     mode: params.publish_dir_mode,
+     saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
+ ]
+}
+```
 
 
 ### nf-core/configs
