@@ -18,9 +18,14 @@ nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/sh
 ```
   The profile used depends on the avilable environments available to your device.
 
+**Pipeline arguments**
 | Argument | Description | Example |
 |----------|-------------|---------|
 | `--input` | Path to the input samplesheet (CSV/TSV) | `samplesheet.csv` |
+| `--aligned` | (optional) Whether given BAM/SAM files have alignment information | `true or false, default false`
+| `--hyrbid_assembler` | (optional) Which assembler to use for hybrid assmebly | `spades or unicycler, default null`
+| `--illumina_adapters` | (optional) path to file of adapters for bbduk | `path to file, default null`
+| `--polish` | (optional) Whether to polish at all despite what's set in the samplesheet | `true or false, default true`
 
 ## Samplesheet input
 
@@ -47,10 +52,10 @@ However, there is a strict requirement for certain inputs and certain types of v
 
 | Type | Description | Required Fields | Disallowed Fields |
 |------|-------------|-----------------|-------------------|
-| **Hybrid Assembly** | Short + long reads for hybrid assembly | `sample`, `short_fastq1`, `long_fastq` | `assembly` (must be `"assemblyNA"`) |
-| **Illumina-only** | Paired-end short read assembly | `sample`, `short_fastq1`, `short_fastq2` | `assembly` (must be `"assemblyNA"`), `long_fastq` (must be `"longNA"`) |
-| **Long-read-only** | Long read assembly (Nanopore/PacBio) | `sample`, `long_fastq` | `assembly` (must be `"assemblyNA"`), `short_fastq1`, `short_fastq2` (must be `"short1NA"`/`"short2NA"`) |
-| **Pre-assembled** | Already assembled genome | `sample`, `assembly` | `short_fastq1`, `short_fastq2`, `long_fastq` (must be `NA` values) |
+| **Hybrid Assembly** | Short + long reads for hybrid assembly | `sample`, `short_fastq1`, `long_fastq` | `assembly` (must be `"assemblyNA`/`empty"`) |
+| **Illumina-only** | Paired-end short read assembly | `sample`, `short_fastq1`, `short_fastq2` | `assembly` (must be `"assemblyNA`/`empty"`), `long_fastq` (must be `"longNA`/`empty"`) |
+| **Long-read-only** | Long read assembly (Nanopore/PacBio) | `sample`, `long_fastq` | `assembly` (must be `"assemblyNA`/`empty"`), `short_fastq1`, `short_fastq2` (must be `"short1NA"`/`"short2NA"`/`empty`) |
+| **Pre-assembled** | Already assembled genome | `sample`, `assembly` | `short_fastq1`, `short_fastq2`, `long_fastq` (must be `NA`/`empty` values) |
 
 ### **Table 3: Valid File Extensions**
 
@@ -75,11 +80,11 @@ However, there is a strict requirement for certain inputs and certain types of v
 sample,short_fastq1,short_fastq2,long_fastq,assembly,polish,ONT_basecaller
 pacbio1,,,./testPac/OS0131AD_EA076372_bc2074.hifi.fq.gz,,long,                             #Pacbio reads where long reads are used again to polish
 pacbio37,,,./testPac/SRR33769408.fastq.gz,,,                                               #Pacbio reads where there is no polishing
-NANOPORE08720179,/project/kessel/syl218/NanoIllumina/SAMN08720179/SRR29751147_1.fastq.gz,/project/kessel/syl218/NanoIllumina/SAMN08720179/SRR29751147_2.fastq.gz,,,short,      #Nanopore and illumina reads where illumina reads were used to polish
-NANOPORE08720180,/project/kessel/syl218/NanoIllumina/SAMN08720180/SRR29751252_1.fastq.gz,/project/kessel/syl218/NanoIllumina/SAMN08720180/SRR29751252_2.fastq.gz,,,,           #Nanopore and illumina reads, no polishing
-Nanopore2,,,testDatasetNfcore/evalData/nanopore/nanoporeSRR10074455.fastq.gz,,long,        #Nanopore reads where the same reads are used to polish
-Illumina087201792,/project/NanoIllumina/SAMN08720179/SRR29751147_1.fastq.gz,/project/NanoIllumina/SAMN08720179/SRR29751147_2.fastq.gz,,,,
-Illumina087201802,/project/NanoIllumina/SAMN08720180/SRR29751252_1.fastq.gz,/project/NanoIllumina/SAMN08720180/SRR29751252_2.fastq.gz,,,,
+NANOPORE08720179,SRR29751147_1.fastq.gz,SRR29751147_2.fastq.gz,,,short,      #Nanopore and illumina reads where illumina reads were used to polish
+NANOPORE08720180,SRR29751252_1.fastq.gz,SRR29751252_2.fastq.gz,,,,           #Nanopore and illumina reads, no polishing
+Nanopore2,,,nanoporeSRR10074455.fastq.gz,,long,        #Nanopore reads where the same reads are used to polish
+Illumina087201792,SRR29751147_1.fastq.gz,SRR29751147_2.fastq.gz,,,,
+Illumina087201802,SRR29751252_1.fastq.gz,SRR29751252_2.fastq.gz,,,,
 ```
 {: .warning }
 > If no basecaller mode is declared, medaka for polishing will default to the model r1041_e82_400bps_sup_v5.2.0.
