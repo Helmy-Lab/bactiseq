@@ -272,6 +272,7 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 
 ### Custom tool/module configuration
 Nextflow pipelines allow users to customize the parameters used by specific tools/modules through the configuration folder.
+
 *** steps to customize ***
 1. Navigate to the pipeline directory and edit the file: pipeline_directory/conf/modules.config, the pipeline directory is where you pulled the pipeline into.
 2. Locate or add the module configuration section
