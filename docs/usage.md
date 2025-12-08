@@ -78,7 +78,7 @@ However, there is a strict requirement for certain inputs and certain types of v
 
 ### Example of a csv file
 
-```csv title="samplesheet.csv"
+```csv
 sample,short_fastq1,short_fastq2,long_fastq,assembly,polish,ONT_basecaller
 pacbio1,,,./testPac/OS0131AD_EA076372_bc2074.hifi.fq.gz,,long,
 pacbio37,,,./testPac/SRR33769408.fastq.gz,,,
