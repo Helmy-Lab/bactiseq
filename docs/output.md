@@ -122,7 +122,7 @@ NANOPORE08720179/
 
 Custom visualizations are stored at the same level as per-sample directories. These custom visualizations are cross-sample comparisons between all samples. Custom visualizations also come with a csv containing all the same data for further analysis and flexibility in creating visualizations for the user. 
 
-### Visual outputs of the pipeline
+### Visual outputs of the pipeline: Visualization Module
 This pipeline generates multiple visual outputs to support analysis and quality control of genomic, assembly, and coverage data. Visualizations are produced using both custom Python scripts and pre‑existing bioinformatics tools. Our custom Python-based visualizations focus on cross-sample comparative analysis, enabling multi-sample insights that pre-made tools cannot easily provide. The pipeline generates eight complementary cross-sample visualizations:
 
 <img alt="image" src="https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/customVisuals.png" />
