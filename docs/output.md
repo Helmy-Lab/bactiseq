@@ -125,7 +125,7 @@ Custom visualizations are stored at the same level as per-sample directories. Th
 ### Visual outputs of the pipeline
 This pipeline generates multiple visual outputs to support analysis and quality control of genomic, assembly, and coverage data. Visualizations are produced using both custom Python scripts and pre‑existing bioinformatics tools. Our custom Python-based visualizations focus on cross-sample comparative analysis, enabling multi-sample insights that pre-made tools cannot easily provide. The pipeline generates eight complementary cross-sample visualizations:
 
-<img alt="image" src="[https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/CLI_run_nextflow.png](https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/customVisuals.png)" />
+<img alt="image" src="https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/customVisuals.png" />
 
 **(A) Plasmid Distribution** - Bar graph showing plasmids per sample, colored by plasmid type with plasmid length on y-axis
 **(B) AMR Gene Counts** - Interactive bar graph of antimicrobial resistance genes detected per sample (hover reveals gene lists)
