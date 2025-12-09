@@ -143,6 +143,16 @@ This pipeline generates multiple visual outputs to support analysis and quality 
 
 **(H) Gene Similarity Clustering** - Heatmap showing gene content similarity between all samples
 
+The visualizatoin module also incorporates pre-made tools to generate visualizations. These tools, CGview, Tinycov, and Bandage are wrapped within our pipeline.
+
+<img alt="image" src="https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/visualizations.png" />
+
+**(A) Circular Genome Maps: CGview** - Annotated circular genome visualization created by CGview with gene labels enabled, saved as zoomable SVG files
+
+**(B) Coverage Plots: Tinycov ** - Coverage visualization of BAM files using Tinycov, showing average coverage and window distribution for each reference sequence
+
+**(C) Assembly Graphs Bandage** - De novo assembly graph visualization created by SPAdes and rendered with Bandage, depicting contig connectivity and assembly structure
+
 ### Pipeline information
 
 <details markdown="1">
