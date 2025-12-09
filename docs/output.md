@@ -123,9 +123,18 @@ NANOPORE08720179/
 Custom visualizations are stored at the same level as per-sample directories. These custom visualizations are cross-sample comparisons between all samples. Custom visualizations also come with a csv containing all the same data for further analysis and flexibility in creating visualizations for the user. 
 
 ### Visual outputs of the pipeline
-This pipeline generates multiple visual outputs to support analysis and quality control of genomic, assembly, and coverage data. Visualizations are produced using both custom Python scripts and pre‑existing bioinformatics tools. Our custom Python-based visualizations focus on cross-sample comparative analysis, enabling multi-sample insights that pre-made tools cannot easily provide. 
+This pipeline generates multiple visual outputs to support analysis and quality control of genomic, assembly, and coverage data. Visualizations are produced using both custom Python scripts and pre‑existing bioinformatics tools. Our custom Python-based visualizations focus on cross-sample comparative analysis, enabling multi-sample insights that pre-made tools cannot easily provide. The pipeline generates eight complementary cross-sample visualizations:
 
+<img alt="image" src="[https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/CLI_run_nextflow.png](https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/customVisuals.png)" />
 
+**(A) Plasmid Distribution** - Bar graph showing plasmids per sample, colored by plasmid type with plasmid length on y-axis
+**(B) AMR Gene Counts** - Interactive bar graph of antimicrobial resistance genes detected per sample (hover reveals gene lists)
+**(C) Sequencing Quality Overview** - Bar graph showing average nucleotide quality and read count per sample
+**(D) MLST Distribution** - Pie chart displaying sequence type frequencies across the sample set
+**(E) RGI AMR Presence Matrix** - Binary heatmap showing presence/absence of AMR genes detected by RGI
+**(F) AMRFinderPlus AMR Presence Matrix** - Binary heatmap showing presence/absence of AMR genes detected by AMRFinderPlus
+**(G) Virulence Factor Matrix** - Binary heatmap showing presence/absence of virulence genes
+**(H) Gene Similarity Clustering** - Heatmap showing gene content similarity between all samples
 
 ### Pipeline information
 
