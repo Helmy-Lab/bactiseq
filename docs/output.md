@@ -81,6 +81,8 @@ Upon successful completion of the pipeline, the resutls will be stored, per samp
 **Output directory structure for one sample (polish enabled and performed)**
 
 ```
+customVisualizations
+├── heatmaps/bar graphs/pie charts/.csv's of the data
 NANOPORE08720179/
 ├── Annotation/
 │   ├── AbricateVFDB/          # *.txt
@@ -118,7 +120,11 @@ NANOPORE08720179/
     └── tinycov/               # *.png
 ```
 
+Custom visualizations are stored at the same level as per-sample directories. These custom visualizations are cross-sample comparisons between all samples. Custom visualizations also come with a csv containing all the same data for further analysis and flexibility in creating visualizations for the user. 
+
 ### Visual outputs of the pipeline
+This pipeline generates multiple visual outputs to support analysis and quality control of genomic, assembly, and coverage data. Visualizations are produced using both custom Python scripts and pre‑existing bioinformatics tools. Our custom Python-based visualizations focus on cross-sample comparative analysis, enabling multi-sample insights that pre-made tools cannot easily provide. 
+
 
 
 ### Pipeline information
