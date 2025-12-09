@@ -1,7 +1,7 @@
 ---
 layout: default
 title: BactiSeq Databases
-nav_order: 0
+nav_order: 1
 ---
 
 # nf-core/bactiseq: Documentation
