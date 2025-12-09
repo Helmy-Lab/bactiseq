@@ -128,12 +128,19 @@ This pipeline generates multiple visual outputs to support analysis and quality 
 <img alt="image" src="https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/customVisuals.png" />
 
 **(A) Plasmid Distribution** - Bar graph showing plasmids per sample, colored by plasmid type with plasmid length on y-axis
+
 **(B) AMR Gene Counts** - Interactive bar graph of antimicrobial resistance genes detected per sample (hover reveals gene lists)
+
 **(C) Sequencing Quality Overview** - Bar graph showing average nucleotide quality and read count per sample
+
 **(D) MLST Distribution** - Pie chart displaying sequence type frequencies across the sample set
+
 **(E) RGI AMR Presence Matrix** - Binary heatmap showing presence/absence of AMR genes detected by RGI
+
 **(F) AMRFinderPlus AMR Presence Matrix** - Binary heatmap showing presence/absence of AMR genes detected by AMRFinderPlus
+
 **(G) Virulence Factor Matrix** - Binary heatmap showing presence/absence of virulence genes
+
 **(H) Gene Similarity Clustering** - Heatmap showing gene content similarity between all samples
 
 ### Pipeline information
