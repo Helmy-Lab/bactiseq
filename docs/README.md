@@ -1,3 +1,9 @@
+---
+layout: default
+title: BactiSeq Databases
+nav_order: 0
+---
+
 # nf-core/bactiseq: Documentation
 
 The nf-core/bactiseq documentation is split into the following pages:
