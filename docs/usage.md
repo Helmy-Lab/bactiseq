@@ -7,7 +7,12 @@ nav_order: 4
 
 <link rel="stylesheet" href="custom.css">
 
-BactiSeq: Usage
+# BactiSeq: Usage
+
+{: .no_toc }
+
+## Table of contents
+{: .no_toc .text-delta }
 
 ## Introduction
 
@@ -16,7 +21,7 @@ BactiDeq is a Nextflow-based bioinformatics pipeline for bacterial whole-genome 
 ```bash
 nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/shifter/apptainer/charliecloud/wave --input samplesheet.csv --outdir /path/to/output/directory/
 ```
-<img width="1804" height="800" alt="image" src="https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/CLI_run_nextflow.png" />
+<img  height="2000" alt="image" src="https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/CLI_run_nextflow.png" />
 
   The profile used depends on the avilable environments available to your device.
 
