@@ -1,6 +1,6 @@
 ---
 layout: default
-title: BactiSeq Usage
+title: BactiSeq Output
 nav_order: 5
 ---
 
