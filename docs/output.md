@@ -1,3 +1,9 @@
+---
+layout: default
+title: BactiSeq Usage
+nav_order: 5
+---
+
 # Bactiseq Output
 
 ## Table of contents
