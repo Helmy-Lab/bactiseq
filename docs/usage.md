@@ -27,7 +27,7 @@ nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/sh
 <div style="text-align: center;">
   <img src="https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/CLI_run_nextflow.png" 
        alt="CLI run nextflow" 
-       style="height: 200px; width: auto;">
+       style="height: 100px; width: auto;">
 </div>
 ![CLI run nextflow](https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/CLI_run_nextflow.png)
 {: .img-fluid }
