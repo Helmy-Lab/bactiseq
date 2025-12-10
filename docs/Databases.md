@@ -11,6 +11,12 @@ BactiSeq: Databases
 
 # Database Configuration
 
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ## Introduction
 Databases are fundamental for genomic analysis, and Bactiseq's customizable database parameters provide critical flexibility that enhances the pipeline's applicability across diverse research contexts. This functionality enables researchers to:
 
