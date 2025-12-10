@@ -1,12 +1,14 @@
 ---
 layout: default
-title: BactiSeq Databases
+title: Home
 nav_order: 1
+description: "BactiSeq - Bacterial whole genome analysis pipeline"
+permalink: /
 ---
 
-# nf-core/bactiseq: Documentation
+# BactiSeq: Documentation
 
-The nf-core/bactiseq documentation is split into the following pages:
+BactiSeq documentation is split into the following pages:
 
 - [Usage](usage.md)
   - An overview of how the pipeline works, how to run it and a description of all of the different command-line flags.
