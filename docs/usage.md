@@ -315,15 +315,47 @@ withName: CGVIEW {
  ]
 }
 ```
+## **Nextflow CPU and Memory limits**
 
+Nextflow pipelines, including BactiSeq, manage computational resources through configuration files. Resource limits for CPU cores, memory allocation, and maximum runtime are defined in the pipeline's configuration files, primarily in `conf/base.config`. 
 
-## nf-core/configs
+The main resource configuration file (`conf/base.config`) uses a label-based system to categorize processes by their resource requirements:
 
-In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-core pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
-
-See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
-
-If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
+Example of base.config
+```nextflow
+process {
+    // Default settings for all processes
+    cpus   = { 1      * task.attempt }
+    memory = { 6.GB   * task.attempt }
+    time   = { 4.h    * task.attempt }
+// Process-specific resource requirements using labels
+    withLabel:process_single {
+        cpus   = { 1                   }
+        memory = { 6.GB * task.attempt }
+        time   = { 4.h  * task.attempt }
+    }
+    withLabel:process_low {
+        cpus   = { 8     * task.attempt }
+        memory = { 12.GB * task.attempt }
+        time   = { 4.h   * task.attempt }
+    }
+    withLabel:process_medium {
+        cpus   = { 10     * task.attempt }
+        memory = { 10.GB * task.attempt }
+        time   = { 8.h   * task.attempt }
+    }
+    withLabel:process_high {
+        cpus   = { 20    * task.attempt }
+        memory = { 128.GB * task.attempt }
+        time   = { 48.h  * task.attempt }
+    }
+    withLabel:process_long {
+        time   = { 20.h  * task.attempt }
+    }
+    withLabel:process_high_memory {
+        memory = { 200.GB * task.attempt }
+    }
+```
 
 ## Running in the background
 
@@ -342,3 +374,5 @@ We recommend adding the following line to your environment to limit this (typica
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
+
+
