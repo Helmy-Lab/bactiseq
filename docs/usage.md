@@ -13,6 +13,9 @@ nav_order: 4
 ## Table of contents
 {: .no_toc .text-delta }
 
+1. TOC
+{:toc}
+
 ## Introduction
 
 BactiDeq is a Nextflow-based bioinformatics pipeline for bacterial whole-genome sequencing analysis. It provides end-to-end processing from raw sequencing reads to annotated variants and quality reports, following best practices for reproducibility and scalability.
