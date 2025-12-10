@@ -295,7 +295,7 @@ Some tools come with pre-selected parameters for the workflows
 | **Cgview** | `--feature_labels T` |
 | **GATK4 SamtoFastq** | `--VALIDATION_STRINGENCY SILENT` |
 
-### Custom tool/module configuration
+## Custom tool/module configuration
 Nextflow pipelines allow users to customize the parameters used by specific tools/modules through the configuration folder.
 
 *** steps to customize ***
@@ -315,7 +315,7 @@ withName: CGVIEW {
 ```
 
 
-### nf-core/configs
+## nf-core/configs
 
 In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-core pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
