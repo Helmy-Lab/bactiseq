@@ -56,7 +56,7 @@ However, there is a strict requirement for certain inputs and certain types of v
 4. **Pre-assembled:** `assembly` only, no reads
 
 
-## **Input Data Types & Requirements**
+## Input Data Types & Requirements
 
 ### **Table 1: Input Combinations**
 
@@ -67,7 +67,7 @@ However, there is a strict requirement for certain inputs and certain types of v
 | **Long-read-only** | Long read assembly (Nanopore/PacBio) | `sample`, `long_fastq` | `assembly` (must be `"assemblyNA`/`empty"`), `short_fastq1`, `short_fastq2` (must be `"short1NA"`/`"short2NA"`/`empty`) |
 | **Pre-assembled** | Already assembled genome | `sample`, `assembly` | `short_fastq1`, `short_fastq2`, `long_fastq` (must be `NA`/`empty` values) |
 
-### **Table 3: Valid File Extensions**
+### **Table 2: Valid File Extensions**
 
 | Field | Required Extensions | Example Files |
 |-------|---------------------|---------------|
@@ -76,7 +76,7 @@ However, there is a strict requirement for certain inputs and certain types of v
 | `assembly` | `.fasta`, `.fa`, `.fna`, `.gbk`, `.gb`, `.gbff`, `.genbank`, `.embl`, `.gff`, `.gff3` | `genome.fasta`, `annotation.gff`, `assembly.gbff` |
 
 
-### **Table 5: Example Valid Configurations**
+### **Table 3: Example Valid Configurations**
 
 | Type | Sample Row Example |
 |------|-------------------|
