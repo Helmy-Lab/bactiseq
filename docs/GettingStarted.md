@@ -12,6 +12,9 @@ nav_order: 2
 ## Table of contents
 {: .no_toc .text-delta }
 
+1. TOC
+{:toc}
+
 ## Prerequisites
 
 Before running the BactiSeq pipeline, ensure you have the following installed:
