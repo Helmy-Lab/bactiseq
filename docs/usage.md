@@ -7,7 +7,7 @@ nav_order: 4
 
 <link rel="stylesheet" href="custom.css">
 
-# BactiSeq: Output
+# BactiSeq: Outputs
 
 {: .no_toc }
 
