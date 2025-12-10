@@ -247,6 +247,8 @@ A pipeline might not always support every possible argument or option of a parti
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
 
+In general, you need to edit the `conf/modules.config` file to add parameters to tools.
+
 ##Below are the possible modules within BactiSeq that allow additional parameters.
 
 | Process | Description | Resource for Options |
@@ -278,11 +280,26 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 | **AMRFinderplus** | AMR gene identification | [https://github.com/ncbi/amr/wiki](https://github.com/ncbi/amr/wiki) |
 | **MLST** | MLST identification | [https://github.com/tseemann/mlst](https://github.com/tseemann/mlst) |
 
+Some tools come with pre-selected parameters for the workflows 
+
+## Processes/tools with pre-set setting
+
+**Table 1: Bactiseq Pipeline: Processes with pre-set settings**
+
+| Process | Pre-set settings |
+|---------|------------------|
+| **Bakta** | `--database --type full` |
+| **Chopper** | `-q 10 --minlength 1000` |
+| **bbduk** | `ktrim=r k=23 mink=11 hdist=1 tpe tbo maq=10 trim1=6 qtrim=r minlength=31` |
+| **abricate** | `--db vfdb --minid 80 --mincov 80` |
+| **Cgview** | `--feature_labels T` |
+| **GATK4 SamtoFastq** | `--VALIDATION_STRINGENCY SILENT` |
+
 ### Custom tool/module configuration
 Nextflow pipelines allow users to customize the parameters used by specific tools/modules through the configuration folder.
 
 *** steps to customize ***
-1. Navigate to the pipeline directory and edit the file: pipeline_directory/conf/modules.config, the pipeline directory is where you pulled the pipeline into.
+1. Navigate to the pipeline directory and edit the file: `pipeline_directory/conf/modules.config`, the pipeline directory is where you pulled the pipeline into.
 2. Locate or add the module configuration section
 3. Insert custom arguments in the `ext.args` parameter
 ### Example Configuration:
