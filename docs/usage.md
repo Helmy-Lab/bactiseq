@@ -8,7 +8,6 @@ nav_order: 4
 <link rel="stylesheet" href="custom.css">
 
 # BactiSeq: Usage
-
 {: .no_toc }
 
 ## Table of contents
