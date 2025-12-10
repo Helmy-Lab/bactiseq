@@ -1,13 +1,13 @@
 ---
 layout: default
-title: BactiSeq Usage
+title: BactiSeq Outputs
 nav_order: 4
 ---
 
 
 <link rel="stylesheet" href="custom.css">
 
-# BactiSeq: Usage
+# BactiSeq: Output
 
 {: .no_toc }
 
