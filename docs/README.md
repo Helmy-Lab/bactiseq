@@ -5,6 +5,10 @@ nav_order: 1
 description: "BactiSeq - Bacterial whole genome analysis pipeline"
 permalink: /
 ---
+# BactiSeq: Introduction
+Bactiseq is a bacterial isolate whole genome sequence analysis pipeline. Bactiseq delivers analysis from Read quality analysis all the way through to gene comparision between samples. BactiSeq accepts reads from PacBio HiFi in the form of Fastq and BAM files, Nanopore reads, and Illumina reads. BactiSeq is capabale of Hybrid assembly or Long read/Short read only assembly.
+
+![bactiseq workflow visualization](https://raw.githubusercontent.com/Sylvial-00/bactiseq/refs/heads/dev/docs/images/Bacterial%20Genomics%20Pipeline.png)
 
 # BactiSeq: Documentation
 
