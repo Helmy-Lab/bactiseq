@@ -6,7 +6,7 @@ nav_order: 2
 <link rel="stylesheet" href="custom.css">
 
 
-# Installation
+# Getting started: "How do I download this pipeline?"
 {: .no_toc }
 
 ## Table of contents
