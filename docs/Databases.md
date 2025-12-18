@@ -55,6 +55,5 @@ When no custom database paths are provided, Bactiseq downloads the following def
 If a different version fo the database is wanted, the path to the manually downaded database can be set in nextflow.config file of the pipeline. This allows researchers to utilize specific database to maintain consistency with potentially previously executed
 analyses or optimize database size and scope if computational resources are limited.
 
-> ⚠️ **WARNING:** If no basecaller mode is declared, medaka for polishing will default to the model `r1041_e82_400bps_sup_v5.2.0`.
+> ⚠️ **WARNING:** If you change the database type for Bakta to a light database, you must change the line in  `subworkflows/local/databasedownload/main.nf` for bakta to detect `db-light` instead of just `db`.
 
-> 💡 **TIP:** To ensure the long read data gets properly identified as either Nanopore or Pacbio. Bactiseq checks for certain file extensions, words within filenames, header data within the reads, and sample names. To ensure the data gets identified correctly - Putting Pacbio in the filename of reads/samplename or Nanopore in read file or samplename is suggested.
