@@ -9,7 +9,10 @@ permalink: /
 # BactiSeq: Documentation
 
 BactiSeq documentation is split into the following pages:
-
+- [Getting started](GettingStarted.md)
+  - An overview on the pre-requisites, and how to install and use the pipeline
+- [BactiSeq Databased](Databases.md)
+  - An overview on the type of databases necessary for the pipeline to run 
 - [Usage](usage.md)
   - An overview of how the pipeline works, how to run it and a description of all of the different command-line flags.
 - [Output](output.md)
