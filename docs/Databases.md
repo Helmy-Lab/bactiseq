@@ -33,7 +33,7 @@ When no custom database paths are provided, Bactiseq downloads the following def
 2. **AMRFinderPlus database** - v3.12.8
 3. **CheckM2 database** - v14897628
 4. **RGI database** - v6.0.3
-5. **Busco database** - v5.8.3 (`eukaryota_odb10`)
+5. **Busco database** - v5.8.3 (`bacteria_odb10`)
 6. **Kraken2 database** - 8GB standard database
 7. **Gambit database** - v1.0
 
@@ -47,7 +47,7 @@ When no custom database paths are provided, Bactiseq downloads the following def
 | **card_db** | Path to RGI database for AMR genes | `null` | [https://github.com/arpcard/rgi/blob/master/docs/rgi_load.rst](https://github.com/arpcard/rgi/blob/master/docs/rgi_load.rst) |
 | **checkm2_db** | Path to CheckM2 database | `null` | [https://zenodo.org/records/14897628](https://zenodo.org/records/14897628) |
 | **checkm2_ver** | Version of database that will be downloaded if no path is given | `14897628` | [https://zenodo.org/records/14897628](https://zenodo.org/records/14897628) |
-| **busco_db_type** | Type of database that the Busco database contains | `"eukaryota_odb10"` | [https://busco.ezlab.org/](https://busco.ezlab.org/) |
+| **busco_db_type** | Type of database that the Busco database contains | `"bacteria_odb10"` | [https://busco.ezlab.org/](https://busco.ezlab.org/) |
 | **busco_db** | Path to Busco database | `null` | [https://busco.ezlab.org/](https://busco.ezlab.org/) |
 | **kraken2_db** | Path to Kraken2 database | `null` | [https://benlangmead.github.io/aws-indexes/k2](https://benlangmead.github.io/aws-indexes/k2) |
 | **gambit_db** | Path to gambit database | `null` | [https://gambit-genomics.readthedocs.io/en/latest/databases.html#database-releases](https://gambit-genomics.readthedocs.io/en/latest/databases.html#database-releases) |
