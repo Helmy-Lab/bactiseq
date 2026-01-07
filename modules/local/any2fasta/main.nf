@@ -4,8 +4,8 @@ process ANY2FASTA {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/any2fasta:0.4.2--hdfd78af_3':
-        'biocontainers/any2fasta:0.4.2--hdfd78af_3' }"
+        'docker://pvstodghill/any2fasta:latest' :
+        'pvstodghill/any2fasta:latest' }"
 
     input:
     tuple val(meta), path(file)
