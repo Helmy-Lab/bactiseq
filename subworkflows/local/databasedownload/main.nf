@@ -65,7 +65,7 @@ workflow DATABASEDOWNLOAD {
     }else if (params.bakta_db != null){
         bakta_ch = Channel.fromPath(params.bakta_db)
     }else if (params.bakta_db == null && !downloadData.contains("baktadb")){
-        bakta_ch = Channel.fromPath(params.db_path + '/baktadb/db-full')
+        bakta_ch = Channel.fromPath(params.db_path + '/baktadb/db')
     }
 
     //DOWNLOAD CHECKM2 database
