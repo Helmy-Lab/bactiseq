@@ -24,12 +24,12 @@
       },
       "long_fastq": {
         "type": "string",
-        "pattern": "^(\\S+\\.f(ast)?q\\.gz|longNA)$",
+        "pattern": "^(\\S+\\.(f(ast)?q\\.gz|bam|sam)|longNA)$",
         "default": "longNA"
       },
       "assembly": {
         "type": "string",
-        "pattern": "^(\\S+\\.(fasta|fa|fna|gbk?|gbff|genbank|embl|gff|gff3?)|assemblyNA)$",
+        "pattern": "^(\\S+\\.(fasta|fa|fna|gbk?|gbff|genbank|embl|gff|gff3?|gfa)(\\.gz)?|assemblyNA)$",
         "default": "assemblyNA"
       },
       "polish": {
