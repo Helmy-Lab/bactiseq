@@ -53,14 +53,17 @@ def check_long(file_name, header, sample){
     Checks filename from long fastq column in samplesheet in string form
     returns: 
     */
-     if (header.contains('runid') || header.contains('basecall_model') || file_name.toLowerCase().contains('nanopore') || sample.toLowerCase().contains('nanopore')){
+    if (header == null || !(header instanceof String)) {
+        header = ""
+    }
+    if (file_name.contains('.bam') || file_name.contains('.sam') || sample.toLowerCase().contains('bam') || sample.toLowerCase().contains('sam')){
+        return 'bam'
+    } else if (header.contains('runid') || header.contains('basecall_model') || file_name.toLowerCase().contains('nanopore') || sample.toLowerCase().contains('nanopore')){
         //What type of polishing do we need to do?
         return 'nanopore'
-    } else if (header.contains('ccs') || header.contains('@m') || file_name.contains('hifi.') || file_name.toLowerCase().contains('pacbio') || sample.toLowerCase().contains('pacbio')){
+    } else if (header.contains('ccs') || header.contains('@m') || file_name.toLowerCase().contains('hifi.') || file_name.toLowerCase().contains('pacbio') || sample.toLowerCase().contains('pacbio')){
         return 'pacbio'
-    } else if (file_name.contains('.bam') || file_name.contains('.sam') || sample.toLowerCase().contains('bam') || sample.toLowerCase().contains('sam')){
-        return 'bam'
-    }else{
+    } else{
         return 'none'
     }
 }
