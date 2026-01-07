@@ -90,12 +90,16 @@ workflow BACTISEQ {
     // ////---------------------------------------------------------
     ASSEMBLED_SUBWORKFLOW(SAMPLESHEETFILTERING.out.assembled_con)
     ch_all_assembly = ch_all_assembly.mix(ASSEMBLED_SUBWORKFLOW.out.output)
-    ch_all_assembly = ch_all_assembly.mix(SAMPLESHEETFILTERING.out.assembled_fin)
+    ch_assembled_done = SAMPLESHEETFILTERING.out.assembled_fin.map{meta, short1, short2, long_reads, assembly_file ->
+        [meta, file(assembly_file)]
+    }
+    ch_all_assembly = ch_all_assembly.mix(ch_assembled_done)
     ch_versions = ch_versions.mix(ASSEMBLED_SUBWORKFLOW.out.versions)
     ////++++++++++++++++++++++++++++++++++++
     ////++++++++++++++++++++++++++++++++++++
-    ch_all_assembly.branch { file ->
-        gz: file.extension == 'gz'
+    ch_all_assembly.branch { meta, file ->
+        def filename = file.toString()
+        gz: file.endsWith('.gz') 
         normal: true
     }.set { branched }
     
