@@ -42,9 +42,14 @@ workflow PACBIO_SUBWORKFLOW {
     }
     //If the inputs are bam  OR sam files, make them into fastq files, else, 
     GATK4_SAMTOFASTQ(bam_files)
+    //filter out non-bams
+    def non_bam_files = ch_input_initial.filter { meta, file ->
+        meta.long != 'bam'
+    }
+
     ch_versions = ch_versions.mix(GATK4_SAMTOFASTQ.out.versions)
     //If no conversions were done, take the normal ch_input
-    def ch_input = GATK4_SAMTOFASTQ.out.fastq.concat(ch_input_initial.toList()).first().flatMap()
+    def ch_input = GATK4_SAMTOFASTQ.out.fastq.mix(non_bam_files)
 
     def ch_polish_final = ch_input_full.map { meta, short1, short2, long_reads, assembly ->
         if (meta.polish == 'short' && short2 != 'short2NA') {
