@@ -36,25 +36,25 @@ The pipeline has been tested thoroughly with Singularity
 
 ---
 
-## **Installation**
+## Installation
 
-### **1. Install Nextflow**
+### 1. Install Nextflow
 [Nextflow's official download and setup page](https://www.nextflow.io/docs/latest/install.html)
-### **2. Install a Container engine (recommended)**
+### 2. Install a Container engine (recommended)
 [Nextflow's Docker installation guide](https://www.nextflow.io/docs/latest/developer-env.html#:~:text=Select%20Install.-,Docker,that%20allows%20you%20to%20create%2C%20deploy%2C%20and%20manage%20applications%20within%20containers.,-Windows) <br />
 [Singularity Official Documentation](https://docs.sylabs.io/guides/3.0/user-guide/installation.html#:~:text=Edit%20on%20GitHub-,Installation,versions%20of%20Singularity%20please%20see%20earlier%20versions%20of%20the%20docs.)
 
-### **3. Install gitGit**
+### 3. Install gitGit
 [Official Git Documentation](https://github.com/git-guides/install-git)
 
 
-## **Running the Pipeline**
+## Running the Pipeline
 
-### **Using `nextflow run`**
+### Using `nextflow run`
 
 The `nextflow run` command is the primary way to execute Nextflow pipelines. You have several options:
 
-#### **A. From Cloned Repository**
+#### A. From Cloned Repository
 The BactiSeq pipeline is hosted on GitHub at `sylvial-00/bactiseq`. You need to clone it first:
 ```bash
 # Clone the repository to your local machine
@@ -68,12 +68,12 @@ nextflow run main.nf -profile docker or singularity --input samplesheet.csv
 # Or specify the config file explicitly
 nextflow run -c nextflow.config --input samplesheet.csv
 ```
-#### **B. Directly from github**
+#### B. Directly from github
 ```bash
 nextflow run https://github.com/sylvial-00/bactiseq --input samplesheet.csv
 ```
 
-## **Updating the pipeline**
+## Updating the pipeline
 ```bash
 # Navigate to your pipeline directory
 cd /path/to/bactiseq
