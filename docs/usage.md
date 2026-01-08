@@ -18,7 +18,7 @@ nav_order: 4
 
 ## Introduction
 
-BactiDeq is a Nextflow-based bioinformatics pipeline for bacterial whole-genome sequencing analysis. It provides end-to-end processing from raw sequencing reads to annotated variants and quality reports, following best practices for reproducibility and scalability.
+BactiSeq is a Nextflow-based bioinformatics pipeline for bacterial whole-genome sequencing analysis. It provides end-to-end processing from raw sequencing reads to annotated variants and quality reports, following best practices for reproducibility and scalability.
 **Basic Command**
 ```bash
 nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/shifter/apptainer/charliecloud/wave --input samplesheet.csv --outdir /path/to/output/directory/
@@ -102,7 +102,7 @@ Illumina087201802,SRR29751252_1.fastq.gz,SRR29751252_2.fastq.gz,,,,
 
 > ⚠️ **WARNING:** If no basecaller mode is declared, medaka for polishing will default to the model `r1041_e82_400bps_sup_v5.2.0`.
 
-> 💡 **TIP:** To ensure the long read data gets properly identified as either Nanopore or Pacbio. Bactiseq checks for certain file extensions, words within filenames, header data within the reads, and sample names. To ensure the data gets identified correctly - Putting Pacbio in the filename of reads/samplename or Nanopore in read file or samplename is suggested.
+> 💡 **TIP:** To ensure the long read data gets properly identified as either Nanopore or Pacbio. BactiSeq checks for certain file extensions, words within filenames, header data within the reads, and sample names. To ensure the data gets identified correctly - Putting Pacbio in the filename of reads/samplename or Nanopore in read file or samplename is suggested.
 
 | Column | Description |
 | ------ | ----------- |
@@ -155,11 +155,11 @@ polish: false
 <...>
 ```
 
-You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
+You can also generate such "YAML"/"JSON" files via [nf-core/launch](https://nf-co.re/launch).
 
 ### Updating the pipeline
 
-When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
+When you run the command bellow, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
 nextflow pull Sylvial-00/bactiseq
