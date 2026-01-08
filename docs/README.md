@@ -69,13 +69,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | | 8. Binary heatmap of AMR/virulence genes | Custom Python scripts | Pandas v2.0.0 |
 | | | | |
 | | **Database Download Module** | | |
-| | 1. Bakta database | | 1.10.4 |
-| | 2. AMRFinderPlus database | | 3.12.8 |
-| | 3. CheckM2 database | | 14897628 |
-| | 4. RGI database | | 6.0.3 |
-| | 5. Busco database | | 5.8.3 (bacteria_odb10) |
-| | 6. Kraken2 database | | 8gb standard Kraken2 database |
-| | 7. Gambit database | | 1.0 |
+| | 1. Bakta database | bakta_db | 1.10.4 |
+| | 2. AMRFinderPlus database | amrfinder_update | 3.12.8 |
+| | 3. CheckM2 database | CheckM2 | 14897628 |
+| | 4. RGI database | RGI | 6.0.3 |
+| | 5. Busco database | Busco | 5.8.3 (bacteria_odb10) |
+| | 6. Kraken2 database | WGET | 8gb standard Kraken2 database |
+| | 7. Gambit database | WGET | 1.0 |
 
 # BactiSeq: Documentation
 
