@@ -23,7 +23,7 @@ Upon successful completion of the pipeline, the resutls will be stored, per samp
 ```
 customVisualizations
 ├── heatmaps/bar graphs/pie charts/.csv's of the data
-NANOPORE08720179/
+Sample/
 ├── Annotation/
 │   ├── AbricateVFDB/          # *.txt
 │   ├── AmrfinderPlus/         # *.tsv
