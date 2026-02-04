@@ -147,7 +147,10 @@ We thank the following people for their extensive assistance in the development 
 
 
 ## Contributions and Support
+The primary BactiSeq pipeline was developed by [Your Name/Team Name].
 
+**Module Development**
+- The **tinycov** module for read coverage analysis was developed by Tazmeen Gill.
 
 ## Citations
 
