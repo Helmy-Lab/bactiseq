@@ -147,7 +147,7 @@ We thank the following people for their extensive assistance in the development 
 
 
 ## Contributions and Support
-The primary BactiSeq pipeline was developed by [Your Name/Team Name].
+The primary BactiSeq pipeline was developed by Sylvia Li.
 
 **Module Development**
 - The **tinycov** (Matthey-Doret, C. (2025). Cmdoret/tinycov [Python]. https://github.com/cmdoret/tinycov) module for read coverage analysis was developed by Tazmeen Gill.
