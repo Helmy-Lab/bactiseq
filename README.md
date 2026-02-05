@@ -71,7 +71,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | | 2. AMRFinderPlus database | | 3.12.8 |
 | | 3. CheckM2 database | | 14897628 |
 | | 4. RGI database | | 6.0.3 |
-| | 5. Busco database | | 5.8.3 (eukaryota_odb10) |
+| | 5. Busco database | | 5.8.3 (Bacteria_odb10) |
 | | 6. Kraken2 database | | 8gb standard Kraken2 database |
 | | 7. Gambit database | | 1.0 |
 
