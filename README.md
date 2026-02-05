@@ -81,13 +81,13 @@ For usage, and how to install, our documentation will walk you through it
 [Documentation for BactiSeq](https://helmy-lab.github.io/bactiseq/)
 
 BactiSeq documentation is split into the following pages:
-- [Getting started](./docs/GettingStarted.md)
+- [Getting started](https://helmy-lab.github.io/bactiseq/GettingStarted.html)
   - An overview on the pre-requisites, and how to install and use the pipeline
-- [BactiSeq Databases](./docs/Databases.md)
+- [BactiSeq Databases](https://helmy-lab.github.io/bactiseq/Databases.html)
   - An overview on the type of databases necessary for the pipeline to run 
-- [Usage](./docs/usage.md)
+- [Usage](https://helmy-lab.github.io/bactiseq/usage.html)
   - An overview of how the pipeline works, how to run it and a description of all of the different command-line flags.
-- [Output](./docs/output.md)
+- [Output](https://helmy-lab.github.io/bactiseq/output.html)
   - An overview of the different results produced by the pipeline and how to interpret them.
 
 
