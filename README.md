@@ -78,6 +78,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 ## Usage
 For usage, and how to install, our documentation will walk you through it
 
+[Documentation for BactiSeq](https://helmy-lab.github.io/bactiseq/)
+
 BactiSeq documentation is split into the following pages:
 - [Getting started](./docs/GettingStarted.md)
   - An overview on the pre-requisites, and how to install and use the pipeline
