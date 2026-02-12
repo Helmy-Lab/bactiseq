@@ -67,6 +67,7 @@ workflow BACTISEQ {
     // ////---------------------------------------------------------
     // ///----************** NANOPORE *************--------------
     // ////---------------------------------------------------------
+    SAMPLESHEETFILTERING.out.nano_reads.view()
     NANOPORE_SUBWORKFLOW(SAMPLESHEETFILTERING.out.nano_reads, DATABASEDOWNLOAD.out.gambitdb, DATABASEDOWNLOAD.out.krakendb)
     ch_all_assembly = ch_all_assembly.mix(NANOPORE_SUBWORKFLOW.out.output)
     ch_gfa = ch_gfa.mix(NANOPORE_SUBWORKFLOW.out.gfa)
