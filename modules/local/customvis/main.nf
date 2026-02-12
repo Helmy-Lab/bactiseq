@@ -12,12 +12,16 @@ process CUSTOMVIS {
     path "virulence/*", stageAs: "virulence/*"
     path "mlst/*", stageAs: "mlst/*"
     path "seqkit/*", stageAs: "seqkit/*"
+    path "kraken2/*", stageAs: "kraken2/*"
+    path "gambit/*", stageAs: "gambit/*"
     // tuple val(meta), path(file)
 
     output:
-    path "*.png", emit: images
-    path "*csv"
-    path "*.html"
+    // path "*.png", emit: images
+    // path "*csv"
+    // path "*.html"
+    path ".*"
+
 
     when:
     task.ext.when == null || task.ext.when

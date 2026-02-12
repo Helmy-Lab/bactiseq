@@ -119,6 +119,37 @@ workflow BACTISEQ {
     VISUALIZATIONS(ANNOTATION.out.embl,ch_gfa,PACBIO_SUBWORKFLOW.out.bams)
     ch_versions = ch_versions.mix(VISUALIZATIONS.out.versions)
 
+    ///-----------------------------------
+    ///COLLECT THE TAXONOMIC INFORMATION ---------------
+    ///----------------------------------
+
+    def ch_gambitout = PACBIO_SUBWORKFLOW.out.gambitout.map{
+        meta, file -> 
+        file
+    }.collect()
+    ch_gambitout = ch_gambitout.mix(NANOPORE_SUBWORKFLOW.out.gambitout.map{
+        meta, file ->
+        file
+    }.collect())
+    ch_gambitout = ch_gambitout.mix(ILLUMINA_SUBWORKFLOW.out.gambitout.map{
+        meta, file ->
+        file
+    }.collect())
+
+
+    def ch_krakenout = PACBIO_SUBWORKFLOW.out.kraken2out.map{
+        meta, file ->
+        file
+    }.collect()
+    ch_krakenout = ch_krakenout.mix(NANOPORE_SUBWORKFLOW.out.kraken2out.map{
+        meta, file ->
+        file
+    }.collect())
+    ch_krakenout = ch_krakenout.mix(ILLUMINA_SUBWORKFLOW.out.kraken2out.map{
+        meta, file ->
+        file
+    }.collect())
+
     ///-----------------------------------------------------------------
     ///        RUN CUSTOM VISUALIZATION ONLY AFTER ALL ANNOTATIONS ARE DONE 
     ///                     uses .collect to get all outputs
@@ -127,7 +158,7 @@ workflow BACTISEQ {
         .mix(NANOPORE_SUBWORKFLOW.out.seqkit)
         .mix(ILLUMINA_SUBWORKFLOW.out.seqkit)                  
         .map{ meta, file -> file }    
-        .collect()                    
+        .collect()               
 
     def ch_all_seqkit = ch_seqkit 
     ch_all_seqkit.view()

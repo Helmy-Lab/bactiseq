@@ -130,6 +130,8 @@ workflow ILLUMINA_SUBWORKFLOW {
     ch_output = ch_output.mix(polish_branches.no_polish.map { meta, assembly, polish_data -> [meta, assembly] })
 
     emit:
+    gambitout = TAXONOMY.out.gambitreport
+    kraken2out = TAXONOMY.out.kraken2report
     outupt = ch_output
     versions = ch_versions                     // channel: [ versions.yml ]
     seqkit = ch_seqkit

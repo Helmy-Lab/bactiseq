@@ -91,6 +91,8 @@ workflow NANOPORE_SUBWORKFLOW {
     }
     ch_output = ch_output.mix(polish_branch.no_polish)
     emit:
+    gambitout = TAXONOMY.out.gambitreport
+    kraken2out = TAXONOMY.out.kraken2report
     output = ch_output
     versions = ch_versions                     // channel: [ versions.yml ]\
     gfa = ch_gfa
