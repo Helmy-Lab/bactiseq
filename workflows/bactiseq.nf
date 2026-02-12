@@ -191,7 +191,7 @@ workflow BACTISEQ {
     }.collect()
     ch_all_mlst.view()
 
-    CUSTOMVIS(ch_all_bakta, ch_all_rgi, ch_all_amr, ch_all_organized_mob, ch_all_virulence, ch_all_mlst, ch_all_seqkit) 
+    CUSTOMVIS(ch_all_bakta, ch_all_rgi, ch_all_amr, ch_all_organized_mob, ch_all_virulence, ch_all_mlst, ch_all_seqkit, ch_krakenout, ch_gambitout) 
     
 
     softwareVersionsToYAML(ch_versions).collectFile(
