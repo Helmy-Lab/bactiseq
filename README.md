@@ -76,7 +76,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | | 7. Gambit database | | 1.0 |
 
 ## Usage
-For usage, and how to install, our documentation will walk you through it
+For usage, and how to install, our documentation will walk you through it:
 
 [Documentation for BactiSeq](https://helmy-lab.github.io/bactiseq/)
 
