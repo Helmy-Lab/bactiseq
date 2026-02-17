@@ -39,6 +39,8 @@ nextflow run main.nf -profile plato/docker/conda/mamba/singularity/arm/podman/sh
 | `--illumina_adapters` | (optional) path to file of adapters for bbduk | `path to file, default null`
 | `--polish` | (optional) Whether to polish at all despite what's set in the samplesheet | `true or false, default true`
 
+> ⚠️ **WARNING:** UNICYCLER Automatically carries out multiple rounds of polishing with RACON. Consider this when setting polishing settings for hybrid assembly using Unicycler.
+
 ## Samplesheet input
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 7 columns, and a header row as shown in the examples below.
